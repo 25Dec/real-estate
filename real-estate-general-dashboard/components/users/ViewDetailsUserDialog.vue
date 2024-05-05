@@ -1,0 +1,174 @@
+<script setup>
+	import { accessToken, baseUrl } from '~/constants';
+
+	const { visible, roles, data } = defineProps(['visible', 'roles', 'data']);
+	const myVisible = ref(visible);
+
+	const socialID = ref(data['social_id']);
+	const phone = ref(data['phone']);
+	const loginName = ref(data['login_name']);
+	const password = ref(data['password']);
+	const firstName = ref(data['first_name']);
+	const lastName = ref(data['last_name']);
+	const email = ref(data['email']);
+	const type = ref(data['type']);
+	const phoneVerified = ref(data['phone_verified']);
+	const emailVerified = ref(data['email_verified']);
+	const socialVerified = ref(data['social_verified']);
+</script>
+
+<template>
+	<Dialog
+		v-model:visible="myVisible"
+		modal
+		maximizable
+		header="Header"
+		:style="{ width: '50rem' }"
+		:breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+	>
+		<template #header>
+			<div class="inline-flex items-center justify-center gap-2">
+				<span class="font-bold text-xl">User Details</span>
+			</div>
+		</template>
+		<template class="flex flex-col gap-3">
+			<div class="flex flex-row gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="firstName">Firste</label>
+					<InputText
+						id="firstName"
+						placeholder="First name"
+						v-model.trim="firstName"
+						disabled
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="lastName">Last name</label>
+					<InputText
+						id="lastName"
+						placeholder="Last name"
+						v-model.trim="lastName"
+						disabled
+					/>
+				</div>
+			</div>
+
+			<div class="flex flex-row gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="loginName">Login name</label>
+					<InputText
+						id="loginName"
+						placeholder="Login name"
+						v-model.trim="loginName"
+						disabled
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="password">Password</label>
+					<Password
+						id="password"
+						placeholder="Password"
+						v-model="password"
+						:feedback="false"
+						toggleMask
+						disabled
+					/>
+				</div>
+			</div>
+
+			<div class="flex flex-row gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="phone">Phone number</label>
+					<InputText
+						id="phone"
+						placeholder="+84 9698 886 660"
+						v-model.trim="phone"
+						integeronly
+						disabled
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="phoneVerified">Phone verified</label>
+					<InputText
+						id="phoneVerified"
+						placeholder="+84 9698 886 660"
+						v-model.trim="phoneVerified"
+						integeronly
+						disabled
+					/>
+				</div>
+			</div>
+
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="type">User role</label>
+				<Dropdown
+					id="type"
+					class="flex-1"
+					placeholder="Select user role"
+					v-model="roles[roles.findIndex((role) => role.value == type)].value"
+					:options="roles"
+					optionLabel="name"
+					optionValue="value"
+					disabled
+				/>
+			</div>
+
+			<div class="flex flex-col gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="email">Email</label>
+					<InputText
+						id="email"
+						placeholder="example@gmail.com"
+						v-model="email"
+						disabled
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="emailVerified">Email verified</label>
+					<InputText
+						id="emailVerified"
+						placeholder="example@gmail.com"
+						v-model="emailVerified"
+						disabled
+					/>
+				</div>
+			</div>
+
+			<div class="flex flex-col gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="socialID">Social ID</label>
+					<InputText
+						id="socialID"
+						placeholder="https://www.facebook.com"
+						v-model="socialID"
+						disabled
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="socialVerified">Social verified</label>
+					<InputText
+						id="socialVerified"
+						placeholder="https://www.facebook.com"
+						v-model="socialVerified"
+						disabled
+					/>
+				</div>
+			</div>
+			<div class="flex flex-row gap-3 justify-between">
+				<span class="text-xs text-gray-400">
+					Created at: {{ convertDateTime(data['created_at']) }}
+				</span>
+				<span class="text-xs text-gray-400">
+					Updated at: {{ convertDateTime(data['updated_at']) }}
+				</span>
+			</div>
+		</template>
+		<template #footer>
+			<Button
+				type="button"
+				label="Close"
+				@click="myVisible = false"
+			/>
+		</template>
+	</Dialog>
+</template>
