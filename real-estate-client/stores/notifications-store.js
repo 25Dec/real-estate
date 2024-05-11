@@ -2,9 +2,12 @@ import { baseUrl } from '~/constants';
 
 export const useNotificationsStore = defineStore('notifications', () => {
 	const notifications = ref([]);
+	const currentNotification = ref({});
 
 	const getNotifications = async () => {
 		const accessToken = useCookie('token');
+		const { currentProjectID } = storeToRefs(useProjectsStore());
+
 		const { data } = await useFetch(baseUrl + '/auth/message', {
 			headers: {
 				'Content-Type': 'application/json',
@@ -12,7 +15,9 @@ export const useNotificationsStore = defineStore('notifications', () => {
 			},
 		});
 
-		notifications.value = data.value.data.data;
+		notifications.value = data.value.data.data.filter(
+			(noti) => noti['project_id'] == currentProjectID.value
+		);
 	};
 
 	const addNewNotification = async (data) => {
@@ -61,6 +66,7 @@ export const useNotificationsStore = defineStore('notifications', () => {
 
 	return {
 		notifications,
+		currentNotification,
 		getNotifications,
 		addNewNotification,
 		editNotification,

@@ -1,24 +1,24 @@
 import { baseUrl } from '~/constants';
 
-export const useFloorsStore = defineStore('floors', () => {
-	const floors = ref([]);
-	const currentFloor = ref({});
+export const useHighAreasStore = defineStore('highAreas', () => {
+	const highAreas = ref([]);
+	const currentHighArea = ref({});
 
-	const getFloors = async () => {
+	const getHighAreas = async () => {
 		const accessToken = useCookie('token');
-		const { data } = await useFetch(baseUrl + '/auth/floor', {
+		const { data } = await useFetch(baseUrl + '/auth/highArea', {
 			headers: {
 				'Content-Type': 'application/json',
 				access_token: accessToken.value,
 			},
 		});
 
-		floors.value = data.value.data.data;
+		highAreas.value = data.value.data.data;
 	};
 
-	const addNewFloor = async (data) => {
+	const addNewHighArea = async (data) => {
 		const accessToken = useCookie('token');
-		const response = await $fetch(baseUrl + `/auth/floor`, {
+		const response = await $fetch(baseUrl + `/auth/highArea`, {
 			method: 'post',
 			headers: {
 				'Content-Type': 'application/json',
@@ -27,13 +27,13 @@ export const useFloorsStore = defineStore('floors', () => {
 			body: data,
 		});
 
-		await getFloors();
+		await getHighAreas();
 		return response;
 	};
 
-	const editFloor = async (data) => {
+	const editHighArea = async (data) => {
 		const accessToken = useCookie('token');
-		const response = await $fetch(baseUrl + `/auth/floor/${data['id']}`, {
+		const response = await $fetch(baseUrl + `/auth/highArea/${data['id']}`, {
 			method: 'put',
 			headers: {
 				'Content-Type': 'application/json',
@@ -42,15 +42,15 @@ export const useFloorsStore = defineStore('floors', () => {
 			body: data,
 		});
 
-		await getFloors();
+		await getHighAreas();
 		return response;
 	};
 
-	const deleteFloor = async (data) => {
+	const deleteHighArea = async (data) => {
 		const accessToken = useCookie('token');
 		let response = '';
 		try {
-			response = await $fetch(baseUrl + `/auth/floor/${data['id']}`, {
+			response = await $fetch(baseUrl + `/auth/highArea/${data['id']}`, {
 				method: 'delete',
 				headers: {
 					'Content-Type': 'application/json',
@@ -61,16 +61,16 @@ export const useFloorsStore = defineStore('floors', () => {
 			response = { ...error };
 		}
 
-		await getFloors();
+		await getHighAreas();
 		return response;
 	};
 
 	return {
-		floors,
-		currentFloor,
-		getFloors,
-		addNewFloor,
-		editFloor,
-		deleteFloor,
+		highAreas,
+		currentHighArea,
+		getHighAreas,
+		addNewHighArea,
+		editHighArea,
+		deleteHighArea,
 	};
 });

@@ -1,18 +1,14 @@
 <script setup>
-	const { visible, data, allProjectIDs, statuses } = defineProps([
-		'visible',
-		'allProjectIDs',
-		'data',
-		'statuses',
-	]);
+	const { visible, statuses } = defineProps(['visible', 'statuses']);
+
+	const { currentNotification } = storeToRefs(useNotificationsStore());
 
 	const myVisible = ref(visible);
-	const title = ref(data['title']);
-	const content = ref(data['content']);
-	const status = ref(data['status']);
-	const projectID = ref(data['project_id']);
-	const createdAt = ref(data['created_at']);
-	const updatedAt = ref(data['updated_at']);
+	const title = ref(currentNotification.value['title']);
+	const content = ref(currentNotification.value['content']);
+	const status = ref(currentNotification.value['status']);
+	const createdAt = ref(currentNotification.value['created_at']);
+	const updatedAt = ref(currentNotification.value['updated_at']);
 </script>
 
 <template>
@@ -36,7 +32,6 @@
 					<label for="title">Title</label>
 					<InputText
 						id="title"
-						placeholder="Title"
 						v-model="title"
 						disabled
 					/>
@@ -45,29 +40,10 @@
 
 			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="projectID">Project ID</label>
-					<Dropdown
-						id="projectID"
-						class="flex-1"
-						placeholder="Select project ID"
-						v-model="
-							allProjectIDs[
-								allProjectIDs.findIndex((id) => id.value == projectID)
-							].value
-						"
-						:options="allProjectIDs"
-						optionLabel="name"
-						optionValue="value"
-						disabled
-					/>
-				</div>
-
-				<div class="flex flex-1 flex-col gap-2">
 					<label for="status">Status</label>
 					<Dropdown
 						id="status"
 						class="flex-1"
-						placeholder="Select status"
 						v-model="status"
 						:options="statuses"
 						optionLabel="name"
@@ -82,7 +58,6 @@
 				<Textarea
 					id="content"
 					v-model="content"
-					placeholder="Content"
 					autoResize
 					rows="5"
 					cols="30"

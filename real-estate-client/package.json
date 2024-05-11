@@ -10,6 +10,7 @@
 		"postinstall": "nuxt prepare"
 	},
 	"dependencies": {
+		"@emailjs/browser": "^4.3.3",
 		"@formkit/auto-animate": "^0.8.1",
 		"@nuxt/image": "^1.5.0",
 		"@pinia/nuxt": "^0.5.1",

@@ -1,40 +1,42 @@
 <script setup>
 	const { visible } = defineProps(['visible']);
 
-	const { currentProjectID } = storeToRefs(useProjectsStore());
-	const { addNewPaymentMethod } = usePaymentMethodsStore();
+	const { blocks } = storeToRefs(useBlocksStore());
+	const { addNewFloor } = useFloorsStore();
 	const toast = useToast();
 
 	const myVisible = ref(visible);
-	const totalOfPaymentTime = ref(0);
-	const methodName = ref('');
-	const percentDiscount = ref(0);
-	const vat = ref(0);
-	const maintenanceFee = ref(0);
+	const blockID = ref(0);
+	const numberOfHighArea = ref(0);
+	const publicArea = ref(0);
+	const totalArea = ref(0);
+	const progress = ref(0);
+	const desc = ref('');
 
 	const onSave = async () => {
-		const newPaymentMethodData = {
+		const newFloorData = {
 			id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1,
-			project_id: currentProjectID.value,
-			total_of_payment_time: totalOfPaymentTime.value,
-			method_name: methodName.value,
-			percent_discount: percentDiscount.value,
-			vat: vat.value,
-			maintenance_fee: maintenanceFee.value,
-			created_by: 46,
-			updated_by: 46,
+			block_id: parseInt(blockID.value),
+			number_of_high_area: parseInt(numberOfHighArea.value),
+			public_area: parseInt(publicArea.value),
+			total_area: parseInt(totalArea.value),
+			progress: parseInt(progress.value),
+			desc: desc.value,
+			deleted: 'false',
+			created_by: 13,
+			updated_by: 13,
 			created_at: new Date().toLocaleString(),
 			updated_at: null,
 		};
 
-		const response = await addNewPaymentMethod(newPaymentMethodData);
+		const response = await addNewFloor(newFloorData);
 		myVisible.value = false;
 
 		if (response != null && response['result'] == 'ok') {
 			toast.add({
 				severity: 'success',
 				summary: 'Success',
-				detail: 'Create New Payment Method Successfully!',
+				detail: 'Create New Floor Successfully!',
 				group: 'bl',
 				life: 3000,
 			});
@@ -42,7 +44,7 @@
 			toast.add({
 				severity: 'warning',
 				summary: 'Error',
-				detail: 'Failed to Create New Payment Method',
+				detail: 'Failed to Create New Floor',
 				group: 'bl',
 				life: 3000,
 			});
@@ -61,69 +63,74 @@
 	>
 		<template #header>
 			<div class="inline-flex items-center justify-center gap-2">
-				<span class="font-bold text-xl">Create New Payment Method</span>
+				<span class="font-bold text-xl">Create New Floor</span>
 			</div>
 		</template>
 
 		<template class="flex flex-col gap-3">
-			<div class="flex flex-col gap-3">
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="blockID">Block</label>
+				<Dropdown
+					id="blockID"
+					placeholder="Select block"
+					v-model="blockID"
+					:options="blocks"
+					optionLabel="name"
+					optionValue="value"
+				/>
+			</div>
+
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="desc">Name</label>
+				<InputText
+					id="desc"
+					v-model="desc"
+				/>
+			</div>
+
+			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="methodName">Method name</label>
-					<InputText
-						id="methodName"
-						placeholder="Method name"
-						v-model="methodName"
+					<label for="numberOfHighArea">Number of High Area</label>
+					<InputNumber
+						id="numberOfHighArea"
+						v-model="numberOfHighArea"
+						mode="decimal"
+						showButtons
+						:min="0"
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="publicArea">Public Area</label>
+					<InputNumber
+						id="publicArea"
+						v-model="publicArea"
+						mode="decimal"
+						showButtons
+						:min="0"
 					/>
 				</div>
 			</div>
 
-			<div class="flex flex-row gap-3">
+			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="totalOfPaymentTime">Total of payment time</label>
+					<label for="totalArea">Total Area</label>
 					<InputNumber
-						id="totalOfPaymentTime"
-						v-model="totalOfPaymentTime"
+						id="totalArea"
+						v-model="totalArea"
 						mode="decimal"
 						showButtons
 						:min="0"
 					/>
 				</div>
-
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="percentDiscount">Discount</label>
+					<label for="progress">Progress</label>
 					<InputNumber
-						id="percentDiscount"
-						v-model="percentDiscount"
+						id="progress"
+						v-model="progress"
+						prefix="%"
 						mode="decimal"
 						showButtons
 						:min="0"
-						prefix="%"
-					/>
-				</div>
-			</div>
-
-			<div class="flex flex-row gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="maintenanceFee">Maintenance Fee</label>
-					<InputNumber
-						id="maintenanceFee"
-						v-model="maintenanceFee"
-						mode="decimal"
-						showButtons
-						:min="0"
-						prefix="%"
-					/>
-				</div>
-
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="vat">VAT</label>
-					<InputNumber
-						id="vat"
-						v-model="vat"
-						mode="decimal"
-						showButtons
-						:min="0"
-						prefix="%"
 					/>
 				</div>
 			</div>

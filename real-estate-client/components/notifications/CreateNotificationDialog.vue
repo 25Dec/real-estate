@@ -1,18 +1,14 @@
 <script setup>
-	const { visible, allProjectIDs, statuses } = defineProps([
-		'visible',
-		'allProjectIDs',
-		'statuses',
-	]);
+	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
 	const toast = useToast();
+	const { currentProjectID } = storeToRefs(useProjectsStore());
 	const { addNewNotification } = useNotificationsStore();
 
 	const myVisible = ref(visible);
 	const title = ref('');
 	const content = ref('');
 	const status = ref('');
-	const projectID = ref('');
 
 	const onSave = async () => {
 		const newNotiData = {
@@ -21,7 +17,7 @@
 			content: content.value,
 			status: status.value.value,
 			deleted: 'false',
-			project_id: projectID.value.value,
+			project_id: currentProjectID.value,
 			created_by: 13,
 			updated_by: 13,
 			created_at: new Date().toLocaleString(),
@@ -77,17 +73,6 @@
 			</div>
 
 			<div class="flex flex-row gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="projectID">Project ID</label>
-					<Dropdown
-						id="projectID"
-						class="flex-1"
-						placeholder="Select project ID"
-						v-model="projectID"
-						:options="allProjectIDs"
-						optionLabel="name"
-					/>
-				</div>
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="status">Status</label>
 					<Dropdown

@@ -1,25 +1,31 @@
 <script setup>
 	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
-	import { baseUrl } from '../../constants/index';
 
-	const accessToken = useCookie('token');
-	const { currentProjectIDFromLocalStore } = storeToRefs(useProjectsStore());
-
-	const { data } = await useFetch(baseUrl + '/auth/paymentMethodProcess', {
-		headers: {
-			'Content-Type': 'application/json',
-			access_token: accessToken.value,
-		},
-	});
-
-	const paymentMethodProcesses = ref(
-		data.value.data.filter((paymentMethod) => {
-			return paymentMethod['project_id'] == 27;
-		})
+	const { paymentMethods, paymentMethodsDropdown } = storeToRefs(
+		usePaymentMethodsStore()
 	);
-	const paymentMethodProcess = ref({});
+	const { getPaymentMethods } = usePaymentMethodsStore();
+	const { paymentMethodsProcess } = storeToRefs(
+		usePaymentMethodsProcessStore()
+	);
+	const { getPaymentMethodsProcess } = usePaymentMethodsProcessStore();
 
+	await getPaymentMethods();
+	await getPaymentMethodsProcess();
+
+	const currentPaymentMethodProcess = ref({
+		name: paymentMethods.value[0]?.['method_name'] ?? '',
+		value: paymentMethods.value[0]?.['id'] ?? '',
+	});
+	// my payment method process base on "payment method id"
+	const myPaymentMethodsProcessBaseOnPMId = computed(() => {
+		return paymentMethodsProcess.value.filter((process) => {
+			return (
+				process['payment_method_id'] == currentPaymentMethodProcess.value.value
+			);
+		});
+	});
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
@@ -28,20 +34,27 @@
 	const editPaymentMethodProcessDialogVisible = ref(false);
 	const deletePaymentMethodProcessDialogVisible = ref(false);
 
-	const viewPaymentMethodProcessDetails = async (data) => {
-		paymentMethodProcess.value = data;
+	const handleDropdown = (event) => {
+		myPaymentMethodsProcessBaseOnPMId.value =
+			paymentMethodsProcess.value.filter((process) => {
+				return process['payment_method_id'] == event.value;
+			});
+	};
+
+	const toggleViewDetailsPaymentMethodProcess = (data) => {
+		currentPaymentMethodProcess.value = data;
 		viewDetailsPaymentMethodProcessDialogVisible.value =
 			!viewDetailsPaymentMethodProcessDialogVisible.value;
 	};
 
-	const editPaymentMethodProcess = async (data) => {
-		paymentMethodProcess.value = data;
+	const toggleEditPaymentMethodProcess = (data) => {
+		currentPaymentMethodProcess.value = data;
 		editPaymentMethodProcessDialogVisible.value =
 			!editPaymentMethodProcessDialogVisible.value;
 	};
 
-	const deletePaymentMethodProcess = async (data) => {
-		paymentMethodProcess.value = data;
+	const toggleDeletePaymentMethodProcess = async (data) => {
+		currentPaymentMethodProcess.value = data;
 		deletePaymentMethodProcessDialogVisible.value =
 			!deletePaymentMethodProcessDialogVisible.value;
 	};
@@ -54,7 +67,7 @@
 		>
 			<div class="flex items-center gap-2">
 				<span class="font-semibold text-lg">Payment Method Process</span>
-				<Tag :value="paymentMethodProcesses.length"></Tag>
+				<Tag :value="myPaymentMethodsProcessBaseOnPMId.length"></Tag>
 			</div>
 
 			<div class="flex items-center gap-2">
@@ -64,12 +77,12 @@
 					</InputIcon>
 					<InputText
 						v-model="filters['global'].value"
-						placeholder="Filter payment method..."
+						placeholder="Filter payment method process..."
 					/>
 				</IconField>
 				<Button
 					size="small"
-					label="New Payment Method Process"
+					label="New"
 					@click="
 						createPaymentMethodProcessDialogVisible =
 							!createPaymentMethodProcessDialogVisible
@@ -78,15 +91,38 @@
 			</div>
 		</div>
 
-		<div class="absolute top-[8%] w-full h-[92%]">
+		<div
+			class="fixed right-0 top-[8%] z-50 backdrop-blur-xl w-5/6 h-[8%] px-4 border-b flex justify-between items-center"
+		>
+			<div class="flex items-center gap-2">
+				<label
+					for="currentPaymentMethod"
+					class="font-semibold text-lg"
+					>Current Payment Method:
+				</label>
+				<Dropdown
+					id="currentPaymentMethod"
+					placeholder="Select payment method"
+					v-model="currentPaymentMethodProcess.value"
+					:options="paymentMethodsDropdown"
+					optionLabel="name"
+					optionValue="value"
+					@change="(event) => handleDropdown(event)"
+				/>
+			</div>
+		</div>
+
+		<div class="absolute top-[16%] w-full h-[92%]">
 			<DataTable
-				:value="paymentMethodProcesses"
+				:value="myPaymentMethodsProcessBaseOnPMId"
 				v-model:filters="filters"
 				:paginator="true"
 				:rows="50"
 				:rowsPerPageOptions="[5, 10, 20, 50]"
 				scrollable
 				scrollHeight="flex"
+				sortField="id"
+				:sortOrder="-1"
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
@@ -95,18 +131,26 @@
 				</template>
 
 				<Column
-					field="payment_method_id"
-					header="Payment Method ID"
-					sortable
+					field="payment_time_example"
+					header="Payment Time Example"
 				>
 					<template #body="{ data }">
-						{{ data['payment_method_id'] }}
+						{{ data['payment_time_example'] }}
+					</template>
+				</Column>
+
+				<Column
+					field="include_vat"
+					header="Include VAT"
+				>
+					<template #body="{ data }">
+						{{ data['include_vat'] == true ? 'Yes' : 'No' }}
 					</template>
 				</Column>
 
 				<Column
 					field="total_percent_payment"
-					header="Total Percent Payment"
+					header="Total payment"
 					sortable
 				>
 					<template #body="{ data }">
@@ -123,21 +167,21 @@
 						<Button
 							text
 							severity="secondary"
-							@click="viewPaymentMethodProcessDetails(data)"
+							@click="toggleViewDetailsPaymentMethodProcess(data)"
 						>
 							<Icon name="mdi:eye-outline" />
 						</Button>
 						<Button
 							text
 							severity="secondary"
-							@click="editPaymentMethodProcess(data)"
+							@click="toggleEditPaymentMethodProcess(data)"
 						>
 							<Icon name="mdi:edit-outline" />
 						</Button>
 						<Button
 							text
 							severity="danger"
-							@click="deletePaymentMethodProcess(data)"
+							@click="toggleDeletePaymentMethodProcess(data)"
 						>
 							<Icon name="mdi:delete-outline" />
 						</Button>
@@ -146,25 +190,20 @@
 			</DataTable>
 		</div>
 	</div>
-	<ViewDetailsPaymentMethodDialog
-		v-if="viewDetailsPaymentMethodDialogVisible"
-		:visible="viewDetailsPaymentMethodDialogVisible"
-		:data="paymentMethod"
+	<ViewDetailsPaymentMethodProcessDialog
+		v-if="viewDetailsPaymentMethodProcessDialogVisible"
+		:visible="viewDetailsPaymentMethodProcessDialogVisible"
 	/>
-	<CreatePaymentMethodDialog
-		v-if="createPaymentMethodDialogVisible"
-		:visible="createPaymentMethodDialogVisible"
-		:allProjectIDs="allProjectIDs"
+	<CreatePaymentMethodProcessDialog
+		v-if="createPaymentMethodProcessDialogVisible"
+		:visible="createPaymentMethodProcessDialogVisible"
 	/>
-	<EditPaymentMethodDialog
-		v-if="editPaymentMethodDialogVisible"
-		:visible="editPaymentMethodDialogVisible"
-		:allProjectIDs="allProjectIDs"
-		:data="paymentMethod"
+	<EditPaymentMethodProcessDialog
+		v-if="editPaymentMethodProcessDialogVisible"
+		:visible="editPaymentMethodProcessDialogVisible"
 	/>
-	<DeletePaymentMethodDialog
-		v-if="deletePaymentMethodDialogVisible"
-		:visible="deletePaymentMethodDialogVisible"
-		:data="paymentMethod"
+	<DeletePaymentMethodProcessDialog
+		v-if="deletePaymentMethodProcessDialogVisible"
+		:visible="deletePaymentMethodProcessDialogVisible"
 	/>
 </template>

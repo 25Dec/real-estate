@@ -1,13 +1,8 @@
 <script setup>
-	const emit = defineEmits(['reload']);
-	import { baseUrl } from '~/constants';
+	const { visible } = defineProps(['visible']);
 
-	const { visible, allProjectIDs, statuses } = defineProps([
-		'visible',
-		'allProjectIDs',
-		'statuses',
-	]);
-	const accessToken = useCookie('token');
+	const { zones } = storeToRefs(useZonesStore());
+	const { addNewLandArea } = useLandAreasStore();
 	const toast = useToast();
 
 	const myVisible = ref(visible);
@@ -21,7 +16,7 @@
 	const progress = ref(0);
 	const numberOfFloor = ref(0);
 	const numberOfRoom = ref(0);
-	const numberOfWc = ref(0);
+	const numberOfWC = ref(0);
 	const price = ref(0);
 	const owner = ref(0);
 	const buyStatus = ref(0);
@@ -40,7 +35,7 @@
 			progress: progress.value,
 			number_of_floor: numberOfFloor.value,
 			number_of_room: numberOfRoom.value,
-			number_of_wc: numberOfWc.value,
+			number_of_wc: numberOfWC.value,
 			price: price.value,
 			owner: owner.value,
 			buy_status: buyStatus.value,
@@ -48,19 +43,11 @@
 			deleted: 'true',
 			created_by: 13,
 			updated_by: 13,
-			created_at: '2023-08-11T10:34:53.000Z',
+			created_at: new Date().toLocaleString(),
 			updated_at: null,
 		};
 
-		const response = await $fetch(baseUrl + `/auth/message`, {
-			method: 'post',
-			headers: {
-				'Content-Type': 'application/json',
-				access_token: accessToken.value,
-			},
-			body: newLandAreaData,
-		});
-
+		const response = await addNewLandArea(newLandAreaData);
 		myVisible.value = false;
 
 		if (response != null && response['result'] == 'ok') {
@@ -86,7 +73,8 @@
 <template>
 	<Dialog
 		v-model:visible="myVisible"
-		modal
+		modala
+		maximizable
 		header="Header"
 		:style="{ width: '50rem' }"
 		:breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
@@ -96,52 +84,133 @@
 				<span class="font-bold text-xl">Create New Land Area</span>
 			</div>
 		</template>
+
 		<template class="flex flex-col gap-3">
-			<div class="flex">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="title">Title</label>
-					<InputText
-						id="title"
-						placeholder="Title"
-						v-model="title"
-					/>
-				</div>
-			</div>
-
-			<div class="flex flex-row gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="projectID">Project ID</label>
-					<Dropdown
-						id="projectID"
-						class="flex-1"
-						placeholder="Select project ID"
-						v-model="projectID"
-						:options="allProjectIDs"
-						optionLabel="name"
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="status">Status</label>
-					<Dropdown
-						id="status"
-						class="flex-1"
-						placeholder="Select status"
-						v-model="status"
-						:options="statuses"
-						optionLabel="name"
-					/>
-				</div>
-			</div>
-
 			<div class="flex flex-1 flex-col gap-2">
-				<label for="content">Content</label>
-				<Textarea
-					id="content"
-					v-model="content"
-					placeholder="Content"
-					autoResize
-					rows="5"
-					cols="30"
+				<label for="zone_id">Zone</label>
+				<Dropdown
+					id="zone_id"
+					placeholder="Select zone"
+					v-model="currentZone"
+					:options="zones"
+					optionLabel="name"
+					optionValue="value"
+				/>
+			</div>
+
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="lat">Latitude</label>
+					<InputNumber
+						id="lat"
+						placeholder="Latitude"
+						mode="decimal"
+						showButtons
+						v-model="lat"
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="long">Longitude</label>
+					<InputNumber
+						id="long"
+						placeholder="Longitude"
+						mode="decimal"
+						showButtons
+						v-model="long"
+					/>
+				</div>
+			</div>
+
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="buildingArea">Building Area</label>
+					<InputNumber
+						id="buildingArea"
+						placeholder="Building Area"
+						mode="decimal"
+						showButtons
+						v-model="buildingArea"
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="totalArea">Total Area</label>
+					<InputNumber
+						id="totalArea"
+						placeholder="Total Area"
+						mode="decimal"
+						showButtons
+						v-model="totalArea"
+					/>
+				</div>
+			</div>
+
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="numberOfFloor">Number of floor</label>
+					<InputNumber
+						id="numberOfFloor"
+						mode="decimal"
+						showButtons
+						v-model="numberOfFloor"
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="numberOfRoom">Number of room</label>
+					<InputNumber
+						id="numberOfRoom"
+						mode="decimal"
+						showButtons
+						v-model="numberOfRoom"
+					/>
+				</div>
+			</div>
+
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="numberOfWC">Number of WC</label>
+					<InputNumber
+						id="numberOfWC"
+						mode="decimal"
+						showButtons
+						v-model="numberOfWC"
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="landDirection">Land Direction</label>
+					<InputText
+						id="landDirection"
+						placeholder="Land Direction"
+						v-model="landDirection"
+					/>
+				</div>
+			</div>
+
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="price">Price</label>
+					<InputNumber
+						id="price"
+						v-model="price"
+						mode="decimal"
+						prefix="$"
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="progress">Progress</label>
+					<InputNumber
+						id="progress"
+						v-model="progress"
+						mode="decimal"
+						prefix="%"
+					/>
+				</div>
+			</div>
+
+			<div class="flex flex-1 flex-col gap-2 items-end">
+				<label for="isFront">Is Front</label>
+				<InputSwitch
+					id="isFront"
+					v-model="isFront"
 				/>
 			</div>
 		</template>

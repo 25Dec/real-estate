@@ -1,64 +1,22 @@
 <script setup>
-	import { baseUrl } from '~/constants';
+	const { visible, allProjectIDs } = defineProps(['visible', 'allProjectIDs']);
 
-	const { visible, allProjectIDs, data } = defineProps([
-		'visible',
-		'allProjectIDs',
-		'data',
-	]);
-	const accessToken = useCookie('token');
-	const toast = useToast();
+	const { currentPaymentMethod } = storeToRefs(usePaymentMethodsStore());
 
 	const myVisible = ref(visible);
-	const projectID = ref(data['project_id']);
-	const totalOfPaymentTime = ref(data['total_of_payment_time']);
-	const methodName = ref(data['method_name']);
-	const percentDiscount = ref(data['percent_discount'] * 10);
-	const vat = ref(data['vat'] * 10);
-	const maintenanceFee = ref(data['maintenance_fee'] * 10);
-	const createdAt = ref(data['created_at']);
-	const updatedAt = ref(data['updated_at']);
-
-	const onSave = async () => {
-		const newPaymentMethodData = {
-			project_id: projectID.value.value,
-			total_of_payment_time: totalOfPaymentTime.value,
-			method_name: methodName.value,
-			percent_discount: percentDiscount.value,
-			vat: vat.value,
-			maintenance_fee: maintenanceFee.value,
-			updated_at: new Date().toLocaleString(),
-		};
-
-		const response = await $fetch(baseUrl + `/auth/paymentMethod`, {
-			method: 'post',
-			headers: {
-				'Content-Type': 'application/json',
-				access_token: accessToken.value,
-			},
-			body: newPaymentMethodData,
-		});
-
-		myVisible.value = false;
-
-		if (response != null && response['result'] == 'ok') {
-			toast.add({
-				severity: 'success',
-				summary: 'Success',
-				detail: 'Edit Payment Method Successfully!',
-				group: 'bl',
-				life: 3000,
-			});
-		} else {
-			toast.add({
-				severity: 'warning',
-				summary: 'Error',
-				detail: 'Failed to Edit Payment Method',
-				group: 'bl',
-				life: 3000,
-			});
-		}
-	};
+	const totalOfPaymentTime = ref(
+		currentPaymentMethod.value['total_of_payment_time']
+	);
+	const methodName = ref(currentPaymentMethod.value['method_name']);
+	const percentDiscount = ref(
+		currentPaymentMethod.value['percent_discount'] * 10
+	);
+	const vat = ref(currentPaymentMethod.value['vat'] * 10);
+	const maintenanceFee = ref(
+		currentPaymentMethod.value['maintenance_fee'] * 10
+	);
+	const createdAt = ref(currentPaymentMethod.value['created_at']);
+	const updatedAt = ref(currentPaymentMethod.value['updated_at']);
 </script>
 
 <template>
@@ -78,23 +36,6 @@
 
 		<template class="flex flex-col gap-3">
 			<div class="flex flex-col gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="projectID">Project ID</label>
-					<Dropdown
-						id="projectID"
-						class="flex flex-1"
-						v-model="
-							allProjectIDs[
-								allProjectIDs.findIndex((id) => id.value == projectID)
-							].value
-						"
-						:options="allProjectIDs"
-						optionLabel="name"
-						optionValue="value"
-						disabled
-					/>
-				</div>
-
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="methodName">Method name</label>
 					<InputText

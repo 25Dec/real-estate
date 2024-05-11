@@ -1,13 +1,7 @@
 <script setup>
-	const emit = defineEmits(['reload']);
-	import { baseUrl } from '~/constants';
+	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const { visible, allProjectIDs, statuses } = defineProps([
-		'visible',
-		'allProjectIDs',
-		'statuses',
-	]);
-	const accessToken = useCookie('token');
+	const { addNewHighArea } = useHighAreasStore();
 	const toast = useToast();
 
 	const myVisible = ref(visible);
@@ -17,37 +11,35 @@
 	const projectID = ref('');
 
 	const onSave = async () => {
-		const newNotiData = {
+		const newHighAreaData = {
 			id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1,
-			title: title.value,
-			content: content.value,
-			status: status.value.value,
+			floor_id: 35,
+			high_area_direction: '1 direction',
+			lat: 0,
+			long: 0,
+			total_area: 33,
+			progress: 20,
+			number_of_wc: 1,
+			number_of_room: 0,
+			price: 1,
+			owner: 46,
+			buy_status: 'not booked',
+			desc: 'high area test 2',
 			deleted: 'false',
-			project_id: projectID.value.value,
 			created_by: 13,
 			updated_by: 13,
 			created_at: new Date().toLocaleString(),
 			updated_at: null,
 		};
 
-		const response = await $fetch(baseUrl + `/auth/landArea`, {
-			method: 'post',
-			headers: {
-				'Content-Type': 'application/json',
-				access_token: accessToken.value,
-			},
-			body: newNotiData,
-		});
-
-		emit('reload');
-
+		const response = await addNewHighArea(newHighAreaData);
 		myVisible.value = false;
 
 		if (response != null && response['result'] == 'ok') {
 			toast.add({
 				severity: 'success',
 				summary: 'Success',
-				detail: 'Create New Land Area Successfully!',
+				detail: 'Create New High Area Successfully!',
 				group: 'bl',
 				life: 3000,
 			});
@@ -55,7 +47,7 @@
 			toast.add({
 				severity: 'warning',
 				summary: 'Error',
-				detail: 'Failed to Create New Land Area',
+				detail: 'Failed to Create New High Area',
 				group: 'bl',
 				life: 3000,
 			});

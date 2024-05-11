@@ -1,22 +1,16 @@
 <script setup>
 	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
-	import { baseUrl } from '~/constants';
 
-	const accessToken = useCookie('token');
-	const { notifications } = storeToRefs(useNotificationsStore());
+	const { notifications, currentNotification } = storeToRefs(
+		useNotificationsStore()
+	);
 	const { getNotifications } = useNotificationsStore();
-	const { projects } = storeToRefs(useProjectsStore());
 	const { getProjects } = useProjectsStore();
+
 	await getNotifications();
 	await getProjects();
 
-	const allProjectIDs = ref(
-		projects.map((project) => {
-			return { name: `${project.id}`, value: project.id };
-		})
-	);
-	const notification = ref({});
 	const statuses = ref([{ name: 'Info', value: 'info' }]);
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -26,26 +20,19 @@
 	const editNotificationDialogVisible = ref(false);
 	const deleteNotificationDialogVisible = ref(false);
 
-	const viewDetailsNotification = async (data) => {
-		notification.value = data;
+	const toggleViewDetailsNotification = async (data) => {
+		currentNotification.value = data;
 		viewDetailsNotificationDialogVisible.value =
 			!viewDetailsNotificationDialogVisible.value;
 	};
 
-	const editNotification = async (data) => {
-		notification.value = data;
+	const toggleEditNotification = async (data) => {
+		currentNotification.value = data;
 		editNotificationDialogVisible.value = !editNotificationDialogVisible.value;
 	};
 
-	const deleteNotification = async (data) => {
-		await $fetch(baseUrl + `/auth/message/${data['id']}`, {
-			method: 'delete',
-			headers: {
-				'Content-Type': 'application/json',
-				access_token: accessToken.value,
-			},
-		});
-		notification.value = data;
+	const toggleDeleteNotification = async (data) => {
+		currentNotification.value = data;
 		deleteNotificationDialogVisible.value =
 			!deleteNotificationDialogVisible.value;
 	};
@@ -73,7 +60,7 @@
 				</IconField>
 				<Button
 					size="small"
-					label="New Notification"
+					label="New"
 					@click="
 						createNotificationDialogVisible = !createNotificationDialogVisible
 					"
@@ -97,17 +84,6 @@
 						<span>No notifications found.</span>
 					</div>
 				</template>
-
-				<Column
-					field="projectID"
-					header="Project ID"
-					sortable
-					class="backdrop-blur-lg"
-				>
-					<template #body="{ data }">
-						{{ data['project_id'] }}
-					</template>
-				</Column>
 
 				<Column
 					field="title"
@@ -138,21 +114,21 @@
 						<Button
 							text
 							severity="secondary"
-							@click="viewDetailsNotification(data)"
+							@click="toggleViewDetailsNotification(data)"
 						>
 							<Icon name="mdi:eye-outline" />
 						</Button>
 						<Button
 							text
 							severity="secondary"
-							@click="editNotification(data)"
+							@click="toggleEditNotification(data)"
 						>
 							<Icon name="mdi:edit-outline" />
 						</Button>
 						<Button
 							text
 							severity="danger"
-							@click="deleteNotification(data)"
+							@click="toggleDeleteNotification(data)"
 						>
 							<Icon name="mdi:delete-outline" />
 						</Button>
@@ -164,26 +140,20 @@
 	<ViewDetailsNotificationDialog
 		v-if="viewDetailsNotificationDialogVisible"
 		:visible="viewDetailsNotificationDialogVisible"
-		:data="notification"
-		:allProjectIDs="allProjectIDs"
 		:statuses="statuses"
 	/>
 	<CreateNotificationDialog
 		v-if="createNotificationDialogVisible"
 		:visible="createNotificationDialogVisible"
-		:allProjectIDs="allProjectIDs"
 		:statuses="statuses"
 	/>
 	<EditNotificationDialog
 		v-if="editNotificationDialogVisible"
 		:visible="editNotificationDialogVisible"
-		:data="notification"
-		:allProjectIDs="allProjectIDs"
 		:statuses="statuses"
 	/>
 	<DeleteNotificationDialog
 		v-if="deleteNotificationDialogVisible"
 		:visible="deleteNotificationDialogVisible"
-		:data="notification"
 	/>
 </template>

@@ -2,61 +2,106 @@
 	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
 
-	const accessToken = useCookie('token');
-	const { currentProjectIDFromLocalStore } = storeToRefs(useProjectsStore());
+	const { zones } = storeToRefs(useZonesStore());
+	const { getZones } = useZonesStore();
+	const { blocks } = storeToRefs(useBlocksStore());
+	const { getBlocks } = useBlocksStore();
+	const { floors } = storeToRefs(useFloorsStore());
+	const { getFloors } = useFloorsStore();
+	const { highAreas, currentHighArea } = storeToRefs(useHighAreasStore());
+	const { getHighAreas } = useHighAreasStore();
 
-	let zones = await useZonesFetching(accessToken.value);
-	let blocks = await useBlocksFetching(accessToken.value);
-	let floors = await useFloorsFetching(accessToken.value);
+	await getZones();
+	await getBlocks();
+	await getFloors();
+	await getHighAreas();
 
-	zones = ref(
-		zones
-			.filter((zone) => {
-				return zone['project_id'] == currentProjectIDFromLocalStore.value;
-			})
-			.map((zone) => {
-				return { id: zone.id, name: `${zone.name}`, value: `${zone.id}` };
-			})
-	);
+	zones.value = zones.value.map((zone) => {
+		return { id: zone.id, name: `${zone.name}`, value: `${zone.id}` };
+	});
 	const currentZone = ref({
 		name: zones.value[0]?.name ?? '',
 		value: zones.value[0]?.value ?? '',
 	});
 
-	const currentBlock = computed(() => {
-		return {};
-	});
-	floors = ref(
-		floors.filter((floor) => {
-			return floor['zone_id'] == 3;
+	blocks.value = blocks.value
+		.map((block) => {
+			return {
+				id: block.id,
+				name: `${block.desc}`,
+				value: `${block.id}`,
+				zone_id: `${block['zone_id']}`,
+			};
 		})
-	);
-	const currentFloor = computed(() => {
-		return {};
+		.filter((block) => block['zone_id'] == currentZone.value.value);
+	const currentBlock = ref({
+		name: blocks.value[0]?.name ?? '',
+		value: blocks.value[0]?.value ?? '',
 	});
-	const highAreas = ref([]);
-	const highArea = ref({});
+
+	floors.value = floors.value
+		.map((floor) => {
+			return {
+				id: floor.id,
+				name: `${floor.desc}`,
+				value: `${floor.id}`,
+				block_id: `${floor['block_id']}`,
+			};
+		})
+		.filter((floor) => floor['block_id'] == currentBlock.value.value);
+	const currentFloor = ref({
+		name: blocks.value[0]?.name ?? '',
+		value: blocks.value[0]?.value ?? '',
+	});
+
+	const myHighAreasBaseOnZoneAndBlockAndFloorID = computed(() => {
+		return highAreas.value.filter((highArea) => {
+			return highArea['floor_id'] == currentFloor.value.value;
+		});
+
+		return highAreas.value;
+	});
+
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
+	const menu = ref();
+	const menuItems = ref([
+		{
+			label: 'Payment',
+			command: () => {},
+		},
+		{
+			label: 'Payment History',
+			command: () => {},
+		},
+	]);
 	const viewDetailsHighAreaDialogVisible = ref(false);
 	const createHighAreaDialogVisible = ref(false);
 	const editHighAreaDialogVisible = ref(false);
 	const deleteHighAreaDialogVisible = ref(false);
 
-	const viewDetailsHighArea = (data) => {
-		highArea.value = data;
+	const handleDropdown = (event, type) => {
+		myHighAreasBaseOnZoneAndBlockAndFloorID.value = highAreas.value.filter(
+			(highArea) => {
+				return highArea['floor_id'] == event.value;
+			}
+		);
+	};
+
+	const toggleViewDetailsHighArea = (data) => {
+		currentHighArea.value = data;
 		viewDetailsHighAreaDialogVisible.value =
 			!viewDetailsHighAreaDialogVisible.value;
 	};
 
-	const editHighArea = (data) => {
-		highArea.value = data;
+	const toggleEditHighArea = (data) => {
+		currentHighArea.value = data;
 		editHighAreaDialogVisible.value = !editHighAreaDialogVisible.value;
 	};
 
-	const deleteHighArea = async (data) => {
-		highArea.value = data;
+	const toggleDeleteHighArea = async (data) => {
+		currentHighArea.value = data;
 		deleteHighAreaDialogVisible.value = !deleteHighAreaDialogVisible.value;
 	};
 </script>
@@ -68,7 +113,7 @@
 		>
 			<div class="flex items-center gap-2">
 				<span class="font-semibold text-lg">High Area</span>
-				<Tag :value="highAreas.length"></Tag>
+				<Tag :value="myHighAreasBaseOnZoneAndBlockAndFloorID.length"></Tag>
 			</div>
 
 			<div class="flex items-center gap-2">
@@ -83,7 +128,7 @@
 				</IconField>
 				<Button
 					size="small"
-					label="New Floor"
+					label="New"
 					@click="createHighAreaDialogVisible = !createHighAreaDialogVisible"
 				/>
 			</div>
@@ -105,12 +150,12 @@
 					:options="zones"
 					optionLabel="name"
 					optionValue="value"
+					@change="(event) => handleDropdown(event, 'zone')"
 				/>
 			</div>
-
 			<div class="flex items-center gap-2">
 				<label
-					for="currentBlock"
+					for="currentZone"
 					class="font-semibold text-lg"
 					>Current Block:
 				</label>
@@ -121,9 +166,9 @@
 					:options="blocks"
 					optionLabel="name"
 					optionValue="value"
+					@change="(event) => handleDropdown(event, 'block')"
 				/>
 			</div>
-
 			<div class="flex items-center gap-2">
 				<label
 					for="currentFloor"
@@ -132,18 +177,19 @@
 				</label>
 				<Dropdown
 					id="currentFloor"
-					placeholder="Select Floor"
+					placeholder="Select floor"
 					v-model="currentFloor.value"
 					:options="floors"
 					optionLabel="name"
 					optionValue="value"
+					@change="(event) => handleDropdown(event, 'floor')"
 				/>
 			</div>
 		</div>
 
 		<div class="absolute top-[16%] w-full h-[92%]">
 			<DataTable
-				:value="floors"
+				:value="myHighAreasBaseOnZoneAndBlockAndFloorID"
 				v-model:filters="filters"
 				:paginator="true"
 				:rows="50"
@@ -169,25 +215,23 @@
 				</Column>
 
 				<Column
-					field="total_area"
-					header="Total Area"
+					field="floor"
+					header="Floor"
 				>
 					<template #body="{ data }">
-						{{ data['total_area'] }}
+						{{ floors.find((floor) => floor.id == data['floor_id'])['name'] }}
 					</template>
 				</Column>
 
 				<Column
-					field="progress"
-					header="Progress"
-					sortable
+					field="buy_status"
+					header="Buy Status"
 				>
 					<template #body="{ data }">
-						<Knob
-							v-model="data['progress']"
-							readonly
-							:size="50"
-						/>
+						<Tag
+							:severity="data['buy_status'] == 'booked' ? 'danger' : 'success'"
+							:value="data['buy_status'].toUpperCase()"
+						></Tag>
 					</template>
 				</Column>
 
@@ -196,24 +240,36 @@
 						<Button
 							text
 							severity="secondary"
-							@click="viewDetailsFloor(data)"
+							@click="toggleViewDetailsHighArea(data)"
 						>
 							<Icon name="mdi:eye-outline" />
 						</Button>
 						<Button
 							text
 							severity="secondary"
-							@click="editFloor(data)"
+							@click="toggleEditHighArea(data)"
 						>
 							<Icon name="mdi:edit-outline" />
 						</Button>
 						<Button
 							text
 							severity="danger"
-							@click="deleteFloor(data)"
+							@click="toggleDeleteHighArea(data)"
 						>
 							<Icon name="mdi:delete-outline" />
 						</Button>
+						<Button
+							text
+							severity="secondary"
+							@click="(event) => menu.toggle(event)"
+						>
+							<Icon name="mdi:more-vert" />
+						</Button>
+						<Menu
+							ref="menu"
+							:model="menuItems"
+							:popup="true"
+						/>
 					</template>
 				</Column>
 			</DataTable>
@@ -222,22 +278,17 @@
 	<ViewDetailsHighAreaDialog
 		v-if="viewDetailsHighAreaDialogVisible"
 		:visible="viewDetailsHighAreaDialogVisible"
-		:data="highArea"
 	/>
 	<CreateHighAreaDialog
 		v-if="createHighAreaDialogVisible"
 		:visible="createHighAreaDialogVisible"
-		:allProjectIDs="allProjectIDs"
 	/>
 	<EditHighAreaDialog
 		v-if="editHighAreaDialogVisible"
 		:visible="editHighAreaDialogVisible"
-		:allProjectIDs="allProjectIDs"
-		:data="highArea"
 	/>
 	<DeleteHighAreaDialog
 		v-if="deleteHighAreaDialogVisible"
 		:visible="deleteHighAreaDialogVisible"
-		:data="highArea"
 	/>
 </template>

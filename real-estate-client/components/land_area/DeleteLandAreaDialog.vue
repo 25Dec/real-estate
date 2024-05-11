@@ -1,28 +1,21 @@
 <script setup>
-	import { baseUrl } from '~/constants';
+	const { visible } = defineProps(['visible']);
 
-	const { visible, data } = defineProps(['visible', 'data']);
-	const accessToken = useCookie('token');
+	const { currentLandArea } = storeToRefs(useLandAreasStore());
+	const { deleteLandArea } = useLandAreasStore();
 	const toast = useToast();
 
 	const myVisible = ref(visible);
 
 	const onDelete = async () => {
-		const response = await $fetch(baseUrl + `/auth/message/${data['id']}`, {
-			method: 'delete',
-			headers: {
-				'Content-Type': 'application/json',
-				access_token: accessToken.value,
-			},
-		});
-
+		const response = await deleteLandArea(currentLandArea.value);
 		myVisible.value = false;
 
 		if (response != null && response['result'] == 'ok') {
 			toast.add({
 				severity: 'success',
 				summary: 'Success',
-				detail: 'Delete Notification Successfully!',
+				detail: 'Delete Land Area Successfully!',
 				group: 'bl',
 				life: 3000,
 			});
@@ -30,7 +23,7 @@
 			toast.add({
 				severity: 'warning',
 				summary: 'Error',
-				detail: 'Failed to Delete Notification',
+				detail: 'Failed to Delete Land Area',
 				group: 'bl',
 				life: 3000,
 			});
@@ -48,13 +41,13 @@
 	>
 		<template #header>
 			<div class="inline-flex items-center justify-center gap-2">
-				<span class="font-bold text-xl">Delete Notification?</span>
+				<span class="font-bold text-xl">Delete Land Area?</span>
 			</div>
 		</template>
 		<div>
 			<span>
-				This will delete notification
-				<b>{{ data['title'] }}</b>
+				This will delete land area
+				<b>{{ currentLandArea['desc'] }}</b>
 				permanently!
 			</span>
 			<span>You cannot undo this action!</span>

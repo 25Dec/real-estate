@@ -1,66 +1,66 @@
 <script setup>
 	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
-	import { baseUrl } from '../../constants/index';
 
-	const accessToken = useCookie('token');
-	const { currentProjectIDFromLocalStore } = storeToRefs(useProjectsStore());
+	const { zones } = storeToRefs(useZonesStore());
+	const { getZones } = useZonesStore();
+	const { landAreas, currentLandArea } = storeToRefs(useLandAreasStore());
+	const { getLandAreas, deleteLandArea } = useLandAreasStore();
 
-	const zonesData = await useFetch(baseUrl + '/auth/zone', {
-		headers: {
-			'Content-Type': 'application/json',
-			access_token: accessToken.value,
-		},
+	await getZones();
+	await getLandAreas();
+
+	zones.value = zones.value.map((zone) => {
+		return { id: zone.id, name: `${zone.name}`, value: `${zone.id}` };
 	});
-
-	const landAreasData = await useFetch(baseUrl + '/auth/landArea', {
-		headers: {
-			'Content-Type': 'application/json',
-			access_token: accessToken.value,
-		},
-	});
-
-	const zones = ref(
-		zonesData.data.value.data.data
-			.filter((zone) => {
-				return zone['project_id'] == currentProjectIDFromLocalStore.value;
-			})
-			.map((zone) => {
-				return { id: zone.id, name: `${zone.name}`, value: `${zone.id}` };
-			})
-	);
 	const currentZone = ref({
 		name: zones.value[0]?.name ?? '',
 		value: zones.value[0]?.value ?? '',
 	});
-	console.log(currentZone.value);
-	const landAreas = computed(() => {
-		return landAreasData.data.value.data.data.filter((landArea) => {
+
+	const myLandAreasBaseOnZoneID = computed(() => {
+		return landAreas.value.filter((landArea) => {
 			return landArea['zone_id'] == currentZone.value.value;
 		});
 	});
-	const landArea = ref({});
+
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
+	const menu = ref();
+	const menuItems = ref([
+		{
+			label: 'Payment',
+			command: () => {},
+		},
+		{
+			label: 'Payment History',
+			command: () => {},
+		},
+	]);
 	const viewDetailsLandAreaDialogVisible = ref(false);
 	const createLandAreaDialogVisible = ref(false);
 	const editLandAreaDialogVisible = ref(false);
 	const deleteLandAreaDialogVisible = ref(false);
 
-	const viewDetailsLandArea = (data) => {
-		landArea.value = data;
+	const handleDropdown = (event) => {
+		myLandAreasBaseOnZoneID.value = landAreas.value.filter((landAreas) => {
+			return landAreas['zone_id'] == event.value;
+		});
+	};
+	const toggleViewDetailsLandArea = (data) => {
+		currentLandArea.value = data;
 		viewDetailsLandAreaDialogVisible.value =
 			!viewDetailsLandAreaDialogVisible.value;
 	};
 
-	const editLandArea = (data) => {
-		landArea.value = data;
+	const toggleEditLandArea = (data) => {
+		currentLandArea.value = data;
 		editLandAreaDialogVisible.value = !editLandAreaDialogVisible.value;
 	};
 
-	const deleteLandArea = async (data) => {
-		landArea.value = data;
+	const toggleDeleteLandArea = async (data) => {
+		currentLandArea.value = data;
 		deleteLandAreaDialogVisible.value = !deleteLandAreaDialogVisible.value;
 	};
 </script>
@@ -72,7 +72,7 @@
 		>
 			<div class="flex items-center gap-2">
 				<span class="font-semibold text-lg">Land Area</span>
-				<Tag :value="landAreas.length"></Tag>
+				<Tag :value="myLandAreasBaseOnZoneID.length"></Tag>
 			</div>
 
 			<div class="flex items-center gap-2">
@@ -87,7 +87,7 @@
 				</IconField>
 				<Button
 					size="small"
-					label="New Land Area"
+					label="New"
 					@click="createLandAreaDialogVisible = !createLandAreaDialogVisible"
 				/>
 			</div>
@@ -109,13 +109,14 @@
 					:options="zones"
 					optionLabel="name"
 					optionValue="value"
+					@change="(event) => handleDropdown(event)"
 				/>
 			</div>
 		</div>
 
 		<div class="absolute top-[16%] w-full h-[92%]">
 			<DataTable
-				:value="landAreas"
+				:value="myLandAreasBaseOnZoneID"
 				v-model:filters="filters"
 				:paginator="true"
 				:rows="50"
@@ -133,7 +134,7 @@
 
 				<Column
 					field="desc"
-					header="Description"
+					header="Name"
 				>
 					<template #body="{ data }">
 						{{ data['desc'] }}
@@ -141,8 +142,9 @@
 				</Column>
 
 				<Column
-					field="buy_status"
+					field="type"
 					header="Buy Status"
+					:sortable="true"
 				>
 					<template #body="{ data }">
 						{{ data['buy_status'] }}
@@ -168,43 +170,55 @@
 						<Button
 							text
 							severity="secondary"
-							@click="viewDetailsLandArea(data)"
+							@click="toggleViewDetailsLandArea(data)"
 						>
 							<Icon name="mdi:eye-outline" />
 						</Button>
 						<Button
 							text
 							severity="secondary"
-							@click="editLandArea(data)"
+							@click="toggleEditLandArea(data)"
 						>
 							<Icon name="mdi:edit-outline" />
 						</Button>
 						<Button
 							text
 							severity="danger"
-							@click="deleteLandArea(data)"
+							@click="toggleDeleteLandArea(data)"
 						>
 							<Icon name="mdi:delete-outline" />
 						</Button>
+						<Button
+							text
+							severity="secondary"
+							@click="(event) => menu.toggle(event)"
+						>
+							<Icon name="mdi:more-vert" />
+						</Button>
+						<Menu
+							ref="menu"
+							:model="menuItems"
+							:popup="true"
+						/>
 					</template>
 				</Column>
 			</DataTable>
 		</div>
 	</div>
+	<ViewDetailsLandAreaDialog
+		v-if="viewDetailsLandAreaDialogVisible"
+		:visible="viewDetailsLandAreaDialogVisible"
+	/>
 	<CreateLandAreaDialog
 		v-if="createLandAreaDialogVisible"
 		:visible="createLandAreaDialogVisible"
-		:allProjectIDs="allProjectIDs"
 	/>
 	<EditLandAreaDialog
 		v-if="editLandAreaDialogVisible"
 		:visible="editLandAreaDialogVisible"
-		:allProjectIDs="allProjectIDs"
-		:data="landArea"
 	/>
 	<DeleteLandAreaDialog
 		v-if="deleteLandAreaDialogVisible"
 		:visible="deleteLandAreaDialogVisible"
-		:data="landArea"
 	/>
 </template>

@@ -68,7 +68,7 @@
 				</IconField>
 				<Button
 					size="small"
-					label="New Customer"
+					label="New"
 					@click="createCustomerDialogVisible = !createCustomerDialogVisible"
 				/>
 			</div>

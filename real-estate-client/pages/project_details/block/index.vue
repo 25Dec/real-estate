@@ -17,7 +17,7 @@
 		name: zones.value[0]?.name ?? '',
 		value: zones.value[0]?.value ?? '',
 	});
-	const myBlocks = computed(() => {
+	const myBlocksBaseOnZoneID = computed(() => {
 		return blocks.value.filter((block) => {
 			return block['zone_id'] == currentZone.value.value;
 		});
@@ -37,6 +37,12 @@
 	const editBlockDialogVisible = ref(false);
 	const deleteBlockDialogVisible = ref(false);
 
+	const handleDropdown = (event) => {
+		myBlocksBaseOnZoneID.value = blocks.value.filter((block) => {
+			return block['zone_id'] == event.value;
+		});
+	};
+
 	const toggleViewDetailsBlock = (data) => {
 		currentBlock.value = data;
 		viewDetailsBlockDialogVisible.value = !viewDetailsBlockDialogVisible.value;
@@ -49,7 +55,6 @@
 
 	const toggleDeleteBlock = async (data) => {
 		currentBlock.value = data;
-		await deleteBlock(data);
 		deleteBlockDialogVisible.value = !deleteBlockDialogVisible.value;
 	};
 </script>
@@ -61,7 +66,7 @@
 		>
 			<div class="flex items-center gap-2">
 				<span class="font-semibold text-lg">Block</span>
-				<Tag :value="myBlocks.length"></Tag>
+				<Tag :value="myBlocksBaseOnZoneID.length"></Tag>
 			</div>
 
 			<div class="flex items-center gap-2">
@@ -76,7 +81,7 @@
 				</IconField>
 				<Button
 					size="small"
-					label="New Block"
+					label="New"
 					@click="createBlockDialogVisible = !createBlockDialogVisible"
 				/>
 			</div>
@@ -98,13 +103,14 @@
 					:options="zones"
 					optionLabel="name"
 					optionValue="value"
+					@change="(event) => handleDropdown(event)"
 				/>
 			</div>
 		</div>
 
 		<div class="absolute top-[16%] w-full h-[92%]">
 			<DataTable
-				:value="myBlocks"
+				:value="myBlocksBaseOnZoneID"
 				v-model:filters="filters"
 				:paginator="true"
 				:rows="50"
@@ -200,16 +206,10 @@
 	<CreateBlockDialog
 		v-if="createBlockDialogVisible"
 		:visible="createBlockDialogVisible"
-		:allProjectIDs="allProjectIDs"
-		:zones="zones"
-		:currentZone="currentZone"
 	/>
 	<EditBlockDialog
 		v-if="editBlockDialogVisible"
 		:visible="editBlockDialogVisible"
-		:allProjectIDs="allProjectIDs"
-		:zones="zones"
-		:currentZone="currentZone"
 	/>
 	<DeleteBlockDialog
 		v-if="deleteBlockDialogVisible"

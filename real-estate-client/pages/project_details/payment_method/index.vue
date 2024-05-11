@@ -2,24 +2,14 @@
 	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
 
-	const accessToken = useCookie('token');
-	const { currentProjectIDFromLocalStore } = storeToRefs(useProjectsStore());
-
-	let paymentMethods = await usePaymentMethodFetching(accessToken.value);
-	const { projects } = storeToRefs(useProjectsStore());
-	const { getProjects } = useProjectsStore();
-	await getProjects();
-
-	paymentMethods = paymentMethods.filter((paymentMethod) => {
-		return paymentMethod['project_id'] == currentProjectIDFromLocalStore.value;
-	});
-
-	const allProjectIDs = ref(
-		projects.map((project) => {
-			return { name: `${project.id}`, value: project.id };
-		})
+	const { paymentMethods, currentPaymentMethod } = storeToRefs(
+		usePaymentMethodsStore()
 	);
-	const paymentMethod = ref({});
+	const { getPaymentMethods } = usePaymentMethodsStore();
+	const { allProjectIDs } = storeToRefs(useProjectsStore());
+
+	await getPaymentMethods();
+
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
@@ -28,20 +18,20 @@
 	const editPaymentMethodDialogVisible = ref(false);
 	const deletePaymentMethodDialogVisible = ref(false);
 
-	const viewPaymentMethodDetails = async (data) => {
-		paymentMethod.value = data;
+	const toggleViewPaymentMethodDetails = async (data) => {
+		currentPaymentMethod.value = data;
 		viewDetailsPaymentMethodDialogVisible.value =
 			!viewDetailsPaymentMethodDialogVisible.value;
 	};
 
-	const editPaymentMethod = async (data) => {
-		paymentMethod.value = data;
+	const toggleEditPaymentMethod = async (data) => {
+		currentPaymentMethod.value = data;
 		editPaymentMethodDialogVisible.value =
 			!editPaymentMethodDialogVisible.value;
 	};
 
-	const deletePaymentMethod = async (data) => {
-		paymentMethod.value = data;
+	const toggleDeletePaymentMethod = async (data) => {
+		currentPaymentMethod.value = data;
 		deletePaymentMethodDialogVisible.value =
 			!deletePaymentMethodDialogVisible.value;
 	};
@@ -69,7 +59,7 @@
 				</IconField>
 				<Button
 					size="small"
-					label="New Payment Method"
+					label="New"
 					@click="
 						createPaymentMethodDialogVisible = !createPaymentMethodDialogVisible
 					"
@@ -108,21 +98,21 @@
 						<Button
 							text
 							severity="secondary"
-							@click="viewPaymentMethodDetails(data)"
+							@click="toggleViewPaymentMethodDetails(data)"
 						>
 							<Icon name="mdi:eye-outline" />
 						</Button>
 						<Button
 							text
 							severity="secondary"
-							@click="editPaymentMethod(data)"
+							@click="toggleEditPaymentMethod(data)"
 						>
 							<Icon name="mdi:edit-outline" />
 						</Button>
 						<Button
 							text
 							severity="danger"
-							@click="deletePaymentMethod(data)"
+							@click="toggleDeletePaymentMethod(data)"
 						>
 							<Icon name="mdi:delete-outline" />
 						</Button>
@@ -135,7 +125,6 @@
 		v-if="viewDetailsPaymentMethodDialogVisible"
 		:visible="viewDetailsPaymentMethodDialogVisible"
 		:allProjectIDs="allProjectIDs"
-		:data="paymentMethod"
 	/>
 	<CreatePaymentMethodDialog
 		v-if="createPaymentMethodDialogVisible"
@@ -146,11 +135,9 @@
 		v-if="editPaymentMethodDialogVisible"
 		:visible="editPaymentMethodDialogVisible"
 		:allProjectIDs="allProjectIDs"
-		:data="paymentMethod"
 	/>
 	<DeletePaymentMethodDialog
 		v-if="deletePaymentMethodDialogVisible"
 		:visible="deletePaymentMethodDialogVisible"
-		:data="paymentMethod"
 	/>
 </template>

@@ -108,7 +108,6 @@ declare global {
   const useAsyncData: typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useAsyncData']
   const useAttrs: typeof import('../../node_modules/vue')['useAttrs']
   const useAuthStore: typeof import('../../stores/auth-store')['useAuthStore']
-  const useBlocksFetching: typeof import('../../utils/apis')['useBlocksFetching']
   const useBlocksStore: typeof import('../../stores/blocks-store')['useBlocksStore']
   const useConfirm: typeof import('primevue/useconfirm')['useConfirm']
   const useCookie: typeof import('../../node_modules/nuxt/dist/app/composables/cookie')['useCookie']
@@ -120,13 +119,14 @@ declare global {
   const useElementTransform: typeof import('../../node_modules/@vueuse/motion/dist/runtime/composables/index')['useElementTransform']
   const useError: typeof import('../../node_modules/nuxt/dist/app/composables/error')['useError']
   const useFetch: typeof import('../../node_modules/nuxt/dist/app/composables/fetch')['useFetch']
-  const useFloorsFetching: typeof import('../../utils/apis')['useFloorsFetching']
+  const useFloorsStore: typeof import('../../stores/floor-store')['useFloorsStore']
   const useHead: typeof import('../../node_modules/@unhead/vue')['useHead']
   const useHeadSafe: typeof import('../../node_modules/@unhead/vue')['useHeadSafe']
+  const useHighAreasStore: typeof import('../../stores/high-area-store')['useHighAreasStore']
   const useHydration: typeof import('../../node_modules/nuxt/dist/app/composables/hydrate')['useHydration']
   const useId: typeof import('../../node_modules/nuxt/dist/app/composables/id')['useId']
   const useImage: typeof import('../../node_modules/@nuxt/image/dist/runtime/composables')['useImage']
-  const useLandAreasFetching: typeof import('../../utils/apis')['useLandAreasFetching']
+  const useLandAreasStore: typeof import('../../stores/land-area-store')['useLandAreasStore']
   const useLazyAsyncData: typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useLazyAsyncData']
   const useLazyFetch: typeof import('../../node_modules/nuxt/dist/app/composables/fetch')['useLazyFetch']
   const useLink: typeof import('../vue-router-stub')['useLink']
@@ -141,8 +141,8 @@ declare global {
   const useNotificationsStore: typeof import('../../stores/notifications-store')['useNotificationsStore']
   const useNuxtApp: typeof import('../../node_modules/nuxt/dist/app/nuxt')['useNuxtApp']
   const useNuxtData: typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useNuxtData']
-  const usePaymentMethodFetching: typeof import('../../utils/apis')['usePaymentMethodFetching']
-  const usePaymentMethodProcessFetching: typeof import('../../utils/apis')['usePaymentMethodProcessFetching']
+  const usePaymentMethodsProcessStore: typeof import('../../stores/payment-method-process-store')['usePaymentMethodsProcessStore']
+  const usePaymentMethodsStore: typeof import('../../stores/payment-method-store')['usePaymentMethodsStore']
   const usePinia: typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['usePinia']
   const usePreviewMode: typeof import('../../node_modules/nuxt/dist/app/composables/preview')['usePreviewMode']
   const usePrimeVue: typeof import('primevue/config')['usePrimeVue']
@@ -166,7 +166,6 @@ declare global {
   const useStyle: typeof import('primevue/usestyle')['useStyle']
   const useToast: typeof import('primevue/usetoast')['useToast']
   const useTransitionState: typeof import('../../node_modules/vue')['useTransitionState']
-  const useZonesFetching: typeof import('../../utils/apis')['useZonesFetching']
   const useZonesStore: typeof import('../../stores/zones-store')['useZonesStore']
   const watch: typeof import('../../node_modules/vue')['watch']
   const watchEffect: typeof import('../../node_modules/vue')['watchEffect']
@@ -296,7 +295,6 @@ declare module 'vue' {
     readonly useAsyncData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useAsyncData']>
     readonly useAttrs: UnwrapRef<typeof import('../../node_modules/vue')['useAttrs']>
     readonly useAuthStore: UnwrapRef<typeof import('../../stores/auth-store')['useAuthStore']>
-    readonly useBlocksFetching: UnwrapRef<typeof import('../../utils/apis')['useBlocksFetching']>
     readonly useBlocksStore: UnwrapRef<typeof import('../../stores/blocks-store')['useBlocksStore']>
     readonly useConfirm: UnwrapRef<typeof import('primevue/useconfirm')['useConfirm']>
     readonly useCookie: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/cookie')['useCookie']>
@@ -308,13 +306,14 @@ declare module 'vue' {
     readonly useElementTransform: UnwrapRef<typeof import('../../node_modules/@vueuse/motion/dist/runtime/composables/index')['useElementTransform']>
     readonly useError: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/error')['useError']>
     readonly useFetch: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/fetch')['useFetch']>
-    readonly useFloorsFetching: UnwrapRef<typeof import('../../utils/apis')['useFloorsFetching']>
+    readonly useFloorsStore: UnwrapRef<typeof import('../../stores/floor-store')['useFloorsStore']>
     readonly useHead: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['useHead']>
     readonly useHeadSafe: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['useHeadSafe']>
+    readonly useHighAreasStore: UnwrapRef<typeof import('../../stores/high-area-store')['useHighAreasStore']>
     readonly useHydration: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/hydrate')['useHydration']>
     readonly useId: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/id')['useId']>
     readonly useImage: UnwrapRef<typeof import('../../node_modules/@nuxt/image/dist/runtime/composables')['useImage']>
-    readonly useLandAreasFetching: UnwrapRef<typeof import('../../utils/apis')['useLandAreasFetching']>
+    readonly useLandAreasStore: UnwrapRef<typeof import('../../stores/land-area-store')['useLandAreasStore']>
     readonly useLazyAsyncData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useLazyAsyncData']>
     readonly useLazyFetch: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/fetch')['useLazyFetch']>
     readonly useLink: UnwrapRef<typeof import('../vue-router-stub')['useLink']>
@@ -329,8 +328,8 @@ declare module 'vue' {
     readonly useNotificationsStore: UnwrapRef<typeof import('../../stores/notifications-store')['useNotificationsStore']>
     readonly useNuxtApp: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/nuxt')['useNuxtApp']>
     readonly useNuxtData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useNuxtData']>
-    readonly usePaymentMethodFetching: UnwrapRef<typeof import('../../utils/apis')['usePaymentMethodFetching']>
-    readonly usePaymentMethodProcessFetching: UnwrapRef<typeof import('../../utils/apis')['usePaymentMethodProcessFetching']>
+    readonly usePaymentMethodsProcessStore: UnwrapRef<typeof import('../../stores/payment-method-process-store')['usePaymentMethodsProcessStore']>
+    readonly usePaymentMethodsStore: UnwrapRef<typeof import('../../stores/payment-method-store')['usePaymentMethodsStore']>
     readonly usePinia: UnwrapRef<typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['usePinia']>
     readonly usePreviewMode: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/preview')['usePreviewMode']>
     readonly usePrimeVue: UnwrapRef<typeof import('primevue/config')['usePrimeVue']>
@@ -354,7 +353,6 @@ declare module 'vue' {
     readonly useStyle: UnwrapRef<typeof import('primevue/usestyle')['useStyle']>
     readonly useToast: UnwrapRef<typeof import('primevue/usetoast')['useToast']>
     readonly useTransitionState: UnwrapRef<typeof import('../../node_modules/vue')['useTransitionState']>
-    readonly useZonesFetching: UnwrapRef<typeof import('../../utils/apis')['useZonesFetching']>
     readonly useZonesStore: UnwrapRef<typeof import('../../stores/zones-store')['useZonesStore']>
     readonly watch: UnwrapRef<typeof import('../../node_modules/vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('../../node_modules/vue')['watchEffect']>
@@ -477,7 +475,6 @@ declare module '@vue/runtime-core' {
     readonly useAsyncData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useAsyncData']>
     readonly useAttrs: UnwrapRef<typeof import('../../node_modules/vue')['useAttrs']>
     readonly useAuthStore: UnwrapRef<typeof import('../../stores/auth-store')['useAuthStore']>
-    readonly useBlocksFetching: UnwrapRef<typeof import('../../utils/apis')['useBlocksFetching']>
     readonly useBlocksStore: UnwrapRef<typeof import('../../stores/blocks-store')['useBlocksStore']>
     readonly useConfirm: UnwrapRef<typeof import('primevue/useconfirm')['useConfirm']>
     readonly useCookie: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/cookie')['useCookie']>
@@ -489,13 +486,14 @@ declare module '@vue/runtime-core' {
     readonly useElementTransform: UnwrapRef<typeof import('../../node_modules/@vueuse/motion/dist/runtime/composables/index')['useElementTransform']>
     readonly useError: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/error')['useError']>
     readonly useFetch: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/fetch')['useFetch']>
-    readonly useFloorsFetching: UnwrapRef<typeof import('../../utils/apis')['useFloorsFetching']>
+    readonly useFloorsStore: UnwrapRef<typeof import('../../stores/floor-store')['useFloorsStore']>
     readonly useHead: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['useHead']>
     readonly useHeadSafe: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['useHeadSafe']>
+    readonly useHighAreasStore: UnwrapRef<typeof import('../../stores/high-area-store')['useHighAreasStore']>
     readonly useHydration: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/hydrate')['useHydration']>
     readonly useId: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/id')['useId']>
     readonly useImage: UnwrapRef<typeof import('../../node_modules/@nuxt/image/dist/runtime/composables')['useImage']>
-    readonly useLandAreasFetching: UnwrapRef<typeof import('../../utils/apis')['useLandAreasFetching']>
+    readonly useLandAreasStore: UnwrapRef<typeof import('../../stores/land-area-store')['useLandAreasStore']>
     readonly useLazyAsyncData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useLazyAsyncData']>
     readonly useLazyFetch: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/fetch')['useLazyFetch']>
     readonly useLink: UnwrapRef<typeof import('../vue-router-stub')['useLink']>
@@ -510,8 +508,8 @@ declare module '@vue/runtime-core' {
     readonly useNotificationsStore: UnwrapRef<typeof import('../../stores/notifications-store')['useNotificationsStore']>
     readonly useNuxtApp: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/nuxt')['useNuxtApp']>
     readonly useNuxtData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useNuxtData']>
-    readonly usePaymentMethodFetching: UnwrapRef<typeof import('../../utils/apis')['usePaymentMethodFetching']>
-    readonly usePaymentMethodProcessFetching: UnwrapRef<typeof import('../../utils/apis')['usePaymentMethodProcessFetching']>
+    readonly usePaymentMethodsProcessStore: UnwrapRef<typeof import('../../stores/payment-method-process-store')['usePaymentMethodsProcessStore']>
+    readonly usePaymentMethodsStore: UnwrapRef<typeof import('../../stores/payment-method-store')['usePaymentMethodsStore']>
     readonly usePinia: UnwrapRef<typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['usePinia']>
     readonly usePreviewMode: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/preview')['usePreviewMode']>
     readonly usePrimeVue: UnwrapRef<typeof import('primevue/config')['usePrimeVue']>
@@ -535,7 +533,6 @@ declare module '@vue/runtime-core' {
     readonly useStyle: UnwrapRef<typeof import('primevue/usestyle')['useStyle']>
     readonly useToast: UnwrapRef<typeof import('primevue/usetoast')['useToast']>
     readonly useTransitionState: UnwrapRef<typeof import('../../node_modules/vue')['useTransitionState']>
-    readonly useZonesFetching: UnwrapRef<typeof import('../../utils/apis')['useZonesFetching']>
     readonly useZonesStore: UnwrapRef<typeof import('../../stores/zones-store')['useZonesStore']>
     readonly watch: UnwrapRef<typeof import('../../node_modules/vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('../../node_modules/vue')['watchEffect']>

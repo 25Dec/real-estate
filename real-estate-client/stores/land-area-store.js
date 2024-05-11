@@ -1,24 +1,24 @@
 import { baseUrl } from '~/constants';
 
-export const useFloorsStore = defineStore('floors', () => {
-	const floors = ref([]);
-	const currentFloor = ref({});
+export const useLandAreasStore = defineStore('landAreas', () => {
+	const landAreas = ref([]);
+	const currentLandArea = ref({});
 
-	const getFloors = async () => {
+	const getLandAreas = async () => {
 		const accessToken = useCookie('token');
-		const { data } = await useFetch(baseUrl + '/auth/floor', {
+		const { data } = await useFetch(baseUrl + '/auth/landArea', {
 			headers: {
 				'Content-Type': 'application/json',
 				access_token: accessToken.value,
 			},
 		});
 
-		floors.value = data.value.data.data;
+		landAreas.value = data.value.data.data;
 	};
 
-	const addNewFloor = async (data) => {
+	const addNewLandArea = async (data) => {
 		const accessToken = useCookie('token');
-		const response = await $fetch(baseUrl + `/auth/floor`, {
+		const response = await $fetch(baseUrl + `/auth/landArea`, {
 			method: 'post',
 			headers: {
 				'Content-Type': 'application/json',
@@ -27,13 +27,13 @@ export const useFloorsStore = defineStore('floors', () => {
 			body: data,
 		});
 
-		await getFloors();
+		await getLandAreas();
 		return response;
 	};
 
-	const editFloor = async (data) => {
+	const editLandArea = async (data) => {
 		const accessToken = useCookie('token');
-		const response = await $fetch(baseUrl + `/auth/floor/${data['id']}`, {
+		const response = await $fetch(baseUrl + `/auth/landArea/${data['id']}`, {
 			method: 'put',
 			headers: {
 				'Content-Type': 'application/json',
@@ -42,15 +42,15 @@ export const useFloorsStore = defineStore('floors', () => {
 			body: data,
 		});
 
-		await getFloors();
+		await getLandAreas();
 		return response;
 	};
 
-	const deleteFloor = async (data) => {
+	const deleteLandArea = async (data) => {
 		const accessToken = useCookie('token');
 		let response = '';
 		try {
-			response = await $fetch(baseUrl + `/auth/floor/${data['id']}`, {
+			response = await $fetch(baseUrl + `/auth/landArea/${data['id']}`, {
 				method: 'delete',
 				headers: {
 					'Content-Type': 'application/json',
@@ -61,16 +61,16 @@ export const useFloorsStore = defineStore('floors', () => {
 			response = { ...error };
 		}
 
-		await getFloors();
+		await getLandAreas();
 		return response;
 	};
 
 	return {
-		floors,
-		currentFloor,
-		getFloors,
-		addNewFloor,
-		editFloor,
-		deleteFloor,
+		landAreas,
+		currentLandArea,
+		getLandAreas,
+		addNewLandArea,
+		editLandArea,
+		deleteLandArea,
 	};
 });
