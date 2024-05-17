@@ -3,7 +3,7 @@
 	import { FilterMatchMode } from 'primevue/api';
 
 	const { zones, currentZone } = storeToRefs(useZonesStore());
-	const { getZones, deleteZone } = useZonesStore();
+	const { getZones } = useZonesStore();
 	const { allProjectIDs } = storeToRefs(useProjectsStore());
 	const { getProjects } = useProjectsStore();
 
@@ -33,12 +33,10 @@
 		currentZone.value = data;
 		viewDetailsZoneDialogVisible.value = !viewDetailsZoneDialogVisible.value;
 	};
-
 	const toggleEditZone = async (data) => {
 		currentZone.value = data;
 		editZoneDialogVisible.value = !editZoneDialogVisible.value;
 	};
-
 	const toggleDeleteZone = async (data) => {
 		currentZone.value = data;
 		deleteZoneDialogVisible.value = !deleteZoneDialogVisible.value;
@@ -82,6 +80,7 @@
 				:rowsPerPageOptions="[5, 10, 20, 50]"
 				scrollable
 				scrollHeight="flex"
+				removableSort
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
@@ -90,9 +89,18 @@
 				</template>
 
 				<Column
+					field="id"
+					header="#"
+					sortable
+				>
+					<template #body="{ data }">
+						{{ data['id'] }}
+					</template>
+				</Column>
+
+				<Column
 					field="name"
 					header="Name"
-					sortable
 				>
 					<template #body="{ data }">
 						{{ data['name'] }}
@@ -102,7 +110,6 @@
 				<Column
 					field="desc"
 					header="Description"
-					sortable
 				>
 					<template #body="{ data }">
 						{{ data['desc'] }}

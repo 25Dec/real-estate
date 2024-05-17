@@ -76,6 +76,7 @@
 				:rowsPerPageOptions="[5, 10, 20, 50]"
 				scrollable
 				scrollHeight="flex"
+				removableSort
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
@@ -84,9 +85,18 @@
 				</template>
 
 				<Column
+					field="id"
+					header="#"
+					sortable
+				>
+					<template #body="{ data }">
+						{{ data['id'] }}
+					</template>
+				</Column>
+
+				<Column
 					field="method_name"
 					header="Name"
-					sortable
 				>
 					<template #body="{ data }">
 						{{ data['method_name'] }}

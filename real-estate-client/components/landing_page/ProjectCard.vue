@@ -27,7 +27,10 @@
 			</span>
 		</template>
 		<template #subtitle>
-			{{ data['activated'] == true ? 'Activated' : 'Not Activated' }}
+			<Tag
+				:severity="data['activated'] == 'Activated' ? 'success' : 'danger'"
+				:value="data['activated'] == true ? 'Activated' : 'Not Activated'"
+			/>
 		</template>
 		<template #content>
 			<div class="flex justify-between items-center">
@@ -37,6 +40,7 @@
 		</template>
 		<template #footer>
 			<Button
+				link
 				size="small"
 				label="View More"
 				@click="viewMore"

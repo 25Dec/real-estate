@@ -33,6 +33,7 @@ export { useBlocksStore } from '../stores/blocks-store';
 export { useDashboardStore } from '../stores/dashboard-store';
 export { useFloorsStore } from '../stores/floor-store';
 export { useHighAreasStore } from '../stores/high-area-store';
+export { useHighPaymentProcessStore } from '../stores/high-payment-process-store';
 export { useLandAreasStore } from '../stores/land-area-store';
 export { useLandPaymentProcessStore } from '../stores/land-payment-process-store';
 export { useNotificationsStore } from '../stores/notifications-store';

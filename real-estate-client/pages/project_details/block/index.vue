@@ -5,7 +5,7 @@
 	const { zones } = storeToRefs(useZonesStore());
 	const { getZones } = useZonesStore();
 	const { blocks, currentBlock } = storeToRefs(useBlocksStore());
-	const { getBlocks, deleteBlock } = useBlocksStore();
+	const { getBlocks } = useBlocksStore();
 
 	await getZones();
 	await getBlocks();
@@ -32,6 +32,10 @@
 			command: () => {},
 		},
 	]);
+	const types = ref([
+		{ name: 'Normal', value: 'normal' },
+		{ name: 'Luxury', value: 'luxury' },
+	]);
 	const viewDetailsBlockDialogVisible = ref(false);
 	const createBlockDialogVisible = ref(false);
 	const editBlockDialogVisible = ref(false);
@@ -42,17 +46,14 @@
 			return block['zone_id'] == event.value;
 		});
 	};
-
 	const toggleViewDetailsBlock = (data) => {
 		currentBlock.value = data;
 		viewDetailsBlockDialogVisible.value = !viewDetailsBlockDialogVisible.value;
 	};
-
 	const toggleEditBlock = (data) => {
 		currentBlock.value = data;
 		editBlockDialogVisible.value = !editBlockDialogVisible.value;
 	};
-
 	const toggleDeleteBlock = async (data) => {
 		currentBlock.value = data;
 		deleteBlockDialogVisible.value = !deleteBlockDialogVisible.value;
@@ -117,14 +118,23 @@
 				:rowsPerPageOptions="[5, 10, 20, 50]"
 				scrollable
 				scrollHeight="flex"
-				sortField="id"
-				:sortOrder="-1"
+				removableSort
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
 						<span>No block found.</span>
 					</div>
 				</template>
+
+				<Column
+					field="id"
+					header="#"
+					sortable
+				>
+					<template #body="{ data }">
+						{{ data['id'] }}
+					</template>
+				</Column>
 
 				<Column
 					field="desc"
@@ -138,7 +148,6 @@
 				<Column
 					field="type"
 					header="Type"
-					:sortable="true"
 				>
 					<template #body="{ data }">
 						{{ data['type'] }}
@@ -202,14 +211,17 @@
 	<ViewDetailsBlockDialog
 		v-if="viewDetailsBlockDialogVisible"
 		:visible="viewDetailsBlockDialogVisible"
+		:types="types"
 	/>
 	<CreateBlockDialog
 		v-if="createBlockDialogVisible"
 		:visible="createBlockDialogVisible"
+		:types="types"
 	/>
 	<EditBlockDialog
 		v-if="editBlockDialogVisible"
 		:visible="editBlockDialogVisible"
+		:types="types"
 	/>
 	<DeleteBlockDialog
 		v-if="deleteBlockDialogVisible"

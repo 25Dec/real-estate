@@ -1,21 +1,29 @@
 <script setup>
-	const { visible } = defineProps(['visible']);
+	const { visible, types } = defineProps(['visible', 'types']);
 
+	const { zones } = storeToRefs(useZonesStore());
 	const { currentBlock } = storeToRefs(useBlocksStore());
 	const { editBlock } = useBlocksStore();
-	const { zones } = storeToRefs(useZonesStore());
 
 	const myVisible = ref(visible);
-	const zoneID = ref(currentBlock.value['zone_id']);
-	const currentZone = ref(
-		zones.value.find((zone) => zone['id'] == zoneID.value)
-	);
+	const zone = ref({
+		name: zones.value.filter(
+			(zone) => zone['id'] == currentBlock.value['zone_id']
+		)[0]['name'],
+		value: `${currentBlock.value['zone_id']}`,
+	});
 	const numberOfFloor = ref(currentBlock.value['number_of_floor']);
 	const lat = ref(currentBlock.value['lat']);
 	const long = ref(currentBlock.value['long']);
 	const isService = ref(currentBlock.value['is_service']);
 	const desc = ref(currentBlock.value['desc']);
-	const type = ref(currentBlock.value['type']);
+	console.log(types);
+	const type = ref({
+		name: types.filter(
+			(type) => type['value'] == currentBlock.value['type']
+		)[0]['name'],
+		value: currentBlock.value['type'],
+	});
 	const progress = ref(currentBlock.value['progress']);
 	const startedDay = ref(getYearMonthDay(currentBlock.value['started_day']));
 	const createdAt = ref(currentBlock.value['created_at']);
@@ -24,14 +32,14 @@
 	const onSave = async () => {
 		const newBlockData = {
 			...currentBlock.value,
-			zone_id: zoneID.value,
-			number_of_floor: numberOfFloor.value,
-			lat: lat.value,
-			long: long.value,
-			is_service: isService.value,
+			zone_id: parseInt(zone.value.value),
+			number_of_floor: parseInt(numberOfFloor.value),
+			lat: parseInt(lat.value),
+			long: parseInt(long.value),
+			is_service: isService.value == 1 ? true : false,
 			desc: desc.value,
-			type: type.value,
-			progress: progress.value,
+			type: type.value.value,
+			progress: parseInt(progress.value),
 			started_day: startedDay.value,
 			updated_at: new Date().toLocaleString(),
 		};
@@ -87,9 +95,9 @@
 			<div class="flex flex-1 flex-col gap-2">
 				<label for="zone_id">Zone</label>
 				<Dropdown
-					id="zone_id"
+					id="zone"
 					placeholder="Select zone"
-					v-model="currentZone"
+					v-model="zone.value"
 					:options="zones"
 					optionLabel="name"
 					optionValue="value"
@@ -101,7 +109,6 @@
 					<label for="lat">Latitude</label>
 					<InputNumber
 						id="lat"
-						placeholder="Latitude"
 						mode="decimal"
 						showButtons
 						v-model="lat"
@@ -111,7 +118,6 @@
 					<label for="long">Longitude</label>
 					<InputNumber
 						id="long"
-						placeholder="Longitude"
 						mode="decimal"
 						showButtons
 						v-model="long"
@@ -121,9 +127,13 @@
 
 			<div class="flex flex-1 flex-col gap-2">
 				<label for="type">Type</label>
-				<InputText
+				<Dropdown
 					id="type"
-					v-model="type"
+					placeholder="Select type"
+					v-model="type.value"
+					:options="types"
+					optionLabel="name"
+					optionValue="value"
 				/>
 			</div>
 

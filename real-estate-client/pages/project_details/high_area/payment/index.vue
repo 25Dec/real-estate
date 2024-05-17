@@ -98,7 +98,7 @@
 
 				<Column
 					field="id"
-					header="ID"
+					header="#"
 					sortable
 				>
 					<template #body="{ data }">

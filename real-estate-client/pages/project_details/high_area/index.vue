@@ -20,47 +20,70 @@
 	zones.value = zones.value.map((zone) => {
 		return { id: zone.id, name: `${zone.name}`, value: `${zone.id}` };
 	});
+	const myZones = ref(zones.value);
 	const currentZone = ref({
-		name: zones.value[0]?.name ?? '',
-		value: zones.value[0]?.value ?? '',
+		name: myZones.value[0]?.name ?? '',
+		value: `${myZones.value[0]?.value}` ?? '',
 	});
 
-	blocks.value = blocks.value
-		.map((block) => {
-			return {
-				id: block.id,
-				name: `${block.desc}`,
-				value: `${block.id}`,
-				zone_id: `${block['zone_id']}`,
-			};
-		})
-		.filter((block) => block['zone_id'] == currentZone.value.value);
-	const currentBlock = ref({
-		name: blocks.value[0]?.name ?? '',
-		value: blocks.value[0]?.value ?? '',
+	blocks.value = blocks.value.map((block) => {
+		return {
+			id: block['id'],
+			name: `${block['desc']}`,
+			value: `${block['id']}`,
+			zone_id: `${block['zone_id']}`,
+		};
+	});
+	const myBlocks = ref(
+		blocks.value.filter((block) => block['zone_id'] == currentZone.value.value)
+	);
+	const currentBlock = computed(() => {
+		return {
+			name:
+				myBlocks.value.filter(
+					(block) => block['zone_id'] == currentZone.value.value
+				)?.[0]?.name ?? '',
+			value:
+				`${
+					myBlocks.value.filter(
+						(block) => block['zone_id'] == currentZone.value.value
+					)?.[0]?.value
+				}` ?? '',
+		};
 	});
 
-	floors.value = floors.value
-		.map((floor) => {
-			return {
-				id: floor.id,
-				name: `${floor.desc}`,
-				value: `${floor.id}`,
-				block_id: `${floor['block_id']}`,
-			};
-		})
-		.filter((floor) => floor['block_id'] == currentBlock.value.value);
-	const currentFloor = ref({
-		name: blocks.value[0]?.name ?? '',
-		value: blocks.value[0]?.value ?? '',
+	floors.value = floors.value.map((floor) => {
+		return {
+			id: floor.id,
+			name: `${floor.desc}`,
+			value: `${floor.id}`,
+			block_id: `${floor['block_id']}`,
+		};
+	});
+	const myFloors = ref(
+		floors.value.filter(
+			(floor) => floor['block_id'] == currentBlock.value.value
+		)
+	);
+	const currentFloor = computed(() => {
+		return {
+			name:
+				myFloors.value.filter(
+					(floor) => floor['block_id'] == currentBlock.value.value
+				)?.[0]?.name ?? '',
+			value:
+				`${
+					myFloors.value.filter(
+						(floor) => floor['block_id'] == currentBlock.value.value
+					)?.[0]?.value
+				}` ?? '',
+		};
 	});
 
 	const myHighAreasBaseOnZoneAndBlockAndFloorID = computed(() => {
-		return highAreas.value;
-
-		// return highAreas.value.filter((highArea) => {
-		// 	return highArea['floor_id'] == currentFloor.value.value;
-		// });
+		return highAreas.value.filter((highArea) => {
+			return highArea['floor_id'] == currentFloor.value.value;
+		});
 	});
 
 	const filters = ref({
@@ -85,11 +108,54 @@
 	const deleteHighAreaDialogVisible = ref(false);
 
 	const handleDropdown = (event, type) => {
-		myHighAreasBaseOnZoneAndBlockAndFloorID.value = highAreas.value.filter(
-			(highArea) => {
-				return highArea['floor_id'] == event.value;
-			}
-		);
+		if (type == 'zone') {
+			myBlocks.value = blocks.value.filter(
+				(block) => block['zone_id'] == event.value
+			);
+			currentBlock.value = {
+				name:
+					myBlocks.value.filter(
+						(block) => block['zone_id'] == currentZone.value.value
+					)?.[0]?.name ?? '',
+				value:
+					`${
+						myBlocks.value.filter(
+							(block) => block['zone_id'] == currentZone.value.value
+						)?.[0]?.value
+					}` ?? '',
+			};
+			myFloors.value = floors.value.filter(
+				(floor) => floor['block_id'] == currentBlock.value.value
+			);
+			currentFloor.value = {
+				name:
+					myFloors.value.filter(
+						(floor) => floor['block_id'] == currentBlock.value.value
+					)?.[0]?.name ?? '',
+				value:
+					`${
+						myFloors.value.filter(
+							(floor) => floor['block_id'] == currentBlock.value.value
+						)?.[0]?.value
+					}` ?? '',
+			};
+		}
+
+		if (type == 'block') {
+			myFloors.value = floors.value.filter(
+				(floor) => floor['block_id'] == event.value
+			);
+			currentFloor.value = {
+				name:
+					myFloors.value.filter(
+						(floor) => floor['block_id'] == currentBlock.value.value
+					)?.[0]?.name ?? '',
+				value:
+					myFloors.value.filter(
+						(floor) => floor['block_id'] == currentBlock.value.value
+					)?.[0]?.value ?? '',
+			};
+		}
 	};
 	const toggleMenu = (event, data) => {
 		setCurrentHighArea(data);
@@ -108,7 +174,6 @@
 		setCurrentHighArea(data);
 		deleteHighAreaDialogVisible.value = !deleteHighAreaDialogVisible.value;
 	};
-	// floors.find((floor) => floor.id == data['floor_id'])
 </script>
 
 <template>
@@ -152,7 +217,7 @@
 					id="currentZone"
 					placeholder="Select zone"
 					v-model="currentZone.value"
-					:options="zones"
+					:options="myZones"
 					optionLabel="name"
 					optionValue="value"
 					@change="(event) => handleDropdown(event, 'zone')"
@@ -168,7 +233,7 @@
 					id="currentBlock"
 					placeholder="Select block"
 					v-model="currentBlock.value"
-					:options="blocks"
+					:options="myBlocks"
 					optionLabel="name"
 					optionValue="value"
 					@change="(event) => handleDropdown(event, 'block')"
@@ -184,7 +249,7 @@
 					id="currentFloor"
 					placeholder="Select floor"
 					v-model="currentFloor.value"
-					:options="floors"
+					:options="myFloors"
 					optionLabel="name"
 					optionValue="value"
 					@change="(event) => handleDropdown(event, 'floor')"
@@ -201,8 +266,7 @@
 				:rowsPerPageOptions="[5, 10, 20, 50]"
 				scrollable
 				scrollHeight="flex"
-				sortField="id"
-				:sortOrder="-1"
+				removableSort
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
@@ -212,7 +276,7 @@
 
 				<Column
 					field="id"
-					header="ID"
+					header="#"
 					sortable
 				>
 					<template #body="{ data }">
@@ -246,7 +310,7 @@
 						<Tag
 							:severity="data['buy_status'] == 'booked' ? 'danger' : 'success'"
 							:value="data['buy_status'].toUpperCase()"
-						></Tag>
+						/>
 					</template>
 				</Column>
 

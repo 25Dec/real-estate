@@ -85,6 +85,7 @@
 				scrollHeight="flex"
 				sortField="id"
 				:sortOrder="-1"
+				removableSort
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">

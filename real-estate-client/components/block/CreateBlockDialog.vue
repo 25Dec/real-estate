@@ -1,31 +1,37 @@
 <script setup>
-	const { visible } = defineProps(['visible']);
+	const { visible, types } = defineProps(['visible', 'types']);
 
 	const { zones } = storeToRefs(useZonesStore());
 	const { addNewBlock } = useBlocksStore();
 
 	const myVisible = ref(visible);
-	const zoneID = ref(0);
+	const zone = ref({
+		name: zones.value[0]?.name ?? '',
+		value: zones.value[0]?.value ?? '',
+	});
 	const numberOfFloor = ref(0);
 	const lat = ref(0);
 	const long = ref(0);
 	const isService = ref(false);
 	const desc = ref('');
-	const type = ref('');
+	const type = ref({
+		name: types.value?.[0]?.name ?? '',
+		value: types.value?.[0]?.value ?? '',
+	});
 	const progress = ref(0);
 	const startedDay = ref('');
 
 	const onSave = async () => {
 		const newBlockData = {
 			id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1,
-			zone_id: zoneID.value,
-			number_of_floor: numberOfFloor.value,
-			lat: lat.value,
-			long: long.value,
-			is_service: isService.value,
+			zone_id: parseInt(zone.value.value),
+			number_of_floor: parseInt(numberOfFloor.value),
+			lat: parseInt(lat.value),
+			long: parseInt(long.value),
+			is_service: isService.value == 1 ? true : false,
 			desc: desc.value,
-			type: type.value,
-			progress: progress.value,
+			type: type.value.value,
+			progress: parseInt(progress.value),
 			started_day: startedDay.value,
 			deleted: 'false',
 			created_by: 46,
@@ -83,11 +89,11 @@
 			</div>
 
 			<div class="flex flex-1 flex-col gap-2">
-				<label for="zone_id">Zone</label>
+				<label for="zone">Zone</label>
 				<Dropdown
-					id="zone_id"
+					id="zone"
 					placeholder="Select zone"
-					v-model="currentZone"
+					v-model="zone.value"
 					:options="zones"
 					optionLabel="name"
 					optionValue="value"
@@ -99,7 +105,6 @@
 					<label for="lat">Latitude</label>
 					<InputNumber
 						id="lat"
-						placeholder="Latitude"
 						mode="decimal"
 						showButtons
 						v-model="lat"
@@ -109,7 +114,6 @@
 					<label for="long">Longitude</label>
 					<InputNumber
 						id="long"
-						placeholder="Longitude"
 						mode="decimal"
 						showButtons
 						v-model="long"
@@ -119,14 +123,18 @@
 
 			<div class="flex flex-1 flex-col gap-2">
 				<label for="type">Type</label>
-				<InputText
+				<Dropdown
 					id="type"
-					v-model="type"
+					placeholder="Select type"
+					v-model="type.value"
+					:options="types"
+					optionLabel="name"
+					optionValue="value"
 				/>
 			</div>
 
 			<div class="flex flex-1 flex-col gap-2">
-				<label for="numberOfFloor">Number of floor</label>
+				<label for="numberOfFloor">Number Of Floor</label>
 				<InputNumber
 					id="numberOfFloor"
 					mode="decimal"

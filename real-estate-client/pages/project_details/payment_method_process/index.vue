@@ -14,16 +14,14 @@
 	await getPaymentMethods();
 	await getPaymentMethodsProcess();
 
-	const currentPaymentMethodProcess = ref({
+	const currentPaymentMethod = ref({
 		name: paymentMethods.value[0]?.['method_name'] ?? '',
-		value: paymentMethods.value[0]?.['id'] ?? '',
+		value: `${paymentMethods.value[0]?.['id']}` ?? '',
 	});
 	// my payment method process base on "payment method id"
 	const myPaymentMethodsProcessBaseOnPMId = computed(() => {
 		return paymentMethodsProcess.value.filter((process) => {
-			return (
-				process['payment_method_id'] == currentPaymentMethodProcess.value.value
-			);
+			return process['payment_method_id'] == currentPaymentMethod.value.value;
 		});
 	});
 	const filters = ref({
@@ -40,19 +38,16 @@
 				return process['payment_method_id'] == event.value;
 			});
 	};
-
 	const toggleViewDetailsPaymentMethodProcess = (data) => {
 		currentPaymentMethodProcess.value = data;
 		viewDetailsPaymentMethodProcessDialogVisible.value =
 			!viewDetailsPaymentMethodProcessDialogVisible.value;
 	};
-
 	const toggleEditPaymentMethodProcess = (data) => {
 		currentPaymentMethodProcess.value = data;
 		editPaymentMethodProcessDialogVisible.value =
 			!editPaymentMethodProcessDialogVisible.value;
 	};
-
 	const toggleDeletePaymentMethodProcess = async (data) => {
 		currentPaymentMethodProcess.value = data;
 		deletePaymentMethodProcessDialogVisible.value =
@@ -103,7 +98,7 @@
 				<Dropdown
 					id="currentPaymentMethod"
 					placeholder="Select payment method"
-					v-model="currentPaymentMethodProcess.value"
+					v-model="currentPaymentMethod.value"
 					:options="paymentMethodsDropdown"
 					optionLabel="name"
 					optionValue="value"
@@ -121,8 +116,7 @@
 				:rowsPerPageOptions="[5, 10, 20, 50]"
 				scrollable
 				scrollHeight="flex"
-				sortField="id"
-				:sortOrder="-1"
+				removableSort
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
@@ -131,8 +125,19 @@
 				</template>
 
 				<Column
+					field="id"
+					header="#"
+					sortable
+				>
+					<template #body="{ data }">
+						{{ data['id'] }}
+					</template>
+				</Column>
+
+				<Column
 					field="payment_time_example"
 					header="Payment Time Example"
+					sortable
 				>
 					<template #body="{ data }">
 						{{ data['payment_time_example'] }}

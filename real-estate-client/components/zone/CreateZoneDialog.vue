@@ -21,10 +21,10 @@
 			name: zoneName.value,
 			desc: desc.value,
 			construction_area: parseInt(constructionArea.value),
-			total_area: totalArea.value,
-			number_of_block: numberOfBlock.value,
-			number_of_unit_land: numberOfUnitLand.value,
-			progress: progress.value,
+			total_area: parseInt(totalArea.value),
+			number_of_block: parseInt(numberOfBlock.value),
+			number_of_unit_land: parseInt(numberOfUnitLand.value),
+			progress: parseInt(progress.value),
 			started_day: startedDay.value,
 			deleted: 'false',
 			created_by: 1,
@@ -72,7 +72,7 @@
 
 		<template class="flex flex-col gap-3">
 			<div class="flex flex-1 flex-col gap-2">
-				<label for="zoneName">Zone name</label>
+				<label for="zoneName">Zone Name</label>
 				<InputText
 					id="zoneName"
 					placeholder="Zone name"
@@ -82,7 +82,7 @@
 
 			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="totalArea">Total area</label>
+					<label for="totalArea">Total Area</label>
 					<InputNumber
 						id="totalArea"
 						v-model="totalArea"
@@ -93,7 +93,7 @@
 				</div>
 
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="constructionArea">Construction area</label>
+					<label for="constructionArea">Construction Area</label>
 					<InputNumber
 						id="constructionArea"
 						v-model="constructionArea"
@@ -106,7 +106,7 @@
 
 			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="numberOfBlock">Number of block</label>
+					<label for="numberOfBlock">Number Of Block</label>
 					<InputNumber
 						id="numberOfBlock"
 						v-model="numberOfBlock"
@@ -117,7 +117,7 @@
 				</div>
 
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="numberOfUnitLand">Number of unit land</label>
+					<label for="numberOfUnitLand">Number Of Unit Land</label>
 					<InputNumber
 						id="numberOfUnitLand"
 						v-model="numberOfUnitLand"

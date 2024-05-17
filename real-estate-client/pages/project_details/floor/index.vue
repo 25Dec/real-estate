@@ -16,26 +16,33 @@
 	zones.value = zones.value.map((zone) => {
 		return { id: zone.id, name: `${zone.name}`, value: `${zone.id}` };
 	});
+	const myZones = ref(zones.value);
 	const currentZone = ref({
-		name: zones.value[0]?.name ?? '',
-		value: zones.value[0]?.value ?? '',
+		name: myZones.value[0]?.name ?? '',
+		value: myZones.value[0]?.value ?? '',
 	});
 
-	blocks.value = blocks.value
-		.map((block) => {
-			return {
-				id: block.id,
-				name: `${block.desc}`,
-				value: `${block.id}`,
-				zone_id: `${block['zone_id']}`,
-			};
-		})
-		.filter((block) => block['zone_id'] == currentZone.value.value);
+	blocks.value = blocks.value.map((block) => {
+		return {
+			id: block['id'],
+			name: `${block['desc']}`,
+			value: `${block['id']}`,
+			zone_id: `${block['zone_id']}`,
+		};
+	});
+	const myBlocks = ref(
+		blocks.value.filter((block) => block['zone_id'] == currentZone.value.value)
+	);
 	const currentBlock = ref({
-		name: blocks.value[0]?.name ?? '',
-		value: blocks.value[0]?.value ?? '',
+		name:
+			myBlocks.value.filter(
+				(block) => block['zone_id'] == currentZone.value.value
+			)?.[0]?.name ?? '',
+		value:
+			myBlocks.value.filter(
+				(block) => block['zone_id'] == currentZone.value.value
+			)?.[0]?.value ?? '',
 	});
-
 	const myFloorsBaseOnZoneAndBlockID = computed(() => {
 		return floors.value.filter(
 			(floor) => floor['block_id'] == currentBlock.value.value
@@ -57,22 +64,31 @@
 	const editFloorDialogVisible = ref(false);
 	const deleteFloorDialogVisible = ref(false);
 
-	const handleDropdown = (event) => {
-		myFloorsBaseOnZoneAndBlockID.value = blocks.value.filter((block) => {
-			return block['zone_id'] == event.value;
-		});
+	const handleDropdown = (event, type) => {
+		if (type == 'zone') {
+			myBlocks.value = blocks.value.filter(
+				(block) => block['zone_id'] == event.value
+			);
+			currentBlock.value = {
+				name:
+					myBlocks.value.filter(
+						(block) => block['zone_id'] == currentZone.value.value
+					)?.[0]?.name ?? '',
+				value:
+					myBlocks.value.filter(
+						(block) => block['zone_id'] == currentZone.value.value
+					)?.[0]?.value ?? '',
+			};
+		}
 	};
-
 	const toggleViewDetailsFloor = (data) => {
 		currentFloor.value = data;
 		viewDetailsFloorDialogVisible.value = !viewDetailsFloorDialogVisible.value;
 	};
-
 	const toggleEditFloor = (data) => {
 		currentFloor.value = data;
 		editFloorDialogVisible.value = !editFloorDialogVisible.value;
 	};
-
 	const toggleDeleteFloor = async (data) => {
 		currentFloor.value = data;
 		deleteFloorDialogVisible.value = !deleteFloorDialogVisible.value;
@@ -120,10 +136,10 @@
 					id="currentZone"
 					placeholder="Select zone"
 					v-model="currentZone.value"
-					:options="zones"
+					:options="myZones"
 					optionLabel="name"
 					optionValue="value"
-					@change="(event) => handleDropdown(event)"
+					@change="(event) => handleDropdown(event, 'zone')"
 				/>
 			</div>
 			<div class="flex items-center gap-2">
@@ -136,10 +152,10 @@
 					id="currentBlock"
 					placeholder="Select block"
 					v-model="currentBlock.value"
-					:options="blocks"
+					:options="myBlocks"
 					optionLabel="name"
 					optionValue="value"
-					@change="(event) => handleDropdown(event)"
+					@change="(event) => handleDropdown(event, 'block')"
 				/>
 			</div>
 		</div>
@@ -155,6 +171,7 @@
 				scrollHeight="flex"
 				sortField="id"
 				:sortOrder="-1"
+				removableSort
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">

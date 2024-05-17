@@ -20,13 +20,10 @@
 	});
 
 	const myLandAreasBaseOnZoneID = computed(() => {
-		// return landAreas.value.filter((landArea) => {
-		// 	return landArea['zone_id'] == currentZone.value.value;
-		// });
-
-		return landAreas.value;
+		return landAreas.value.filter((landArea) => {
+			return landArea['zone_id'] == currentZone.value.value;
+		});
 	});
-
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
@@ -130,8 +127,7 @@
 				:rowsPerPageOptions="[5, 10, 20, 50]"
 				scrollable
 				scrollHeight="flex"
-				sortField="id"
-				:sortOrder="-1"
+				removableSort
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
@@ -141,7 +137,7 @@
 
 				<Column
 					field="id"
-					header="ID"
+					header="#"
 					sortable
 				>
 					<template #body="{ data }">
@@ -161,7 +157,6 @@
 				<Column
 					field="type"
 					header="Buy Status"
-					:sortable="true"
 				>
 					<template #body="{ data }">
 						{{ data['buy_status'] }}

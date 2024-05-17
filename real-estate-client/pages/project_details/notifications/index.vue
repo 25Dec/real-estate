@@ -77,7 +77,7 @@
 				:rowsPerPageOptions="[5, 10, 20, 50]"
 				scrollable
 				scrollHeight="flex"
-				stripedRows
+				removableSort
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
@@ -86,10 +86,18 @@
 				</template>
 
 				<Column
+					field="id"
+					header="#"
+					sortable
+				>
+					<template #body="{ data }">
+						{{ data['id'] }}
+					</template>
+				</Column>
+
+				<Column
 					field="title"
 					header="Title"
-					sortable
-					class="backdrop-blur-lg"
 				>
 					<template #body="{ data }">
 						<div class="flex items-center gap-3">
@@ -101,8 +109,6 @@
 				<Column
 					field="status"
 					header="Status"
-					sortable
-					class="backdrop-blur-lg"
 				>
 					<template #body="{ data }">
 						{{ data['status'] }}
