@@ -28,7 +28,7 @@
 <template>
 	<Dialog
 		v-model:visible="myVisible"
-		modala
+		modal
 		maximizable
 		header="Header"
 		:style="{ width: '50rem' }"

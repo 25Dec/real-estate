@@ -2,14 +2,15 @@
 	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
 
+	const router = useRouter();
 	const { zones } = storeToRefs(useZonesStore());
 	const { getZones } = useZonesStore();
 	const { blocks } = storeToRefs(useBlocksStore());
 	const { getBlocks } = useBlocksStore();
 	const { floors } = storeToRefs(useFloorsStore());
 	const { getFloors } = useFloorsStore();
-	const { highAreas, currentHighArea } = storeToRefs(useHighAreasStore());
-	const { getHighAreas } = useHighAreasStore();
+	const { highAreas } = storeToRefs(useHighAreasStore());
+	const { getHighAreas, setCurrentHighArea } = useHighAreasStore();
 
 	await getZones();
 	await getBlocks();
@@ -55,11 +56,11 @@
 	});
 
 	const myHighAreasBaseOnZoneAndBlockAndFloorID = computed(() => {
-		return highAreas.value.filter((highArea) => {
-			return highArea['floor_id'] == currentFloor.value.value;
-		});
-
 		return highAreas.value;
+
+		// return highAreas.value.filter((highArea) => {
+		// 	return highArea['floor_id'] == currentFloor.value.value;
+		// });
 	});
 
 	const filters = ref({
@@ -69,10 +70,12 @@
 	const menuItems = ref([
 		{
 			label: 'Payment',
-			command: () => {},
+			command: () => {
+				router.push('high_area/payment');
+			},
 		},
 		{
-			label: 'Payment History',
+			label: 'Method Process Example',
 			command: () => {},
 		},
 	]);
@@ -88,22 +91,24 @@
 			}
 		);
 	};
-
+	const toggleMenu = (event, data) => {
+		setCurrentHighArea(data);
+		menu.value.toggle(event);
+	};
 	const toggleViewDetailsHighArea = (data) => {
-		currentHighArea.value = data;
+		setCurrentHighArea(data);
 		viewDetailsHighAreaDialogVisible.value =
 			!viewDetailsHighAreaDialogVisible.value;
 	};
-
 	const toggleEditHighArea = (data) => {
-		currentHighArea.value = data;
+		setCurrentHighArea(data);
 		editHighAreaDialogVisible.value = !editHighAreaDialogVisible.value;
 	};
-
 	const toggleDeleteHighArea = async (data) => {
-		currentHighArea.value = data;
+		setCurrentHighArea(data);
 		deleteHighAreaDialogVisible.value = !deleteHighAreaDialogVisible.value;
 	};
+	// floors.find((floor) => floor.id == data['floor_id'])
 </script>
 
 <template>
@@ -206,6 +211,16 @@
 				</template>
 
 				<Column
+					field="id"
+					header="ID"
+					sortable
+				>
+					<template #body="{ data }">
+						{{ data['id'] }}
+					</template>
+				</Column>
+
+				<Column
 					field="desc"
 					header="Name"
 				>
@@ -219,7 +234,7 @@
 					header="Floor"
 				>
 					<template #body="{ data }">
-						{{ floors.find((floor) => floor.id == data['floor_id'])['name'] }}
+						{{ floors.find((floor) => floor.id == data['floor_id'])?.['name'] }}
 					</template>
 				</Column>
 
@@ -261,7 +276,7 @@
 						<Button
 							text
 							severity="secondary"
-							@click="(event) => menu.toggle(event)"
+							@click="(event) => toggleMenu(event, data)"
 						>
 							<Icon name="mdi:more-vert" />
 						</Button>

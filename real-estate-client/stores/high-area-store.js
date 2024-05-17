@@ -3,6 +3,23 @@ import { baseUrl } from '~/constants';
 export const useHighAreasStore = defineStore('highAreas', () => {
 	const highAreas = ref([]);
 	const currentHighArea = ref({});
+	const currentHighAreaID = ref(0);
+
+	const setCurrentHighArea = (data) => {
+		currentHighArea.value = data;
+		currentHighAreaID.value = data.id;
+		if (process.client) {
+			localStorage.setItem('currentHighAreaID', data.id);
+		}
+	};
+
+	const currentHighAreaIDFromLocalStore = computed(() => {
+		if (process.client && localStorage.getItem('currentHighAreaID')) {
+			currentHighAreaID.value = localStorage.getItem('currentHighAreaID');
+			return currentHighAreaID.value;
+		}
+		return 0;
+	});
 
 	const getHighAreas = async () => {
 		const accessToken = useCookie('token');
@@ -68,6 +85,8 @@ export const useHighAreasStore = defineStore('highAreas', () => {
 	return {
 		highAreas,
 		currentHighArea,
+		setCurrentHighArea,
+		currentHighAreaIDFromLocalStore,
 		getHighAreas,
 		addNewHighArea,
 		editHighArea,

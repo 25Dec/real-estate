@@ -68,7 +68,7 @@
 		<template class="flex flex-col gap-3">
 			<div class="flex flex-col gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="methodName">Method name</label>
+					<label for="methodName">Method Name</label>
 					<InputText
 						id="methodName"
 						placeholder="Method name"
@@ -79,7 +79,7 @@
 
 			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="totalOfPaymentTime">Total of payment time</label>
+					<label for="totalOfPaymentTime">Total Of Payment Time</label>
 					<InputNumber
 						id="totalOfPaymentTime"
 						v-model="totalOfPaymentTime"

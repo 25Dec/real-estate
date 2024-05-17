@@ -2,10 +2,11 @@
 	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
 
+	const router = useRouter();
 	const { zones } = storeToRefs(useZonesStore());
 	const { getZones } = useZonesStore();
-	const { landAreas, currentLandArea } = storeToRefs(useLandAreasStore());
-	const { getLandAreas, deleteLandArea } = useLandAreasStore();
+	const { landAreas } = storeToRefs(useLandAreasStore());
+	const { getLandAreas, setCurrentLandArea } = useLandAreasStore();
 
 	await getZones();
 	await getLandAreas();
@@ -19,9 +20,11 @@
 	});
 
 	const myLandAreasBaseOnZoneID = computed(() => {
-		return landAreas.value.filter((landArea) => {
-			return landArea['zone_id'] == currentZone.value.value;
-		});
+		// return landAreas.value.filter((landArea) => {
+		// 	return landArea['zone_id'] == currentZone.value.value;
+		// });
+
+		return landAreas.value;
 	});
 
 	const filters = ref({
@@ -31,10 +34,12 @@
 	const menuItems = ref([
 		{
 			label: 'Payment',
-			command: () => {},
+			command: () => {
+				router.push('land_area/payment');
+			},
 		},
 		{
-			label: 'Payment History',
+			label: 'Method Process Example',
 			command: () => {},
 		},
 	]);
@@ -48,19 +53,21 @@
 			return landAreas['zone_id'] == event.value;
 		});
 	};
+	const toggleMenu = (event, data) => {
+		setCurrentLandArea(data);
+		menu.value.toggle(event);
+	};
 	const toggleViewDetailsLandArea = (data) => {
-		currentLandArea.value = data;
+		setCurrentLandArea(data);
 		viewDetailsLandAreaDialogVisible.value =
 			!viewDetailsLandAreaDialogVisible.value;
 	};
-
 	const toggleEditLandArea = (data) => {
-		currentLandArea.value = data;
+		setCurrentLandArea(data);
 		editLandAreaDialogVisible.value = !editLandAreaDialogVisible.value;
 	};
-
 	const toggleDeleteLandArea = async (data) => {
-		currentLandArea.value = data;
+		setCurrentLandArea(data);
 		deleteLandAreaDialogVisible.value = !deleteLandAreaDialogVisible.value;
 	};
 </script>
@@ -133,6 +140,16 @@
 				</template>
 
 				<Column
+					field="id"
+					header="ID"
+					sortable
+				>
+					<template #body="{ data }">
+						{{ data['id'] }}
+					</template>
+				</Column>
+
+				<Column
 					field="desc"
 					header="Name"
 				>
@@ -191,7 +208,7 @@
 						<Button
 							text
 							severity="secondary"
-							@click="(event) => menu.toggle(event)"
+							@click="(event) => toggleMenu(event, data)"
 						>
 							<Icon name="mdi:more-vert" />
 						</Button>

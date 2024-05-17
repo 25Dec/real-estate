@@ -3,6 +3,23 @@ import { baseUrl } from '~/constants';
 export const useLandAreasStore = defineStore('landAreas', () => {
 	const landAreas = ref([]);
 	const currentLandArea = ref({});
+	const currentLandAreaID = ref(0);
+
+	const setCurrentLandArea = (data) => {
+		currentLandArea.value = data;
+		currentLandAreaID.value = data.id;
+		if (process.client) {
+			localStorage.setItem('currentLandAreaID', data.id);
+		}
+	};
+
+	const currentLandAreaIDFromLocalStore = computed(() => {
+		if (process.client && localStorage.getItem('currentLandAreaID')) {
+			currentLandAreaID.value = localStorage.getItem('currentLandAreaID');
+			return currentLandAreaID.value;
+		}
+		return 0;
+	});
 
 	const getLandAreas = async () => {
 		const accessToken = useCookie('token');
@@ -68,6 +85,8 @@ export const useLandAreasStore = defineStore('landAreas', () => {
 	return {
 		landAreas,
 		currentLandArea,
+		setCurrentLandArea,
+		currentLandAreaIDFromLocalStore,
 		getLandAreas,
 		addNewLandArea,
 		editLandArea,

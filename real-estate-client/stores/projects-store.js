@@ -4,6 +4,21 @@ export const useProjectsStore = defineStore('projects', () => {
 	const projects = ref([]);
 	const currentProjectID = ref(0);
 
+	const setCurrentProjectID = (id) => {
+		currentProjectID.value = id;
+		if (process.client) {
+			localStorage.setItem('currentProjectID', id);
+		}
+	};
+
+	const currentProjectIDFromLocalStore = computed(() => {
+		if (process.client && localStorage.getItem('currentProjectID')) {
+			currentProjectID.value = localStorage.getItem('currentProjectID');
+			return currentProjectID.value;
+		}
+		return 0;
+	});
+
 	const allProjectIDs = computed(async () => {
 		await getProjects();
 		return projects.value.map((project) => {
@@ -64,21 +79,6 @@ export const useProjectsStore = defineStore('projects', () => {
 		await getProjects();
 		return response;
 	};
-
-	const setCurrentProjectID = (id) => {
-		currentProjectID.value = id;
-		if (process.client) {
-			localStorage.setItem('currentProjectID', id);
-		}
-	};
-
-	const currentProjectIDFromLocalStore = computed(() => {
-		if (process.client && localStorage.getItem('currentProjectID')) {
-			currentProjectID.value = localStorage.getItem('currentProjectID');
-			return currentProjectID.value;
-		}
-		return 0;
-	});
 
 	return {
 		projects,

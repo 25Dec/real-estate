@@ -123,10 +123,12 @@ declare global {
   const useHead: typeof import('../../node_modules/@unhead/vue')['useHead']
   const useHeadSafe: typeof import('../../node_modules/@unhead/vue')['useHeadSafe']
   const useHighAreasStore: typeof import('../../stores/high-area-store')['useHighAreasStore']
+  const useHighPaymentProcessStore: typeof import('../../stores/high-payment-process-store')['useHighPaymentProcessStore']
   const useHydration: typeof import('../../node_modules/nuxt/dist/app/composables/hydrate')['useHydration']
   const useId: typeof import('../../node_modules/nuxt/dist/app/composables/id')['useId']
   const useImage: typeof import('../../node_modules/@nuxt/image/dist/runtime/composables')['useImage']
   const useLandAreasStore: typeof import('../../stores/land-area-store')['useLandAreasStore']
+  const useLandPaymentProcessStore: typeof import('../../stores/land-payment-process-store')['useLandPaymentProcessStore']
   const useLazyAsyncData: typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useLazyAsyncData']
   const useLazyFetch: typeof import('../../node_modules/nuxt/dist/app/composables/fetch')['useLazyFetch']
   const useLink: typeof import('../vue-router-stub')['useLink']
@@ -310,10 +312,12 @@ declare module 'vue' {
     readonly useHead: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['useHead']>
     readonly useHeadSafe: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['useHeadSafe']>
     readonly useHighAreasStore: UnwrapRef<typeof import('../../stores/high-area-store')['useHighAreasStore']>
+    readonly useHighPaymentProcessStore: UnwrapRef<typeof import('../../stores/high-payment-process-store')['useHighPaymentProcessStore']>
     readonly useHydration: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/hydrate')['useHydration']>
     readonly useId: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/id')['useId']>
     readonly useImage: UnwrapRef<typeof import('../../node_modules/@nuxt/image/dist/runtime/composables')['useImage']>
     readonly useLandAreasStore: UnwrapRef<typeof import('../../stores/land-area-store')['useLandAreasStore']>
+    readonly useLandPaymentProcessStore: UnwrapRef<typeof import('../../stores/land-payment-process-store')['useLandPaymentProcessStore']>
     readonly useLazyAsyncData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useLazyAsyncData']>
     readonly useLazyFetch: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/fetch')['useLazyFetch']>
     readonly useLink: UnwrapRef<typeof import('../vue-router-stub')['useLink']>
@@ -490,10 +494,12 @@ declare module '@vue/runtime-core' {
     readonly useHead: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['useHead']>
     readonly useHeadSafe: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['useHeadSafe']>
     readonly useHighAreasStore: UnwrapRef<typeof import('../../stores/high-area-store')['useHighAreasStore']>
+    readonly useHighPaymentProcessStore: UnwrapRef<typeof import('../../stores/high-payment-process-store')['useHighPaymentProcessStore']>
     readonly useHydration: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/hydrate')['useHydration']>
     readonly useId: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/id')['useId']>
     readonly useImage: UnwrapRef<typeof import('../../node_modules/@nuxt/image/dist/runtime/composables')['useImage']>
     readonly useLandAreasStore: UnwrapRef<typeof import('../../stores/land-area-store')['useLandAreasStore']>
+    readonly useLandPaymentProcessStore: UnwrapRef<typeof import('../../stores/land-payment-process-store')['useLandPaymentProcessStore']>
     readonly useLazyAsyncData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useLazyAsyncData']>
     readonly useLazyFetch: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/fetch')['useLazyFetch']>
     readonly useLink: UnwrapRef<typeof import('../vue-router-stub')['useLink']>

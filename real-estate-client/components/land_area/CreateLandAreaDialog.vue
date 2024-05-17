@@ -73,7 +73,7 @@
 <template>
 	<Dialog
 		v-model:visible="myVisible"
-		modala
+		modal
 		maximizable
 		header="Header"
 		:style="{ width: '50rem' }"
@@ -130,6 +130,7 @@
 						mode="decimal"
 						showButtons
 						v-model="buildingArea"
+						:min="0"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -140,6 +141,7 @@
 						mode="decimal"
 						showButtons
 						v-model="totalArea"
+						:min="0"
 					/>
 				</div>
 			</div>
@@ -152,6 +154,7 @@
 						mode="decimal"
 						showButtons
 						v-model="numberOfFloor"
+						:min="0"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -161,6 +164,7 @@
 						mode="decimal"
 						showButtons
 						v-model="numberOfRoom"
+						:min="0"
 					/>
 				</div>
 			</div>
@@ -173,6 +177,7 @@
 						mode="decimal"
 						showButtons
 						v-model="numberOfWC"
+						:min="0"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -193,6 +198,7 @@
 						v-model="price"
 						mode="decimal"
 						prefix="$"
+						:min="0"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -202,6 +208,7 @@
 						v-model="progress"
 						mode="decimal"
 						prefix="%"
+						:min="0"
 					/>
 				</div>
 			</div>

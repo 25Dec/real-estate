@@ -5,6 +5,7 @@
 	const { getZones } = useZonesStore();
 	const { currentLandArea } = storeToRefs(useLandAreasStore());
 	const { editLandArea } = useLandAreasStore();
+	const toast = useToast();
 
 	const myVisible = ref(visible);
 	const zoneID = ref(currentLandArea.value['zone_id']);
@@ -70,7 +71,7 @@
 <template>
 	<Dialog
 		v-model:visible="myVisible"
-		modala
+		modal
 		maximizable
 		header="Header"
 		:style="{ width: '50rem' }"
@@ -122,6 +123,7 @@
 						placeholder="Building Area"
 						mode="decimal"
 						v-model="buildingArea"
+						:min="0"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -131,36 +133,40 @@
 						placeholder="Total Area"
 						mode="decimal"
 						v-model="totalArea"
+						:min="0"
 					/>
 				</div>
 			</div>
 
 			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="numberOfFloor">Number of floor</label>
+					<label for="numberOfFloor">Number Of Floor</label>
 					<InputNumber
 						id="numberOfFloor"
 						mode="decimal"
 						v-model="numberOfFloor"
+						:min="0"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="numberOfRoom">Number of room</label>
+					<label for="numberOfRoom">Number Of Room</label>
 					<InputNumber
 						id="numberOfRoom"
 						mode="decimal"
 						v-model="numberOfRoom"
+						:min="0"
 					/>
 				</div>
 			</div>
 
 			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="numberOfWC">Number of WC</label>
+					<label for="numberOfWC">Number Of WC</label>
 					<InputNumber
 						id="numberOfWC"
 						mode="decimal"
 						v-model="numberOfWC"
+						:min="0"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -181,6 +187,7 @@
 						v-model="price"
 						mode="decimal"
 						prefix="$"
+						:min="0"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -190,6 +197,7 @@
 						v-model="progress"
 						mode="decimal"
 						prefix="%"
+						:min="0"
 					/>
 				</div>
 			</div>
