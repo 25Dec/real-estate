@@ -42,11 +42,18 @@
 
 		<template class="flex flex-col gap-3">
 			<div class="flex flex-1 flex-col gap-2">
+				<label for="desc">Name</label>
+				<InputText
+					id="desc"
+					v-model="desc"
+					disabled
+				/>
+			</div>
+
+			<div class="flex flex-1 flex-col gap-2">
 				<label for="zone_id">Zone</label>
-				<InputNumber
+				<InputText
 					id="zone_id"
-					placeholder="Zone ID"
-					mode="decimal"
 					v-model="zoneID"
 					disabled
 				/>
@@ -57,7 +64,6 @@
 					<label for="lat">Latitude</label>
 					<InputNumber
 						id="lat"
-						placeholder="Latitude"
 						mode="decimal"
 						v-model="lat"
 						disabled
@@ -67,7 +73,6 @@
 					<label for="long">Longitude</label>
 					<InputNumber
 						id="long"
-						placeholder="Longitude"
 						mode="decimal"
 						v-model="long"
 						disabled
@@ -80,7 +85,6 @@
 					<label for="buildingArea">Building Area</label>
 					<InputNumber
 						id="buildingArea"
-						placeholder="Building Area"
 						mode="decimal"
 						v-model="buildingArea"
 						disabled
@@ -90,7 +94,6 @@
 					<label for="totalArea">Total Area</label>
 					<InputNumber
 						id="totalArea"
-						placeholder="Total Area"
 						mode="decimal"
 						v-model="totalArea"
 						disabled
@@ -133,7 +136,6 @@
 					<label for="landDirection">Land Direction</label>
 					<InputText
 						id="landDirection"
-						placeholder="Land Direction"
 						v-model="landDirection"
 						disabled
 					/>

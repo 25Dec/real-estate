@@ -23,7 +23,7 @@
 	const myZones = ref(zones.value);
 	const currentZone = ref({
 		name: myZones.value[0]?.name ?? '',
-		value: `${myZones.value[0]?.value}` ?? '',
+		value: myZones.value[0]?.value ?? '',
 	});
 
 	blocks.value = blocks.value.map((block) => {
@@ -37,19 +37,15 @@
 	const myBlocks = ref(
 		blocks.value.filter((block) => block['zone_id'] == currentZone.value.value)
 	);
-	const currentBlock = computed(() => {
-		return {
-			name:
-				myBlocks.value.filter(
-					(block) => block['zone_id'] == currentZone.value.value
-				)?.[0]?.name ?? '',
-			value:
-				`${
-					myBlocks.value.filter(
-						(block) => block['zone_id'] == currentZone.value.value
-					)?.[0]?.value
-				}` ?? '',
-		};
+	const currentBlock = ref({
+		name:
+			myBlocks.value.filter(
+				(block) => block['zone_id'] == currentZone.value.value
+			)?.[0]?.name ?? '',
+		value:
+			myBlocks.value.filter(
+				(block) => block['zone_id'] == currentZone.value.value
+			)?.[0]?.value ?? '',
 	});
 
 	floors.value = floors.value.map((floor) => {
@@ -65,19 +61,15 @@
 			(floor) => floor['block_id'] == currentBlock.value.value
 		)
 	);
-	const currentFloor = computed(() => {
-		return {
-			name:
-				myFloors.value.filter(
-					(floor) => floor['block_id'] == currentBlock.value.value
-				)?.[0]?.name ?? '',
-			value:
-				`${
-					myFloors.value.filter(
-						(floor) => floor['block_id'] == currentBlock.value.value
-					)?.[0]?.value
-				}` ?? '',
-		};
+	const currentFloor = ref({
+		name:
+			myFloors.value.filter(
+				(floor) => floor['block_id'] == currentBlock.value.value
+			)?.[0]?.name ?? '',
+		value:
+			myFloors.value.filter(
+				(floor) => floor['block_id'] == currentBlock.value.value
+			)?.[0]?.value ?? '',
 	});
 
 	const myHighAreasBaseOnZoneAndBlockAndFloorID = computed(() => {
@@ -97,10 +89,6 @@
 				router.push('high_area/payment');
 			},
 		},
-		{
-			label: 'Method Process Example',
-			command: () => {},
-		},
 	]);
 	const viewDetailsHighAreaDialogVisible = ref(false);
 	const createHighAreaDialogVisible = ref(false);
@@ -118,11 +106,9 @@
 						(block) => block['zone_id'] == currentZone.value.value
 					)?.[0]?.name ?? '',
 				value:
-					`${
-						myBlocks.value.filter(
-							(block) => block['zone_id'] == currentZone.value.value
-						)?.[0]?.value
-					}` ?? '',
+					myBlocks.value.filter(
+						(block) => block['zone_id'] == currentZone.value.value
+					)?.[0]?.value ?? '',
 			};
 			myFloors.value = floors.value.filter(
 				(floor) => floor['block_id'] == currentBlock.value.value
@@ -157,6 +143,7 @@
 			};
 		}
 	};
+
 	const toggleMenu = (event, data) => {
 		setCurrentHighArea(data);
 		menu.value.toggle(event);
@@ -273,16 +260,6 @@
 						<span>No high area found.</span>
 					</div>
 				</template>
-
-				<Column
-					field="id"
-					header="#"
-					sortable
-				>
-					<template #body="{ data }">
-						{{ data['id'] }}
-					</template>
-				</Column>
 
 				<Column
 					field="desc"
