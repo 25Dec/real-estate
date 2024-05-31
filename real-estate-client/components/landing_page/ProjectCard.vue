@@ -2,9 +2,11 @@
 	const { data } = defineProps(['data']);
 
 	const router = useRouter();
+	const { currentProject } = storeToRefs(useProjectsStore());
 	const { setCurrentProjectID } = useProjectsStore();
 
 	const viewMore = () => {
+		currentProject.value = data;
 		setCurrentProjectID(data['id']);
 		router.push(`/project_details/${data['id']}`);
 	};

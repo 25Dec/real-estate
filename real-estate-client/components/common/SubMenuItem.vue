@@ -12,6 +12,7 @@
 
 <template>
 	<NuxtLink
+		v-if="data"
 		:to="data['link']"
 		@click="onClick"
 		class="w-full h-16 px-2 flex items-center rounded-lg font-semibold gap-2"
@@ -33,7 +34,7 @@
 		/>
 	</NuxtLink>
 	<div
-		v-if="expanded && data.items && data.items.length > 0"
+		v-if="expanded && data && data.items.length > 0"
 		className="w-full flex flex-col"
 	>
 		<SubMenuItem

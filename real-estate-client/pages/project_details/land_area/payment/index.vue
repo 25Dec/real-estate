@@ -3,10 +3,24 @@
 		layout: 'empty',
 	});
 
-	import { ref } from 'vue';
+	import { ref, markRaw, defineAsyncComponent } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
+	import { useDialog } from 'primevue/usedialog';
 
 	const router = useRouter();
+	const dialog = useDialog();
+
+	const CheckProgressExampleDialogData = defineAsyncComponent(() =>
+		import(
+			'/components/land_payment_process/CheckProgressExampleDialogData.vue'
+		)
+	);
+	const CheckProgressExampleDialogFooter = defineAsyncComponent(() =>
+		import(
+			'/components/land_payment_process/CheckProgressExampleDialogFooter.vue'
+		)
+	);
+
 	const { currentLandAreaIDFromLocalStore } = storeToRefs(useLandAreasStore());
 	const { landPaymentProcesses, currentLandPaymentProcess } = storeToRefs(
 		useLandPaymentProcessStore()
@@ -37,6 +51,20 @@
 		currentLandPaymentProcess.value = data;
 		deleteLandPaymentProcessDialogVisible.value =
 			!deleteLandPaymentProcessDialogVisible.value;
+	};
+	const viewProgressExample = () => {
+		const dialogRef = dialog.open(CheckProgressExampleDialogData, {
+			props: {
+				header: 'Check Progress Example',
+				style: { width: '50rem' },
+				breakpoints: { '1199px': '75vw', '575px': '90vw' },
+				modal: true,
+				maximizable: true,
+			},
+			templates: {
+				footer: markRaw(CheckProgressExampleDialogFooter),
+			},
+		});
 	};
 </script>
 
@@ -76,6 +104,11 @@
 							!createLandPaymentProcessDialogVisible
 					"
 				/>
+				<Button
+					size="small"
+					label="Check Progress Example"
+					@click="viewProgressExample"
+				/>
 			</div>
 		</div>
 
@@ -95,16 +128,6 @@
 						<span>No payment found.</span>
 					</div>
 				</template>
-
-				<Column
-					field="id"
-					header="#"
-					sortable
-				>
-					<template #body="{ data }">
-						{{ data['id'] }}
-					</template>
-				</Column>
 
 				<Column
 					field="payment_time"
@@ -193,4 +216,5 @@
 		v-if="deleteLandPaymentProcessDialogVisible"
 		:visible="deleteLandPaymentProcessDialogVisible"
 	/>
+	<DynamicDialog />
 </template>

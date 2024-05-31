@@ -2,6 +2,7 @@ import { baseUrl } from '~/constants';
 
 export const useProjectsStore = defineStore('projects', () => {
 	const projects = ref([]);
+	const currentProject = ref({});
 	const currentProjectID = ref(0);
 
 	const setCurrentProjectID = (id) => {
@@ -82,6 +83,7 @@ export const useProjectsStore = defineStore('projects', () => {
 
 	return {
 		projects,
+		currentProject,
 		allProjectIDs,
 		currentProjectID,
 		currentProjectIDFromLocalStore,
