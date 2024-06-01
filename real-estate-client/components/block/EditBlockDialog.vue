@@ -5,6 +5,7 @@
 	const { currentBlock } = storeToRefs(useBlocksStore());
 	const { editBlock } = useBlocksStore();
 
+	const toast = useToast();
 	const myVisible = ref(visible);
 	const zone = ref({
 		name: zones.value.filter(
@@ -17,7 +18,7 @@
 	const long = ref(currentBlock.value['long']);
 	const isService = ref(currentBlock.value['is_service']);
 	const desc = ref(currentBlock.value['desc']);
-	console.log(types);
+
 	const type = ref({
 		name: types.filter(
 			(type) => type['value'] == currentBlock.value['type']
@@ -43,6 +44,8 @@
 			started_day: startedDay.value,
 			updated_at: new Date().toLocaleString(),
 		};
+
+		console.log(newBlockData);
 
 		const response = await editBlock(newBlockData);
 		myVisible.value = false;

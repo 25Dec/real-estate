@@ -5,6 +5,7 @@
 	const { addNewBlock } = useBlocksStore();
 
 	const myVisible = ref(visible);
+	const toast = useToast();
 	const zone = ref({
 		name: zones.value[0]?.name ?? '',
 		value: zones.value[0]?.value ?? '',

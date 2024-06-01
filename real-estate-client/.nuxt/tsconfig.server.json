@@ -114,7 +114,7 @@
     "../node_modules/@nuxtjs/tailwindcss/runtime/server",
     "../node_modules/@pinia/nuxt/runtime/server",
     "../node_modules/nuxt-icon/runtime/server",
-    "../../../real-est/runtime/server",
+    "../../../../Co/runtime/server",
     "../node_modules/@nuxt/image/runtime/server",
     "../node_modules/@nuxt/telemetry/runtime/server",
     "./types/nitro.d.ts",
