@@ -173,6 +173,16 @@
 				</Column>
 
 				<Column
+					field="created_at"
+					header="Created At"
+					sortable
+				>
+					<template #body="{ data }">
+						{{ convertDateTime(data['created_at']) }}
+					</template>
+				</Column>
+
+				<Column
 					field="status"
 					header="Status"
 				>

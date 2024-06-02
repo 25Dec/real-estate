@@ -2,9 +2,8 @@
 	const router = useRouter();
 
 	const { logUserOut } = useAuthStore();
-	const { currentProject, currentProjectIDFromLocalStore } = storeToRefs(
-		useProjectsStore()
-	);
+	const { currentProjectFromLocalStore, currentProjectIDFromLocalStore } =
+		storeToRefs(useProjectsStore());
 
 	const baseLink = '/project_details';
 	const links = [
@@ -17,28 +16,28 @@
 					name: 'Zone',
 					link: baseLink + '/zone',
 				},
-				currentProject.value['type'] == 'high' ||
-				currentProject.value['type'] == 'hybrid'
+				currentProjectFromLocalStore.value['type'] == 'high' ||
+				currentProjectFromLocalStore.value['type'] == 'hybrid'
 					? {
 							name: 'Block',
 							link: baseLink + '/block',
 					  }
 					: null,
-				currentProject.value['type'] == 'high' ||
-				currentProject.value['type'] == 'hybrid'
+				currentProjectFromLocalStore.value['type'] == 'high' ||
+				currentProjectFromLocalStore.value['type'] == 'hybrid'
 					? {
 							name: 'Floor',
 							link: baseLink + '/floor',
 					  }
 					: null,
-				currentProject.value['type'] == 'land'
+				currentProjectFromLocalStore.value['type'] == 'land'
 					? {
 							name: 'Land Area',
 							link: baseLink + '/land_area',
 					  }
 					: null,
-				currentProject.value['type'] == 'high' ||
-				currentProject.value['type'] == 'hybrid'
+				currentProjectFromLocalStore.value['type'] == 'high' ||
+				currentProjectFromLocalStore.value['type'] == 'hybrid'
 					? {
 							name: 'High Area',
 							link: baseLink + '/high_area',

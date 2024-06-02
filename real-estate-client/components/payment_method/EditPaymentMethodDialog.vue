@@ -17,6 +17,7 @@
 	const maintenanceFee = ref(
 		currentPaymentMethod.value['maintenance_fee'] * 10
 	);
+	const desc = ref(currentPaymentMethod.value['desc']);
 	const createdAt = ref(currentPaymentMethod.value['created_at']);
 	const updatedAt = ref(currentPaymentMethod.value['updated_at']);
 
@@ -130,6 +131,18 @@
 						prefix="%"
 					/>
 				</div>
+			</div>
+
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="desc">Description</label>
+				<Textarea
+					id="desc"
+					v-model="desc"
+					placeholder="Description"
+					autoResize
+					rows="5"
+					cols="30"
+				/>
 			</div>
 
 			<div class="flex flex-row gap-3 justify-between">

@@ -2,6 +2,7 @@ import { baseUrl } from '~/constants';
 
 export const useFloorsStore = defineStore('floors', () => {
 	const floors = ref([]);
+	const floorsDropdown = ref([]);
 	const currentFloor = ref({});
 
 	const getFloors = async () => {
@@ -14,6 +15,15 @@ export const useFloorsStore = defineStore('floors', () => {
 		});
 
 		floors.value = data.value.data.data;
+
+		if (data.value.data.data.length)
+			floorsDropdown.value = floors.value.map((payment) => {
+				return {
+					name: `${payment['desc']}`,
+					value: `${payment['id']}`,
+				};
+			});
+		else floorsDropdown.value = [];
 	};
 
 	const addNewFloor = async (data) => {
@@ -67,6 +77,7 @@ export const useFloorsStore = defineStore('floors', () => {
 
 	return {
 		floors,
+		floorsDropdown,
 		currentFloor,
 		getFloors,
 		addNewFloor,

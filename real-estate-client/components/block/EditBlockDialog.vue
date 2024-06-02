@@ -45,8 +45,6 @@
 			updated_at: new Date().toLocaleString(),
 		};
 
-		console.log(newBlockData);
-
 		const response = await editBlock(newBlockData);
 		myVisible.value = false;
 

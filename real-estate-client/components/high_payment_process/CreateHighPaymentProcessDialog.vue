@@ -1,15 +1,15 @@
 <script setup>
 	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const toast = useToast();
 	const { currentHighAreaIDFromLocalStore } = storeToRefs(useHighAreasStore());
 	const { addNewHighPaymentProcess } = useHighPaymentProcessStore();
+	const toast = useToast();
 
 	const myVisible = ref(visible);
 	const paymentTime = ref(0);
 	const amountOfMoney = ref(0);
 	const amountOfDebt = ref(0);
-	const submitter = ref(0);
+	const submitter = ref(46);
 	const status = ref('');
 
 	const onSave = async () => {
@@ -20,7 +20,7 @@
 			amount_of_money: parseInt(amountOfMoney.value),
 			amount_of_debt: parseInt(amountOfDebt.value),
 			submitter: parseInt(submitter.value),
-			status: status.value,
+			status: '',
 			created_by: 13,
 			updated_by: 13,
 			created_at: new Date().toLocaleString(),
@@ -116,7 +116,7 @@
 				</div>
 			</div>
 
-			<div class="flex flex-1 flex-col gap-2">
+			<!-- <div class="flex flex-1 flex-col gap-2">
 				<label for="status">Status</label>
 				<Dropdown
 					id="status"
@@ -126,7 +126,7 @@
 					optionLabel="name"
 					optionValue="value"
 				/>
-			</div>
+			</div> -->
 		</template>
 		<template #footer>
 			<Button

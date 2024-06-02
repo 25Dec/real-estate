@@ -77,7 +77,10 @@
 			return highArea['floor_id'] == currentFloor.value.value;
 		});
 	});
-
+	const statuses = ref([
+		{ name: 'Booked', value: 'booked' },
+		{ name: 'Not Booked', value: 'not booked' },
+	]);
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
@@ -334,14 +337,17 @@
 	<ViewDetailsHighAreaDialog
 		v-if="viewDetailsHighAreaDialogVisible"
 		:visible="viewDetailsHighAreaDialogVisible"
+		:statuses="statuses"
 	/>
 	<CreateHighAreaDialog
 		v-if="createHighAreaDialogVisible"
 		:visible="createHighAreaDialogVisible"
+		:statuses="statuses"
 	/>
 	<EditHighAreaDialog
 		v-if="editHighAreaDialogVisible"
 		:visible="editHighAreaDialogVisible"
+		:statuses="statuses"
 	/>
 	<DeleteHighAreaDialog
 		v-if="deleteHighAreaDialogVisible"

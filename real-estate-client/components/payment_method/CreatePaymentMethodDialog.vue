@@ -11,6 +11,7 @@
 	const percentDiscount = ref(0);
 	const vat = ref(0);
 	const maintenanceFee = ref(0);
+	const desc = ref('');
 
 	const onSave = async () => {
 		const newPaymentMethodData = {
@@ -21,6 +22,7 @@
 			percent_discount: percentDiscount.value,
 			vat: vat.value,
 			maintenance_fee: maintenanceFee.value,
+			desc: desc.value,
 			created_by: 46,
 			updated_by: 46,
 			created_at: new Date().toLocaleString(),
@@ -126,6 +128,18 @@
 						prefix="%"
 					/>
 				</div>
+			</div>
+
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="desc">Description</label>
+				<Textarea
+					id="desc"
+					v-model="desc"
+					placeholder="Description"
+					autoResize
+					rows="5"
+					cols="30"
+				/>
 			</div>
 		</template>
 		<template #footer>

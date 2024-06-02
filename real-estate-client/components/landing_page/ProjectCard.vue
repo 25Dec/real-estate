@@ -3,10 +3,10 @@
 
 	const router = useRouter();
 	const { currentProject } = storeToRefs(useProjectsStore());
-	const { setCurrentProjectID } = useProjectsStore();
+	const { setCurrentProject, setCurrentProjectID } = useProjectsStore();
 
 	const viewMore = () => {
-		currentProject.value = data;
+		setCurrentProject({ ...data });
 		setCurrentProjectID(data['id']);
 		router.push(`/project_details/${data['id']}`);
 	};
@@ -35,9 +35,15 @@
 			/>
 		</template>
 		<template #content>
-			<div class="flex justify-between items-center">
-				<span>Progress:</span>
-				<span>{{ data['project_progress'] }}%</span>
+			<div class="flex flex-col gap-1">
+				<div class="flex justify-between items-center">
+					<span>Type:</span>
+					<span>{{ capitalize(data['type']) }}</span>
+				</div>
+				<div class="flex justify-between items-center">
+					<span>Progress:</span>
+					<span>{{ data['project_progress'] }}%</span>
+				</div>
 			</div>
 		</template>
 		<template #footer>

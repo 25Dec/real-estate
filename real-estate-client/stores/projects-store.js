@@ -5,6 +5,13 @@ export const useProjectsStore = defineStore('projects', () => {
 	const currentProject = ref({});
 	const currentProjectID = ref(0);
 
+	const setCurrentProject = (data) => {
+		currentProject.value = data;
+		if (process.client) {
+			localStorage.setItem('currentProject', JSON.stringify(data));
+		}
+	};
+
 	const setCurrentProjectID = (id) => {
 		currentProjectID.value = id;
 		if (process.client) {
@@ -12,9 +19,19 @@ export const useProjectsStore = defineStore('projects', () => {
 		}
 	};
 
+	const currentProjectFromLocalStore = computed(() => {
+		if (process.client && localStorage.getItem('currentProject')) {
+			currentProject.value = JSON.parse(localStorage.getItem('currentProject'));
+			return currentProject.value;
+		}
+		return {};
+	});
+
 	const currentProjectIDFromLocalStore = computed(() => {
 		if (process.client && localStorage.getItem('currentProjectID')) {
-			currentProjectID.value = localStorage.getItem('currentProjectID');
+			currentProjectID.value = JSON.parse(
+				localStorage.getItem('currentProjectID')
+			);
 			return currentProjectID.value;
 		}
 		return 0;
@@ -82,15 +99,17 @@ export const useProjectsStore = defineStore('projects', () => {
 	};
 
 	return {
+		allProjectIDs,
 		projects,
 		currentProject,
-		allProjectIDs,
 		currentProjectID,
+		currentProjectFromLocalStore,
 		currentProjectIDFromLocalStore,
 		getProjects,
 		addNewProject,
 		editProject,
 		deleteProject,
 		setCurrentProjectID,
+		setCurrentProject,
 	};
 });

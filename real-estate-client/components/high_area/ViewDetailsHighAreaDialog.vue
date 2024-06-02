@@ -1,13 +1,20 @@
 <script setup>
-	const { visible } = defineProps(['visible']);
+	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const { floors } = storeToRefs(useFloorsStore());
-	const { getFloors } = useFloorsStore();
+	const { floors, floorsDropdown } = storeToRefs(useFloorsStore());
 	const { currentHighArea } = storeToRefs(useHighAreasStore());
+	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
+	const { getPaymentMethods } = usePaymentMethodsStore();
+
+	await getPaymentMethods();
 
 	const myVisible = ref(visible);
-	const floorID = ref(currentHighArea.value['floor_id']);
-	const high_areaDirection = ref(currentHighArea.value['high_area_direction']);
+	const floor = ref(
+		floorsDropdown.value.filter(
+			(floor) => floor['value'] == currentHighArea.value['floor_id']
+		)?.[0]?.['value']
+	);
+	const highAreaDirection = ref(currentHighArea.value['high_area_direction']);
 	const lat = ref(currentHighArea.value['lat']);
 	const long = ref(currentHighArea.value['long']);
 	const totalArea = ref(currentHighArea.value['total_area']);
@@ -18,6 +25,13 @@
 	const owner = ref(currentHighArea.value['owner']);
 	const buyStatus = ref(currentHighArea.value['buy_status']);
 	const desc = ref(currentHighArea.value['desc']);
+	const paymentMethod = ref(
+		paymentMethodsDropdown.value.filter(
+			(payment) => payment['value'] == 11
+			// currentHighArea.value['payment_method_id']
+		)?.[0]?.['value']
+	);
+	console.log(paymentMethodsDropdown.value);
 	const createdAt = ref(currentHighArea.value['created_at']);
 	const updatedAt = ref(currentHighArea.value['updated_at']);
 </script>
@@ -38,15 +52,26 @@
 		</template>
 
 		<template class="flex flex-col gap-3">
-			<div class="flex flex-1 flex-col gap-2">
-				<label for="floor_id">Floor</label>
-				<InputNumber
-					id="floor_id"
-					placeholder="Floor ID"
-					mode="decimal"
-					v-model="floorID"
-					disabled
-				/>
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="desc">Name</label>
+					<InputText
+						id="desc"
+						v-model="desc"
+						disabled
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="floor">Floor</label>
+					<Dropdown
+						id="floor"
+						v-model="floor"
+						:options="floorsDropdown"
+						optionLabel="name"
+						optionValue="value"
+						disabled
+					/>
+				</div>
 			</div>
 
 			<div class="flex gap-3">
@@ -54,7 +79,6 @@
 					<label for="lat">Latitude</label>
 					<InputNumber
 						id="lat"
-						placeholder="Latitude"
 						mode="decimal"
 						v-model="lat"
 						disabled
@@ -64,7 +88,6 @@
 					<label for="long">Longitude</label>
 					<InputNumber
 						id="long"
-						placeholder="Longitude"
 						mode="decimal"
 						v-model="long"
 						disabled
@@ -72,15 +95,25 @@
 				</div>
 			</div>
 
-			<div class="flex flex-1 flex-col gap-2">
-				<label for="totalArea">Total Area</label>
-				<InputNumber
-					id="totalArea"
-					placeholder="Total Area"
-					mode="decimal"
-					v-model="totalArea"
-					disabled
-				/>
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="totalArea">Total Area</label>
+					<InputNumber
+						id="totalArea"
+						mode="decimal"
+						v-model="totalArea"
+						disabled
+					/>
+				</div>
+
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="highAreaDirection">High Area Direction</label>
+					<InputText
+						id="highAreaDirection"
+						v-model="highAreaDirection"
+						disabled
+					/>
+				</div>
 			</div>
 
 			<div class="flex gap-3">
@@ -106,18 +139,6 @@
 
 			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="landDirection">High Area Direction</label>
-					<InputText
-						id="highAreaDirection"
-						placeholder="High Area Direction"
-						v-model="highAreaDirection"
-						disabled
-					/>
-				</div>
-			</div>
-
-			<div class="flex gap-3">
-				<div class="flex flex-1 flex-col gap-2">
 					<label for="price">Price</label>
 					<InputNumber
 						id="price"
@@ -128,12 +149,37 @@
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
+					<label for="paymentMethod">Payment Method</label>
+					<Dropdown
+						id="paymentMethod"
+						v-model="paymentMethod"
+						:options="paymentMethodsDropdown"
+						optionLabel="name"
+						optionValue="value"
+						disabled
+					/>
+				</div>
+			</div>
+
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
 					<label for="progress">Progress</label>
 					<InputNumber
 						id="progress"
 						v-model="progress"
 						mode="decimal"
 						prefix="%"
+						disabled
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="buyStatus">Buy Status</label>
+					<Dropdown
+						id="buyStatus"
+						v-model="buyStatus"
+						:options="statuses"
+						optionLabel="name"
+						optionValue="value"
 						disabled
 					/>
 				</div>

@@ -4,7 +4,6 @@ import { baseUrl } from '~/constants';
 export const useAuthStore = defineStore('auth', () => {
 	const authenticated = ref(false);
 	const user = ref({});
-	const userToken = ref('');
 
 	const authenticateUser = async (loginName, password) => {
 		try {

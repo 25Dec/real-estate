@@ -1,58 +1,39 @@
 <script setup>
 	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const { addNewHighArea } = useHighAreasStore();
-	const toast = useToast();
+	const { floors, floorsDropdown } = storeToRefs(useFloorsStore());
+	const { currentHighArea } = storeToRefs(useHighAreasStore());
+	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
+	const { getPaymentMethods } = usePaymentMethodsStore();
+
+	await getPaymentMethods();
 
 	const myVisible = ref(visible);
-	const title = ref('');
-	const content = ref('');
-	const status = ref('');
-	const projectID = ref('');
-
-	const onSave = async () => {
-		const newHighAreaData = {
-			id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1,
-			floor_id: 35,
-			high_area_direction: '1 direction',
-			lat: 0,
-			long: 0,
-			total_area: 33,
-			progress: 20,
-			number_of_wc: 1,
-			number_of_room: 0,
-			price: 1,
-			owner: 46,
-			buy_status: 'not booked',
-			desc: 'high area test 2',
-			deleted: 'false',
-			created_by: 13,
-			updated_by: 13,
-			created_at: new Date().toLocaleString(),
-			updated_at: null,
-		};
-
-		const response = await addNewHighArea(newHighAreaData);
-		myVisible.value = false;
-
-		if (response != null && response['result'] == 'ok') {
-			toast.add({
-				severity: 'success',
-				summary: 'Success',
-				detail: 'Create New High Area Successfully!',
-				group: 'bl',
-				life: 3000,
-			});
-		} else {
-			toast.add({
-				severity: 'warning',
-				summary: 'Error',
-				detail: 'Failed to Create New High Area',
-				group: 'bl',
-				life: 3000,
-			});
-		}
-	};
+	const floor = ref(
+		floorsDropdown.value.filter(
+			(floor) => floor['value'] == currentHighArea.value['floor_id']
+		)?.[0]?.['value']
+	);
+	const highAreaDirection = ref(currentHighArea.value['high_area_direction']);
+	const lat = ref(currentHighArea.value['lat']);
+	const long = ref(currentHighArea.value['long']);
+	const totalArea = ref(currentHighArea.value['total_area']);
+	const progress = ref(currentHighArea.value['progress']);
+	const numberOfWC = ref(currentHighArea.value['number_of_wc']);
+	const numberOfRoom = ref(currentHighArea.value['number_of_room']);
+	const price = ref(currentHighArea.value['price']);
+	const owner = ref(currentHighArea.value['owner']);
+	const buyStatus = ref(currentHighArea.value['buy_status']);
+	const desc = ref(currentHighArea.value['desc']);
+	const paymentMethod = ref(
+		paymentMethodsDropdown.value.filter(
+			(payment) => payment['value'] == 11
+			// currentHighArea.value['payment_method_id']
+		)?.[0]?.['value']
+	);
+	console.log(paymentMethodsDropdown.value);
+	const createdAt = ref(currentHighArea.value['created_at']);
+	const updatedAt = ref(currentHighArea.value['updated_at']);
 </script>
 
 <template>
@@ -66,58 +47,154 @@
 	>
 		<template #header>
 			<div class="inline-flex items-center justify-center gap-2">
-				<span class="font-bold text-xl">Create New Land Area</span>
+				<span class="font-bold text-xl">High Area Details</span>
 			</div>
 		</template>
+
 		<template class="flex flex-col gap-3">
-			<div class="flex">
+			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="title">Title</label>
+					<label for="desc">Name</label>
 					<InputText
-						id="title"
-						placeholder="Title"
-						v-model="title"
+						id="desc"
+						v-model="desc"
+						disabled
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="floor">Floor</label>
+					<Dropdown
+						id="floor"
+						v-model="floor"
+						:options="floorsDropdown"
+						optionLabel="name"
+						optionValue="value"
+						disabled
 					/>
 				</div>
 			</div>
 
-			<div class="flex flex-row gap-3">
+			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="projectID">Project ID</label>
-					<Dropdown
-						id="projectID"
-						class="flex-1"
-						placeholder="Select project ID"
-						v-model="projectID"
-						:options="allProjectIDs"
-						optionLabel="name"
+					<label for="lat">Latitude</label>
+					<InputNumber
+						id="lat"
+						mode="decimal"
+						v-model="lat"
+						disabled
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="status">Status</label>
+					<label for="long">Longitude</label>
+					<InputNumber
+						id="long"
+						mode="decimal"
+						v-model="long"
+						disabled
+					/>
+				</div>
+			</div>
+
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="totalArea">Total Area</label>
+					<InputNumber
+						id="totalArea"
+						mode="decimal"
+						v-model="totalArea"
+						disabled
+					/>
+				</div>
+
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="highAreaDirection">High Area Direction</label>
+					<InputText
+						id="highAreaDirection"
+						v-model="highAreaDirection"
+						disabled
+					/>
+				</div>
+			</div>
+
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="numberOfRoom">Number of room</label>
+					<InputNumber
+						id="numberOfRoom"
+						mode="decimal"
+						v-model="numberOfRoom"
+						disabled
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="numberOfWC">Number of WC</label>
+					<InputNumber
+						id="numberOfWC"
+						mode="decimal"
+						v-model="numberOfWC"
+						disabled
+					/>
+				</div>
+			</div>
+
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="price">Price</label>
+					<InputNumber
+						id="price"
+						v-model="price"
+						mode="decimal"
+						prefix="$"
+						disabled
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="paymentMethod">Payment Method</label>
 					<Dropdown
-						id="status"
-						class="flex-1"
-						placeholder="Select status"
-						v-model="status"
+						id="paymentMethod"
+						v-model="paymentMethod"
+						:options="paymentMethodsDropdown"
+						optionLabel="name"
+						optionValue="value"
+						disabled
+					/>
+				</div>
+			</div>
+
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="progress">Progress</label>
+					<InputNumber
+						id="progress"
+						v-model="progress"
+						mode="decimal"
+						prefix="%"
+						disabled
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="buyStatus">Buy Status</label>
+					<Dropdown
+						id="buyStatus"
+						v-model="buyStatus"
 						:options="statuses"
 						optionLabel="name"
+						optionValue="value"
+						disabled
 					/>
 				</div>
 			</div>
 
-			<div class="flex flex-1 flex-col gap-2">
-				<label for="content">Content</label>
-				<Textarea
-					id="content"
-					v-model="content"
-					placeholder="Content"
-					autoResize
-					rows="5"
-					cols="30"
-				/>
+			<div class="flex flex-row gap-3 justify-between">
+				<span class="text-xs text-gray-400">
+					Created at: {{ convertDateTime(createdAt) }}
+				</span>
+				<span class="text-xs text-gray-400">
+					Updated at: {{ convertDateTime(updatedAt) }}
+				</span>
 			</div>
 		</template>
+
 		<template #footer>
 			<Button
 				type="button"
