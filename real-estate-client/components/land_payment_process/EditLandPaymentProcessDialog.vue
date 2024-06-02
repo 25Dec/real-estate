@@ -17,11 +17,11 @@
 	const onSave = async () => {
 		const newPaymentData = {
 			...currentLandPaymentProcess.value,
-			payment_time: paymentTime.value,
-			amount_of_money: amountOfMoney.value,
-			amount_of_debt: amountOfDebt.value,
-			submitter: submitter.value,
-			status: status.value,
+			payment_time: parseInt(paymentTime.value),
+			amount_of_money: parseInt(amountOfMoney.value),
+			amount_of_debt: parseInt(amountOfDebt.value),
+			submitter: parseInt(46),
+			status: '',
 			updated_at: new Date().toLocaleString(),
 		};
 
@@ -32,7 +32,7 @@
 			toast.add({
 				severity: 'success',
 				summary: 'Success',
-				detail: 'edit Payment Successfully!',
+				detail: 'Edit Payment Successfully!',
 				group: 'bl',
 				life: 3000,
 			});
@@ -40,7 +40,7 @@
 			toast.add({
 				severity: 'warning',
 				summary: 'Error',
-				detail: 'Failed to edit Payment',
+				detail: 'Failed to Edit Payment',
 				group: 'bl',
 				life: 3000,
 			});
@@ -59,7 +59,7 @@
 	>
 		<template #header>
 			<div class="inline-flex items-center justify-center gap-2">
-				<span class="font-bold text-xl">Create New Payment</span>
+				<span class="font-bold text-xl">Payment Details</span>
 			</div>
 		</template>
 
@@ -71,7 +71,6 @@
 						id="paymentTime"
 						placeholder="Payment Time"
 						mode="decimal"
-						showButtons
 						v-model="paymentTime"
 						:min="0"
 					/>
@@ -82,7 +81,6 @@
 						id="amountOfMoney"
 						placeholder="Amount Of Money"
 						mode="decimal"
-						showButtons
 						v-model="amountOfMoney"
 						:min="0"
 					/>
@@ -96,7 +94,6 @@
 						id="amountOfDebt"
 						placeholder="Amount Of Debt"
 						mode="decimal"
-						showButtons
 						v-model="amountOfDebt"
 						:min="0"
 					/>
@@ -107,7 +104,6 @@
 						id="submitter"
 						placeholder="Submitter"
 						mode="decimal"
-						showButtons
 						v-model="submitter"
 						:min="0"
 					/>
@@ -118,7 +114,7 @@
 				<label for="status">Status</label>
 				<Dropdown
 					id="status"
-					placeholder="Select status"
+					placeholder="Select Status"
 					v-model="status"
 					:options="statuses"
 					optionLabel="name"

@@ -86,7 +86,6 @@
 						id="totalOfPaymentTime"
 						v-model="totalOfPaymentTime"
 						mode="decimal"
-						showButtons
 						:min="0"
 					/>
 				</div>
@@ -97,7 +96,6 @@
 						id="percentDiscount"
 						v-model="percentDiscount"
 						mode="decimal"
-						showButtons
 						:min="0"
 						prefix="%"
 					/>
@@ -111,7 +109,6 @@
 						id="maintenanceFee"
 						v-model="maintenanceFee"
 						mode="decimal"
-						showButtons
 						:min="0"
 						prefix="%"
 					/>
@@ -123,7 +120,6 @@
 						id="vat"
 						v-model="vat"
 						mode="decimal"
-						showButtons
 						:min="0"
 						prefix="%"
 					/>

@@ -45,6 +45,7 @@
 						id="status"
 						class="flex-1"
 						v-model="status"
+						placeholder="Select Status"
 						:options="statuses"
 						optionLabel="name"
 						optionValue="value"

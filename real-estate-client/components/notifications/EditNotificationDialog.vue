@@ -76,7 +76,7 @@
 					<Dropdown
 						id="status"
 						class="flex-1"
-						placeholder="Select status"
+						placeholder="Select Status"
 						v-model="status"
 						:options="statuses"
 						optionLabel="name"

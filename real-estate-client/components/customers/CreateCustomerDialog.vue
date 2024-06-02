@@ -81,18 +81,18 @@
 		<template class="flex flex-col gap-3">
 			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="firstName">First name</label>
+					<label for="firstName">First Name</label>
 					<InputText
 						id="firstName"
-						placeholder="First name"
+						placeholder="First Name"
 						v-model="firstName"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="lastName">Last name</label>
+					<label for="lastName">Last Name</label>
 					<InputText
 						id="lastName"
-						placeholder="Last name"
+						placeholder="Last Name"
 						v-model="lastName"
 					/>
 				</div>
@@ -100,10 +100,10 @@
 
 			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="loginName">Login name</label>
+					<label for="loginName">Login Name</label>
 					<InputText
 						id="loginName"
-						placeholder="Login name"
+						placeholder="Login Name"
 						v-model="loginName"
 					/>
 				</div>
@@ -130,7 +130,7 @@
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="phoneVerified">Phone verified</label>
+					<label for="phoneVerified">Phone Verified</label>
 					<InputText
 						id="phoneVerified"
 						placeholder="+84 9698 886 660"
@@ -140,11 +140,11 @@
 			</div>
 
 			<div class="flex flex-1 flex-col gap-2">
-				<label for="type">User role</label>
+				<label for="type">User Role</label>
 				<Dropdown
 					id="type"
 					class="flex-1"
-					placeholder="Select user role"
+					placeholder="Select User Role"
 					v-model="type"
 					:options="roles"
 					optionLabel="name"
@@ -161,7 +161,7 @@
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="emailVerified">Email verified</label>
+					<label for="emailVerified">Email Verified</label>
 					<InputText
 						id="emailVerified"
 						placeholder="example@gmail.com"
@@ -180,7 +180,7 @@
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="socialVerified">Social verified</label>
+					<label for="socialVerified">Social Verified</label>
 					<InputText
 						id="socialVerified"
 						placeholder="https://www.facebook.com"

@@ -2,38 +2,72 @@
 	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
 	const { floors, floorsDropdown } = storeToRefs(useFloorsStore());
-	const { currentHighArea } = storeToRefs(useHighAreasStore());
+	const { addNewHighArea } = useHighAreasStore();
 	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
 	const { getPaymentMethods } = usePaymentMethodsStore();
 
 	await getPaymentMethods();
 
+	const toast = useToast();
 	const myVisible = ref(visible);
-	const floor = ref(
-		floorsDropdown.value.filter(
-			(floor) => floor['value'] == currentHighArea.value['floor_id']
-		)?.[0]?.['value']
-	);
-	const highAreaDirection = ref(currentHighArea.value['high_area_direction']);
-	const lat = ref(currentHighArea.value['lat']);
-	const long = ref(currentHighArea.value['long']);
-	const totalArea = ref(currentHighArea.value['total_area']);
-	const progress = ref(currentHighArea.value['progress']);
-	const numberOfWC = ref(currentHighArea.value['number_of_wc']);
-	const numberOfRoom = ref(currentHighArea.value['number_of_room']);
-	const price = ref(currentHighArea.value['price']);
-	const owner = ref(currentHighArea.value['owner']);
-	const buyStatus = ref(currentHighArea.value['buy_status']);
-	const desc = ref(currentHighArea.value['desc']);
-	const paymentMethod = ref(
-		paymentMethodsDropdown.value.filter(
-			(payment) => payment['value'] == 11
-			// currentHighArea.value['payment_method_id']
-		)?.[0]?.['value']
-	);
-	console.log(paymentMethodsDropdown.value);
-	const createdAt = ref(currentHighArea.value['created_at']);
-	const updatedAt = ref(currentHighArea.value['updated_at']);
+	const floor = ref(0);
+	const highAreaDirection = ref('');
+	const lat = ref(0);
+	const long = ref(0);
+	const totalArea = ref(0);
+	const progress = ref(0);
+	const numberOfWC = ref(0);
+	const numberOfRoom = ref(0);
+	const price = ref(0);
+	const owner = ref(0);
+	const buyStatus = ref('');
+	const desc = ref('');
+	const paymentMethod = ref(0);
+
+	const onSave = async () => {
+		const newHighAreaData = {
+			id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1,
+			floor_id: parseInt(floor.value),
+			high_area_direction: highAreaDirection.value,
+			lat: parseInt(lat.value),
+			long: parseInt(long.value),
+			total_area: parseInt(totalArea.value),
+			progress: parseInt(progress.value),
+			number_of_wc: parseInt(numberOfWC.value),
+			number_of_room: parseInt(numberOfRoom.value),
+			price: parseInt(price.value),
+			owner: parseInt(owner.value),
+			buy_status: buyStatus.value,
+			desc: desc.value,
+			payment_method_id: parseInt(paymentMethod.value),
+			deleted: 'false',
+			created_by: 46,
+			updated_by: 46,
+			created_at: new Date().toLocaleString(),
+			updated_at: null,
+		};
+
+		const response = await addNewHighArea(newHighAreaData);
+		myVisible.value = false;
+
+		if (response != null && response['result'] == 'ok') {
+			toast.add({
+				severity: 'success',
+				summary: 'Success',
+				detail: 'Create New High Area Successfully!',
+				group: 'bl',
+				life: 3000,
+			});
+		} else {
+			toast.add({
+				severity: 'warning',
+				summary: 'Error',
+				detail: 'Failed to Create New High Area',
+				group: 'bl',
+				life: 3000,
+			});
+		}
+	};
 </script>
 
 <template>
@@ -58,7 +92,7 @@
 					<InputText
 						id="desc"
 						v-model="desc"
-						disabled
+						placeholder="Name"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -67,9 +101,9 @@
 						id="floor"
 						v-model="floor"
 						:options="floorsDropdown"
+						placeholder="Select Floor"
 						optionLabel="name"
 						optionValue="value"
-						disabled
 					/>
 				</div>
 			</div>
@@ -81,7 +115,6 @@
 						id="lat"
 						mode="decimal"
 						v-model="lat"
-						disabled
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -90,7 +123,6 @@
 						id="long"
 						mode="decimal"
 						v-model="long"
-						disabled
 					/>
 				</div>
 			</div>
@@ -102,7 +134,7 @@
 						id="totalArea"
 						mode="decimal"
 						v-model="totalArea"
-						disabled
+						:min="0"
 					/>
 				</div>
 
@@ -111,7 +143,7 @@
 					<InputText
 						id="highAreaDirection"
 						v-model="highAreaDirection"
-						disabled
+						placeholder="High Area Direction"
 					/>
 				</div>
 			</div>
@@ -123,7 +155,7 @@
 						id="numberOfRoom"
 						mode="decimal"
 						v-model="numberOfRoom"
-						disabled
+						:min="0"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -132,7 +164,7 @@
 						id="numberOfWC"
 						mode="decimal"
 						v-model="numberOfWC"
-						disabled
+						:min="0"
 					/>
 				</div>
 			</div>
@@ -145,7 +177,7 @@
 						v-model="price"
 						mode="decimal"
 						prefix="$"
-						disabled
+						:min="0"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -153,10 +185,10 @@
 					<Dropdown
 						id="paymentMethod"
 						v-model="paymentMethod"
+						placeholder="Select Payment Method"
 						:options="paymentMethodsDropdown"
 						optionLabel="name"
 						optionValue="value"
-						disabled
 					/>
 				</div>
 			</div>
@@ -169,29 +201,20 @@
 						v-model="progress"
 						mode="decimal"
 						prefix="%"
-						disabled
+						:min="0"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="buyStatus">Buy Status</label>
 					<Dropdown
 						id="buyStatus"
+						placeholder="Select Status"
 						v-model="buyStatus"
 						:options="statuses"
 						optionLabel="name"
 						optionValue="value"
-						disabled
 					/>
 				</div>
-			</div>
-
-			<div class="flex flex-row gap-3 justify-between">
-				<span class="text-xs text-gray-400">
-					Created at: {{ convertDateTime(createdAt) }}
-				</span>
-				<span class="text-xs text-gray-400">
-					Updated at: {{ convertDateTime(updatedAt) }}
-				</span>
 			</div>
 		</template>
 

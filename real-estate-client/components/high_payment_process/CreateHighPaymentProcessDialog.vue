@@ -9,7 +9,7 @@
 	const paymentTime = ref(0);
 	const amountOfMoney = ref(0);
 	const amountOfDebt = ref(0);
-	const submitter = ref(46);
+	const submitter = ref(0);
 	const status = ref('');
 
 	const onSave = async () => {
@@ -19,7 +19,7 @@
 			payment_time: parseInt(paymentTime.value),
 			amount_of_money: parseInt(amountOfMoney.value),
 			amount_of_debt: parseInt(amountOfDebt.value),
-			submitter: parseInt(submitter.value),
+			submitter: parseInt(46),
 			status: '',
 			created_by: 13,
 			updated_by: 13,
@@ -73,7 +73,6 @@
 						id="paymentTime"
 						placeholder="Payment Time"
 						mode="decimal"
-						showButtons
 						v-model="paymentTime"
 						:min="0"
 					/>
@@ -84,7 +83,6 @@
 						id="amountOfMoney"
 						placeholder="Amount Of Money"
 						mode="decimal"
-						showButtons
 						v-model="amountOfMoney"
 						:min="0"
 					/>
@@ -98,7 +96,6 @@
 						id="amountOfDebt"
 						placeholder="Amount Of Debt"
 						mode="decimal"
-						showButtons
 						v-model="amountOfDebt"
 						:min="0"
 					/>
@@ -109,7 +106,6 @@
 						id="submitter"
 						placeholder="Submitter"
 						mode="decimal"
-						showButtons
 						v-model="submitter"
 						:min="0"
 					/>

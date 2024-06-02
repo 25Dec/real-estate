@@ -27,11 +27,10 @@
 	const desc = ref(currentHighArea.value['desc']);
 	const paymentMethod = ref(
 		paymentMethodsDropdown.value.filter(
-			(payment) => payment['value'] == 11
-			// currentHighArea.value['payment_method_id']
+			(payment) =>
+				payment['value'] == currentHighArea.value['payment_method_id']
 		)?.[0]?.['value']
 	);
-	console.log(paymentMethodsDropdown.value);
 	const createdAt = ref(currentHighArea.value['created_at']);
 	const updatedAt = ref(currentHighArea.value['updated_at']);
 </script>
@@ -66,6 +65,7 @@
 					<Dropdown
 						id="floor"
 						v-model="floor"
+						placeholder="Select Floor"
 						:options="floorsDropdown"
 						optionLabel="name"
 						optionValue="value"
@@ -153,6 +153,7 @@
 					<Dropdown
 						id="paymentMethod"
 						v-model="paymentMethod"
+						placeholder="Select Payment Method"
 						:options="paymentMethodsDropdown"
 						optionLabel="name"
 						optionValue="value"
@@ -178,6 +179,7 @@
 						id="buyStatus"
 						v-model="buyStatus"
 						:options="statuses"
+						placeholder="Select Status"
 						optionLabel="name"
 						optionValue="value"
 						disabled

@@ -24,6 +24,10 @@
 			return landArea['zone_id'] == currentZone.value.value;
 		});
 	});
+	const statuses = ref([
+		{ name: 'Booked', value: 'booked' },
+		{ name: 'Not Booked', value: 'not booked' },
+	]);
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
@@ -104,7 +108,7 @@
 				</label>
 				<Dropdown
 					id="currentZone"
-					placeholder="Select zone"
+					placeholder="Select Zone"
 					v-model="currentZone.value"
 					:options="zones"
 					optionLabel="name"
@@ -206,14 +210,17 @@
 	<ViewDetailsLandAreaDialog
 		v-if="viewDetailsLandAreaDialogVisible"
 		:visible="viewDetailsLandAreaDialogVisible"
+		:statuses="statuses"
 	/>
 	<CreateLandAreaDialog
 		v-if="createLandAreaDialogVisible"
 		:visible="createLandAreaDialogVisible"
+		:statuses="statuses"
 	/>
 	<EditLandAreaDialog
 		v-if="editLandAreaDialogVisible"
 		:visible="editLandAreaDialogVisible"
+		:statuses="statuses"
 	/>
 	<DeleteLandAreaDialog
 		v-if="deleteLandAreaDialogVisible"

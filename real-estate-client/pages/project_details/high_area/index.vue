@@ -160,7 +160,7 @@
 		setCurrentHighArea(data);
 		editHighAreaDialogVisible.value = !editHighAreaDialogVisible.value;
 	};
-	const toggleDeleteHighArea = async (data) => {
+	const toggleDeleteHighArea = (data) => {
 		setCurrentHighArea(data);
 		deleteHighAreaDialogVisible.value = !deleteHighAreaDialogVisible.value;
 	};
@@ -205,7 +205,7 @@
 				</label>
 				<Dropdown
 					id="currentZone"
-					placeholder="Select zone"
+					placeholder="Select Zone"
 					v-model="currentZone.value"
 					:options="myZones"
 					optionLabel="name"
@@ -221,7 +221,7 @@
 				</label>
 				<Dropdown
 					id="currentBlock"
-					placeholder="Select block"
+					placeholder="Select Block"
 					v-model="currentBlock.value"
 					:options="myBlocks"
 					optionLabel="name"
@@ -237,7 +237,7 @@
 				</label>
 				<Dropdown
 					id="currentFloor"
-					placeholder="Select floor"
+					placeholder="Select Floor"
 					v-model="currentFloor.value"
 					:options="myFloors"
 					optionLabel="name"

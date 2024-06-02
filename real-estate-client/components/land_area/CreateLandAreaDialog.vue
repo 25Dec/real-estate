@@ -90,7 +90,7 @@
 				<label for="zone_id">Zone</label>
 				<Dropdown
 					id="zone_id"
-					placeholder="Select zone"
+					placeholder="Select Zone"
 					v-model="currentZone"
 					:options="zones"
 					optionLabel="name"
@@ -105,7 +105,6 @@
 						id="lat"
 						placeholder="Latitude"
 						mode="decimal"
-						showButtons
 						v-model="lat"
 					/>
 				</div>
@@ -115,7 +114,6 @@
 						id="long"
 						placeholder="Longitude"
 						mode="decimal"
-						showButtons
 						v-model="long"
 					/>
 				</div>
@@ -128,7 +126,6 @@
 						id="buildingArea"
 						placeholder="Building Area"
 						mode="decimal"
-						showButtons
 						v-model="buildingArea"
 						:min="0"
 					/>
@@ -139,7 +136,6 @@
 						id="totalArea"
 						placeholder="Total Area"
 						mode="decimal"
-						showButtons
 						v-model="totalArea"
 						:min="0"
 					/>
@@ -152,7 +148,6 @@
 					<InputNumber
 						id="numberOfFloor"
 						mode="decimal"
-						showButtons
 						v-model="numberOfFloor"
 						:min="0"
 					/>
@@ -162,7 +157,6 @@
 					<InputNumber
 						id="numberOfRoom"
 						mode="decimal"
-						showButtons
 						v-model="numberOfRoom"
 						:min="0"
 					/>
@@ -175,7 +169,6 @@
 					<InputNumber
 						id="numberOfWC"
 						mode="decimal"
-						showButtons
 						v-model="numberOfWC"
 						:min="0"
 					/>

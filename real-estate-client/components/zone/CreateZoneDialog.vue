@@ -88,7 +88,6 @@
 						id="totalArea"
 						v-model="totalArea"
 						mode="decimal"
-						showButtons
 						:min="0"
 					/>
 				</div>
@@ -99,7 +98,6 @@
 						id="constructionArea"
 						v-model="constructionArea"
 						mode="decimal"
-						showButtons
 						:min="0"
 					/>
 				</div>
@@ -112,7 +110,6 @@
 						id="numberOfBlock"
 						v-model="numberOfBlock"
 						mode="decimal"
-						showButtons
 						:min="0"
 					/>
 				</div>
@@ -123,7 +120,6 @@
 						id="numberOfUnitLand"
 						v-model="numberOfUnitLand"
 						mode="decimal"
-						showButtons
 						:min="0"
 					/>
 				</div>
@@ -145,7 +141,6 @@
 						id="progress"
 						v-model="progress"
 						mode="decimal"
-						showButtons
 						prefix="%"
 						:min="0"
 					/>

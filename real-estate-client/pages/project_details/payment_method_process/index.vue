@@ -97,7 +97,7 @@
 				</label>
 				<Dropdown
 					id="currentPaymentMethod"
-					placeholder="Select payment method"
+					placeholder="Select Payment Method"
 					v-model="currentPaymentMethod.value"
 					:options="paymentMethodsDropdown"
 					optionLabel="name"

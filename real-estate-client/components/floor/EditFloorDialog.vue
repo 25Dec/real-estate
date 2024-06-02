@@ -74,7 +74,7 @@
 				<label for="blockID">Block</label>
 				<Dropdown
 					id="blockID"
-					placeholder="Select block"
+					placeholder="Select Block"
 					v-model="blockID.value"
 					:options="blocks"
 					optionLabel="name"
@@ -97,7 +97,6 @@
 						id="numberOfHighArea"
 						v-model="numberOfHighArea"
 						mode="decimal"
-						showButtons
 						:min="0"
 					/>
 				</div>
@@ -107,7 +106,6 @@
 						id="publicArea"
 						v-model="publicArea"
 						mode="decimal"
-						showButtons
 						:min="0"
 					/>
 				</div>
@@ -120,7 +118,6 @@
 						id="totalArea"
 						v-model="totalArea"
 						mode="decimal"
-						showButtons
 						:min="0"
 					/>
 				</div>
@@ -131,7 +128,6 @@
 						v-model="progress"
 						prefix="%"
 						mode="decimal"
-						showButtons
 						:min="0"
 					/>
 				</div>

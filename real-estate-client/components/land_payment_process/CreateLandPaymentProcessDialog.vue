@@ -1,9 +1,9 @@
 <script setup>
 	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const toast = useToast();
 	const { currentLandAreaIDFromLocalStore } = storeToRefs(useLandAreasStore());
 	const { addNewLandPaymentProcess } = useLandPaymentProcessStore();
+	const toast = useToast();
 
 	const myVisible = ref(visible);
 	const paymentTime = ref(0);
@@ -19,8 +19,8 @@
 			payment_time: parseInt(paymentTime.value),
 			amount_of_money: parseInt(amountOfMoney.value),
 			amount_of_debt: parseInt(amountOfDebt.value),
-			submitter: parseInt(submitter.value),
-			status: status.value,
+			submitter: parseInt(46),
+			status: '',
 			created_by: 13,
 			updated_by: 13,
 			created_at: new Date().toLocaleString(),
@@ -73,7 +73,6 @@
 						id="paymentTime"
 						placeholder="Payment Time"
 						mode="decimal"
-						showButtons
 						v-model="paymentTime"
 						:min="0"
 					/>
@@ -84,7 +83,6 @@
 						id="amountOfMoney"
 						placeholder="Amount Of Money"
 						mode="decimal"
-						showButtons
 						v-model="amountOfMoney"
 						:min="0"
 					/>
@@ -98,7 +96,6 @@
 						id="amountOfDebt"
 						placeholder="Amount Of Debt"
 						mode="decimal"
-						showButtons
 						v-model="amountOfDebt"
 						:min="0"
 					/>
@@ -109,14 +106,13 @@
 						id="submitter"
 						placeholder="Submitter"
 						mode="decimal"
-						showButtons
 						v-model="submitter"
 						:min="0"
 					/>
 				</div>
 			</div>
 
-			<div class="flex flex-1 flex-col gap-2">
+			<!-- <div class="flex flex-1 flex-col gap-2">
 				<label for="status">Status</label>
 				<Dropdown
 					id="status"
@@ -126,7 +122,7 @@
 					optionLabel="name"
 					optionValue="value"
 				/>
-			</div>
+			</div> -->
 		</template>
 		<template #footer>
 			<Button

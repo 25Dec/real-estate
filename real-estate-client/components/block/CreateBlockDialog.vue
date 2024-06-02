@@ -93,7 +93,7 @@
 				<label for="zone">Zone</label>
 				<Dropdown
 					id="zone"
-					placeholder="Select zone"
+					placeholder="Select Zone"
 					v-model="zone.value"
 					:options="zones"
 					optionLabel="name"
@@ -107,7 +107,6 @@
 					<InputNumber
 						id="lat"
 						mode="decimal"
-						showButtons
 						v-model="lat"
 					/>
 				</div>
@@ -116,7 +115,6 @@
 					<InputNumber
 						id="long"
 						mode="decimal"
-						showButtons
 						v-model="long"
 					/>
 				</div>
@@ -126,7 +124,7 @@
 				<label for="type">Type</label>
 				<Dropdown
 					id="type"
-					placeholder="Select type"
+					placeholder="Select Type"
 					v-model="type.value"
 					:options="types"
 					optionLabel="name"
@@ -139,7 +137,6 @@
 				<InputNumber
 					id="numberOfFloor"
 					mode="decimal"
-					showButtons
 					v-model="numberOfFloor"
 					:min="0"
 				/>

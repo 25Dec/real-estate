@@ -139,7 +139,7 @@
 				<Dropdown
 					id="type"
 					class="flex-1"
-					placeholder="Select user role"
+					placeholder="Select User Role"
 					v-model="roles[roles.findIndex((role) => role.value == type)].value"
 					:options="roles"
 					optionLabel="name"
