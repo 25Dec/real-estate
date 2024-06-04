@@ -1,19 +1,33 @@
 <script setup>
-	import { accessToken, baseUrl } from '~/constants';
+	const { visible } = defineProps(['visible']);
 
-	const { visible, data } = defineProps(['visible', 'data']);
+	const toast = useToast();
+	const { currentProject } = storeToRefs(useProjectsStore());
+	const { deleteProject } = useProjectsStore();
+
 	const myVisible = ref(visible);
 
 	const onDelete = async () => {
-		await $fetch(baseUrl + `/auth/project/${data['id']}`, {
-			method: 'delete',
-			headers: {
-				'Content-Type': 'application/json',
-				access_token: accessToken,
-			},
-		});
-
+		const response = await deleteProject(currentProject.value);
 		myVisible.value = false;
+
+		if (response != null && response['result'] == 'ok') {
+			toast.add({
+				severity: 'success',
+				summary: 'Success',
+				detail: 'Delete Project Successfully!',
+				group: 'bl',
+				life: 3000,
+			});
+		} else {
+			toast.add({
+				severity: 'warning',
+				summary: 'Error',
+				detail: 'Failed to Delete Project',
+				group: 'bl',
+				life: 3000,
+			});
+		}
 	};
 </script>
 
@@ -21,6 +35,7 @@
 	<Dialog
 		v-model:visible="myVisible"
 		modal
+		maximizable
 		header="Header"
 		:style="{ width: '50rem' }"
 		:breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
@@ -33,7 +48,7 @@
 		<div>
 			<span>
 				This will delete project
-				<b>{{ data['name'] }}</b>
+				<b>{{ currentProject['name'] }}</b>
 				permanently!
 			</span>
 			<span>You cannot undo this action!</span>

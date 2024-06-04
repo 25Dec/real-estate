@@ -51,7 +51,9 @@ export const useProjectsStore = defineStore('projects', () => {
 			},
 		});
 
-		projects.value = data.value.data.data;
+		projects.value = data.value.data.data.filter(
+			(project) => project['deleted'] == 'false'
+		);
 	};
 
 	const addNewProject = async (data) => {

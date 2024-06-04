@@ -2,11 +2,17 @@
 	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
 
-	const { projects } = storeToRefs(useProjectsStore());
+	const { projects, currentProject } = storeToRefs(useProjectsStore());
 	const { getProjects } = useProjectsStore();
 
 	await getProjects();
 
+	const statuses = ref([{ name: 'Working', value: 'working' }]);
+	const types = ref([
+		{ name: 'High', value: 'high' },
+		{ name: 'Land', value: 'land' },
+		{ name: 'Hybrid', value: 'hybrid' },
+	]);
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
@@ -73,7 +79,7 @@
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
-						<span>No project found.</span>
+						<span>No Project Found.</span>
 					</div>
 				</template>
 
@@ -87,11 +93,20 @@
 				</Column>
 
 				<Column
-					field="desc"
-					header="Description"
+					field="address"
+					header="Address"
 				>
 					<template #body="{ data }">
-						{{ data['desc'] }}
+						{{ hideLongText(data['address']) }}
+					</template>
+				</Column>
+
+				<Column
+					field="type"
+					header="Type"
+				>
+					<template #body="{ data }">
+						{{ capitalize(data['type']) }}
 					</template>
 				</Column>
 
@@ -102,7 +117,7 @@
 				>
 					<template #body="{ data }">
 						<Knob
-							v-model="data['progress']"
+							v-model="data['project_progress']"
 							readonly
 							:size="50"
 						/>
@@ -132,18 +147,6 @@
 						>
 							<Icon name="mdi:delete-outline" />
 						</Button>
-						<Button
-							text
-							severity="secondary"
-							@click="(event) => menu.toggle(event)"
-						>
-							<Icon name="mdi:more-vert" />
-						</Button>
-						<Menu
-							ref="menu"
-							:model="menuItems"
-							:popup="true"
-						/>
 					</template>
 				</Column>
 			</DataTable>
@@ -152,15 +155,20 @@
 	<ViewDetailsProjectDialog
 		v-if="viewDetailsProjectDialogVisible"
 		:visible="viewDetailsProjectDialogVisible"
+		:statuses="statuses"
+		:types="types"
 	/>
 	<CreateProjectDialog
 		v-if="createProjectDialogVisible"
 		:visible="createProjectDialogVisible"
-		:allProjectIDs="allProjectIDs"
+		:statuses="statuses"
+		:types="types"
 	/>
 	<EditProjectDialog
 		v-if="editProjectDialogVisible"
 		:visible="editProjectDialogVisible"
+		:statuses="statuses"
+		:types="types"
 	/>
 	<DeleteProjectDialog
 		v-if="deleteProjectDialogVisible"
