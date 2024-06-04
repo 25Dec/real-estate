@@ -1,19 +1,26 @@
 <script setup>
-	const { visible } = defineProps(['visible']);
+	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const { zones } = storeToRefs(useZonesStore());
-	const { getZones } = useZonesStore();
+	const { zones, zonesDropdown } = storeToRefs(useZonesStore());
 	const { currentLandArea } = storeToRefs(useLandAreasStore());
 	const { editLandArea } = useLandAreasStore();
+	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
+	const { getPaymentMethods } = usePaymentMethodsStore();
 	const toast = useToast();
 
+	await getPaymentMethods();
+
 	const myVisible = ref(visible);
-	const zoneID = ref(currentLandArea.value['zone_id']);
-	const landDirection = ref(currentLandArea.value['land_direction']);
+	const zone = ref(
+		zonesDropdown.value.filter(
+			(zone) => zone['value'] == currentLandArea.value['zone_id']
+		)?.[0]?.['value']
+	);
+	const landAreaDirection = ref(currentLandArea.value['land_direction']);
 	const isFront = ref(currentLandArea.value['is_front']);
 	const lat = ref(currentLandArea.value['lat']);
 	const long = ref(currentLandArea.value['long']);
-	const buildingArea = ref(currentLandArea.value['building_area']);
+	const buildingArea = ref(0);
 	const totalArea = ref(currentLandArea.value['total_area']);
 	const progress = ref(currentLandArea.value['progress']);
 	const numberOfFloor = ref(currentLandArea.value['number_of_floor']);
@@ -23,49 +30,59 @@
 	const owner = ref(currentLandArea.value['owner']);
 	const buyStatus = ref(currentLandArea.value['buy_status']);
 	const desc = ref(currentLandArea.value['desc']);
+	const paymentMethod = ref(
+		paymentMethodsDropdown.value.filter(
+			(payment) =>
+				payment['value'] == currentLandArea.value['payment_method_id']
+		)?.[0]?.['value']
+	);
+	console.log(paymentMethodsDropdown.value);
 	const createdAt = ref(currentLandArea.value['created_at']);
 	const updatedAt = ref(currentLandArea.value['updated_at']);
 
-	const newLandAreaData = {
-		...currentLandArea.value,
-		zone_id: zoneID.value,
-		land_direction: landDirection.value,
-		is_front: isFront.value,
-		lat: lat.value,
-		long: long.value,
-		building_area: buildingArea.value,
-		total_area: totalArea.value,
-		progress: progress.value,
-		number_of_floor: numberOfFloor.value,
-		number_of_room: numberOfRoom.value,
-		number_of_wc: numberOfWC.value,
-		price: price.value,
-		owner: owner.value,
-		buy_status: buyStatus.value,
-		desc: desc.value,
-		updated_at: new Date().toLocaleString(),
+	const onSave = async () => {
+		const newLandAreaData = {
+			...currentLandArea.value,
+			zone_id: parseInt(zone.value),
+			land_direction: parseInt(landAreaDirection.value),
+			is_front: isFront.value,
+			lat: parseInt(lat.value),
+			long: parseInt(long.value),
+			building_area: parseInt(buildingArea.value),
+			total_area: parseInt(totalArea.value),
+			progress: parseInt(progress.value),
+			number_of_floor: parseInt(numberOfFloor.value),
+			number_of_room: parseInt(numberOfRoom.value),
+			number_of_wc: parseInt(numberOfWC.value),
+			price: parseInt(price.value),
+			owner: parseInt(owner.value),
+			buy_status: buyStatus.value,
+			desc: desc.value,
+			payment_method_id: parseInt(paymentMethod.value),
+			updated_at: new Date().toLocaleString(),
+		};
+
+		const response = await editLandArea(newLandAreaData);
+		myVisible.value = false;
+
+		if (response != null && response['result'] == 'ok') {
+			toast.add({
+				severity: 'success',
+				summary: 'Success',
+				detail: 'Edit Land Area Successfully!',
+				group: 'bl',
+				life: 3000,
+			});
+		} else {
+			toast.add({
+				severity: 'warning',
+				summary: 'Error',
+				detail: 'Failed to Edit Land Area',
+				group: 'bl',
+				life: 3000,
+			});
+		}
 	};
-
-	const response = await editLandArea(newLandAreaData);
-	myVisible.value = false;
-
-	if (response != null && response['result'] == 'ok') {
-		toast.add({
-			severity: 'success',
-			summary: 'Success',
-			detail: 'Edit New Land Area Successfully!',
-			group: 'bl',
-			life: 3000,
-		});
-	} else {
-		toast.add({
-			severity: 'warning',
-			summary: 'Error',
-			detail: 'Failed to Edit New Land Area',
-			group: 'bl',
-			life: 3000,
-		});
-	}
 </script>
 
 <template>
@@ -84,14 +101,26 @@
 		</template>
 
 		<template class="flex flex-col gap-3">
-			<div class="flex flex-1 flex-col gap-2">
-				<label for="zone_id">Zone</label>
-				<InputNumber
-					id="zone_id"
-					placeholder="Zone ID"
-					mode="decimal"
-					v-model="zoneID"
-				/>
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="desc">Name</label>
+					<InputText
+						id="desc"
+						v-model="desc"
+						placeholder="Name"
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="zone">Zone</label>
+					<Dropdown
+						id="zone"
+						placeholder="Select Zone"
+						v-model="zone"
+						:options="zonesDropdown"
+						optionLabel="name"
+						optionValue="value"
+					/>
+				</div>
 			</div>
 
 			<div class="flex gap-3">
@@ -99,7 +128,6 @@
 					<label for="lat">Latitude</label>
 					<InputNumber
 						id="lat"
-						placeholder="Latitude"
 						mode="decimal"
 						v-model="lat"
 					/>
@@ -108,9 +136,28 @@
 					<label for="long">Longitude</label>
 					<InputNumber
 						id="long"
-						placeholder="Longitude"
 						mode="decimal"
 						v-model="long"
+					/>
+				</div>
+			</div>
+
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="totalArea">Total Area</label>
+					<InputNumber
+						id="totalArea"
+						mode="decimal"
+						v-model="totalArea"
+						:min="0"
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="landAreaDirection">Land Area Direction</label>
+					<InputText
+						id="landAreaDirection"
+						placeholder="Land Area Direction"
+						v-model="landAreaDirection"
 					/>
 				</div>
 			</div>
@@ -120,25 +167,11 @@
 					<label for="buildingArea">Building Area</label>
 					<InputNumber
 						id="buildingArea"
-						placeholder="Building Area"
 						mode="decimal"
 						v-model="buildingArea"
 						:min="0"
 					/>
 				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="totalArea">Total Area</label>
-					<InputNumber
-						id="totalArea"
-						placeholder="Total Area"
-						mode="decimal"
-						v-model="totalArea"
-						:min="0"
-					/>
-				</div>
-			</div>
-
-			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="numberOfFloor">Number Of Floor</label>
 					<InputNumber
@@ -148,6 +181,9 @@
 						:min="0"
 					/>
 				</div>
+			</div>
+
+			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="numberOfRoom">Number Of Room</label>
 					<InputNumber
@@ -157,9 +193,6 @@
 						:min="0"
 					/>
 				</div>
-			</div>
-
-			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="numberOfWC">Number Of WC</label>
 					<InputNumber
@@ -167,14 +200,6 @@
 						mode="decimal"
 						v-model="numberOfWC"
 						:min="0"
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="landDirection">Land Direction</label>
-					<InputText
-						id="landDirection"
-						placeholder="Land Direction"
-						v-model="landDirection"
 					/>
 				</div>
 			</div>
@@ -191,6 +216,20 @@
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
+					<label for="paymentMethod">Payment Method</label>
+					<Dropdown
+						id="paymentMethod"
+						v-model="paymentMethod"
+						placeholder="Select Payment Method"
+						:options="paymentMethodsDropdown"
+						optionLabel="name"
+						optionValue="value"
+					/>
+				</div>
+			</div>
+
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
 					<label for="progress">Progress</label>
 					<InputNumber
 						id="progress"
@@ -198,6 +237,17 @@
 						mode="decimal"
 						prefix="%"
 						:min="0"
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="buyStatus">Buy Status</label>
+					<Dropdown
+						id="buyStatus"
+						placeholder="Select Status"
+						v-model="buyStatus"
+						:options="statuses"
+						optionLabel="name"
+						optionValue="value"
 					/>
 				</div>
 			</div>

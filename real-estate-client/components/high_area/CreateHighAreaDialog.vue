@@ -5,10 +5,10 @@
 	const { addNewHighArea } = useHighAreasStore();
 	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
 	const { getPaymentMethods } = usePaymentMethodsStore();
+	const toast = useToast();
 
 	await getPaymentMethods();
 
-	const toast = useToast();
 	const myVisible = ref(visible);
 	const floor = ref(0);
 	const highAreaDirection = ref('');
@@ -81,7 +81,7 @@
 	>
 		<template #header>
 			<div class="inline-flex items-center justify-center gap-2">
-				<span class="font-bold text-xl">High Area Details</span>
+				<span class="font-bold text-xl">Create New High Area</span>
 			</div>
 		</template>
 
@@ -99,9 +99,9 @@
 					<label for="floor">Floor</label>
 					<Dropdown
 						id="floor"
+						placeholder="Select Floor"
 						v-model="floor"
 						:options="floorsDropdown"
-						placeholder="Select Floor"
 						optionLabel="name"
 						optionValue="value"
 					/>
@@ -150,7 +150,7 @@
 
 			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="numberOfRoom">Number of room</label>
+					<label for="numberOfRoom">Number Of Room</label>
 					<InputNumber
 						id="numberOfRoom"
 						mode="decimal"
@@ -159,7 +159,7 @@
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="numberOfWC">Number of WC</label>
+					<label for="numberOfWC">Number Of WC</label>
 					<InputNumber
 						id="numberOfWC"
 						mode="decimal"

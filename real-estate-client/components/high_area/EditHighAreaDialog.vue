@@ -55,8 +55,6 @@
 			updated_at: new Date().toLocaleString(),
 		};
 
-		console.log(newHighAreaData);
-
 		const response = await editHighArea(newHighAreaData);
 		myVisible.value = false;
 

@@ -1,13 +1,17 @@
 <script setup>
-	const { visible } = defineProps(['visible']);
+	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const { zones } = storeToRefs(useZonesStore());
+	const { zones, zonesDropdown } = storeToRefs(useZonesStore());
 	const { addNewLandArea } = useLandAreasStore();
+	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
+	const { getPaymentMethods } = usePaymentMethodsStore();
 	const toast = useToast();
 
+	await getPaymentMethods();
+
 	const myVisible = ref(visible);
-	const zoneID = ref(0);
-	const landDirection = ref('');
+	const zone = ref(0);
+	const landAreaDirection = ref('');
 	const isFront = ref(false);
 	const lat = ref(0);
 	const long = ref(0);
@@ -19,33 +23,37 @@
 	const numberOfWC = ref(0);
 	const price = ref(0);
 	const owner = ref(0);
-	const buyStatus = ref(0);
+	const buyStatus = ref('');
 	const desc = ref('');
+	const paymentMethod = ref(0);
 
 	const onSave = async () => {
 		const newLandAreaData = {
 			id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1,
-			zone_id: zoneID.value,
-			land_direction: landDirection.value,
+			zone_id: parseInt(zone.value),
+			land_direction: parseInt(landAreaDirection.value),
 			is_front: isFront.value,
-			lat: lat.value,
-			long: long.value,
-			building_area: buildingArea.value,
-			total_area: totalArea.value,
-			progress: progress.value,
-			number_of_floor: numberOfFloor.value,
-			number_of_room: numberOfRoom.value,
-			number_of_wc: numberOfWC.value,
-			price: price.value,
-			owner: owner.value,
+			lat: parseInt(lat.value),
+			long: parseInt(long.value),
+			building_area: parseInt(buildingArea.value),
+			total_area: parseInt(totalArea.value),
+			progress: parseInt(progress.value),
+			number_of_floor: parseInt(numberOfFloor.value),
+			number_of_room: parseInt(numberOfRoom.value),
+			number_of_wc: parseInt(numberOfWC.value),
+			price: parseInt(price.value),
+			owner: parseInt(owner.value),
 			buy_status: buyStatus.value,
 			desc: desc.value,
+			payment_method_id: parseInt(paymentMethod.value),
 			deleted: 'true',
 			created_by: 13,
 			updated_by: 13,
 			created_at: new Date().toLocaleString(),
 			updated_at: null,
 		};
+
+		console.log(newLandAreaData);
 
 		const response = await addNewLandArea(newLandAreaData);
 		myVisible.value = false;
@@ -86,16 +94,26 @@
 		</template>
 
 		<template class="flex flex-col gap-3">
-			<div class="flex flex-1 flex-col gap-2">
-				<label for="zone_id">Zone</label>
-				<Dropdown
-					id="zone_id"
-					placeholder="Select Zone"
-					v-model="currentZone"
-					:options="zones"
-					optionLabel="name"
-					optionValue="value"
-				/>
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="desc">Name</label>
+					<InputText
+						id="desc"
+						v-model="desc"
+						placeholder="Name"
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="zone">Zone</label>
+					<Dropdown
+						id="zone"
+						placeholder="Select Zone"
+						v-model="zone"
+						:options="zonesDropdown"
+						optionLabel="name"
+						optionValue="value"
+					/>
+				</div>
 			</div>
 
 			<div class="flex gap-3">
@@ -103,7 +121,6 @@
 					<label for="lat">Latitude</label>
 					<InputNumber
 						id="lat"
-						placeholder="Latitude"
 						mode="decimal"
 						v-model="lat"
 					/>
@@ -112,9 +129,28 @@
 					<label for="long">Longitude</label>
 					<InputNumber
 						id="long"
-						placeholder="Longitude"
 						mode="decimal"
 						v-model="long"
+					/>
+				</div>
+			</div>
+
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="totalArea">Total Area</label>
+					<InputNumber
+						id="totalArea"
+						mode="decimal"
+						v-model="totalArea"
+						:min="0"
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="landAreaDirection">Land Area Direction</label>
+					<InputText
+						id="landAreaDirection"
+						placeholder="Land Area Direction"
+						v-model="landAreaDirection"
 					/>
 				</div>
 			</div>
@@ -124,27 +160,13 @@
 					<label for="buildingArea">Building Area</label>
 					<InputNumber
 						id="buildingArea"
-						placeholder="Building Area"
 						mode="decimal"
 						v-model="buildingArea"
 						:min="0"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="totalArea">Total Area</label>
-					<InputNumber
-						id="totalArea"
-						placeholder="Total Area"
-						mode="decimal"
-						v-model="totalArea"
-						:min="0"
-					/>
-				</div>
-			</div>
-
-			<div class="flex gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="numberOfFloor">Number of floor</label>
+					<label for="numberOfFloor">Number Of Floor</label>
 					<InputNumber
 						id="numberOfFloor"
 						mode="decimal"
@@ -152,8 +174,11 @@
 						:min="0"
 					/>
 				</div>
+			</div>
+
+			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="numberOfRoom">Number of room</label>
+					<label for="numberOfRoom">Number Of Room</label>
 					<InputNumber
 						id="numberOfRoom"
 						mode="decimal"
@@ -161,24 +186,13 @@
 						:min="0"
 					/>
 				</div>
-			</div>
-
-			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="numberOfWC">Number of WC</label>
+					<label for="numberOfWC">Number Of WC</label>
 					<InputNumber
 						id="numberOfWC"
 						mode="decimal"
 						v-model="numberOfWC"
 						:min="0"
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="landDirection">Land Direction</label>
-					<InputText
-						id="landDirection"
-						placeholder="Land Direction"
-						v-model="landDirection"
 					/>
 				</div>
 			</div>
@@ -195,6 +209,20 @@
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
+					<label for="paymentMethod">Payment Method</label>
+					<Dropdown
+						id="paymentMethod"
+						v-model="paymentMethod"
+						placeholder="Select Payment Method"
+						:options="paymentMethodsDropdown"
+						optionLabel="name"
+						optionValue="value"
+					/>
+				</div>
+			</div>
+
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
 					<label for="progress">Progress</label>
 					<InputNumber
 						id="progress"
@@ -202,6 +230,17 @@
 						mode="decimal"
 						prefix="%"
 						:min="0"
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="buyStatus">Buy Status</label>
+					<Dropdown
+						id="buyStatus"
+						placeholder="Select Status"
+						v-model="buyStatus"
+						:options="statuses"
+						optionLabel="name"
+						optionValue="value"
 					/>
 				</div>
 			</div>

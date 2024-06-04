@@ -1,17 +1,26 @@
 <script setup>
-	const { visible } = defineProps(['visible']);
+	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const { zones } = storeToRefs(useZonesStore());
-	const { getZones } = useZonesStore();
+	const { zones, zonesDropdown } = storeToRefs(useZonesStore());
 	const { currentLandArea } = storeToRefs(useLandAreasStore());
+	const { editLandArea } = useLandAreasStore();
+	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
+	const { getPaymentMethods } = usePaymentMethodsStore();
+	const toast = useToast();
+
+	await getPaymentMethods();
 
 	const myVisible = ref(visible);
-	const zoneID = ref(currentLandArea.value['zone_id']);
-	const landDirection = ref(currentLandArea.value['land_direction']);
+	const zone = ref(
+		zonesDropdown.value.filter(
+			(zone) => zone['value'] == currentLandArea.value['zone_id']
+		)?.[0]?.['value']
+	);
+	const landAreaDirection = ref(currentLandArea.value['land_direction']);
 	const isFront = ref(currentLandArea.value['is_front']);
 	const lat = ref(currentLandArea.value['lat']);
 	const long = ref(currentLandArea.value['long']);
-	const buildingArea = ref(currentLandArea.value['building_area']);
+	const buildingArea = ref(0);
 	const totalArea = ref(currentLandArea.value['total_area']);
 	const progress = ref(currentLandArea.value['progress']);
 	const numberOfFloor = ref(currentLandArea.value['number_of_floor']);
@@ -21,6 +30,12 @@
 	const owner = ref(currentLandArea.value['owner']);
 	const buyStatus = ref(currentLandArea.value['buy_status']);
 	const desc = ref(currentLandArea.value['desc']);
+	const paymentMethod = ref(
+		paymentMethodsDropdown.value.filter(
+			(payment) =>
+				payment['value'] == currentLandArea.value['payment_method_id']
+		)?.[0]?.['value']
+	);
 	const createdAt = ref(currentLandArea.value['created_at']);
 	const updatedAt = ref(currentLandArea.value['updated_at']);
 </script>
@@ -41,22 +56,28 @@
 		</template>
 
 		<template class="flex flex-col gap-3">
-			<div class="flex flex-1 flex-col gap-2">
-				<label for="desc">Name</label>
-				<InputText
-					id="desc"
-					v-model="desc"
-					disabled
-				/>
-			</div>
-
-			<div class="flex flex-1 flex-col gap-2">
-				<label for="zone_id">Zone</label>
-				<InputText
-					id="zone_id"
-					v-model="zoneID"
-					disabled
-				/>
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="desc">Name</label>
+					<InputText
+						id="desc"
+						v-model="desc"
+						placeholder="Name"
+						disabled
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="zone">Zone</label>
+					<Dropdown
+						id="zone"
+						placeholder="Select Zone"
+						v-model="zone"
+						:options="zonesDropdown"
+						optionLabel="name"
+						optionValue="value"
+						disabled
+					/>
+				</div>
 			</div>
 
 			<div class="flex gap-3">
@@ -82,20 +103,21 @@
 
 			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="buildingArea">Building Area</label>
-					<InputNumber
-						id="buildingArea"
-						mode="decimal"
-						v-model="buildingArea"
-						disabled
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
 					<label for="totalArea">Total Area</label>
 					<InputNumber
 						id="totalArea"
 						mode="decimal"
 						v-model="totalArea"
+						:min="0"
+						disabled
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="landAreaDirection">Land Area Direction</label>
+					<InputText
+						id="landAreaDirection"
+						placeholder="Land Area Direction"
+						v-model="landAreaDirection"
 						disabled
 					/>
 				</div>
@@ -103,20 +125,22 @@
 
 			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="numberOfFloor">Number of floor</label>
+					<label for="buildingArea">Building Area</label>
+					<InputNumber
+						id="buildingArea"
+						mode="decimal"
+						v-model="buildingArea"
+						:min="0"
+						disabled
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="numberOfFloor">Number Of Floor</label>
 					<InputNumber
 						id="numberOfFloor"
 						mode="decimal"
 						v-model="numberOfFloor"
-						disabled
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="numberOfRoom">Number of room</label>
-					<InputNumber
-						id="numberOfRoom"
-						mode="decimal"
-						v-model="numberOfRoom"
+						:min="0"
 						disabled
 					/>
 				</div>
@@ -124,19 +148,22 @@
 
 			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="numberOfWC">Number of WC</label>
+					<label for="numberOfRoom">Number Of Room</label>
 					<InputNumber
-						id="numberOfWC"
+						id="numberOfRoom"
 						mode="decimal"
-						v-model="numberOfWC"
+						v-model="numberOfRoom"
+						:min="0"
 						disabled
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="landDirection">Land Direction</label>
-					<InputText
-						id="landDirection"
-						v-model="landDirection"
+					<label for="numberOfWC">Number Of WC</label>
+					<InputNumber
+						id="numberOfWC"
+						mode="decimal"
+						v-model="numberOfWC"
+						:min="0"
 						disabled
 					/>
 				</div>
@@ -150,9 +177,25 @@
 						v-model="price"
 						mode="decimal"
 						prefix="$"
+						:min="0"
 						disabled
 					/>
 				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="paymentMethod">Payment Method</label>
+					<Dropdown
+						id="paymentMethod"
+						v-model="paymentMethod"
+						placeholder="Select Payment Method"
+						:options="paymentMethodsDropdown"
+						optionLabel="name"
+						optionValue="value"
+						disabled
+					/>
+				</div>
+			</div>
+
+			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="progress">Progress</label>
 					<InputNumber
@@ -160,6 +203,19 @@
 						v-model="progress"
 						mode="decimal"
 						prefix="%"
+						:min="0"
+						disabled
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="buyStatus">Buy Status</label>
+					<Dropdown
+						id="buyStatus"
+						placeholder="Select Status"
+						v-model="buyStatus"
+						:options="statuses"
+						optionLabel="name"
+						optionValue="value"
 						disabled
 					/>
 				</div>

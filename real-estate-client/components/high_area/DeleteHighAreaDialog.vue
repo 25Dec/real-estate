@@ -1,28 +1,21 @@
 <script setup>
-	import { baseUrl } from '~/constants';
+	const { visible } = defineProps(['visible']);
 
-	const { visible, data } = defineProps(['visible', 'data']);
-	const accessToken = useCookie('token');
+	const { currentHighArea } = storeToRefs(useHighAreasStore());
+	const { deleteHighArea } = useHighAreasStore();
 	const toast = useToast();
 
 	const myVisible = ref(visible);
 
 	const onDelete = async () => {
-		const response = await $fetch(baseUrl + `/auth/message/${data['id']}`, {
-			method: 'delete',
-			headers: {
-				'Content-Type': 'application/json',
-				access_token: accessToken.value,
-			},
-		});
-
+		const response = await deleteHighArea(currentHighArea.value);
 		myVisible.value = false;
 
 		if (response != null && response['result'] == 'ok') {
 			toast.add({
 				severity: 'success',
 				summary: 'Success',
-				detail: 'Delete Notification Successfully!',
+				detail: 'Delete High Area Successfully!',
 				group: 'bl',
 				life: 3000,
 			});
@@ -30,7 +23,7 @@
 			toast.add({
 				severity: 'warning',
 				summary: 'Error',
-				detail: 'Failed to Delete Notification',
+				detail: 'Failed to Delete High Area',
 				group: 'bl',
 				life: 3000,
 			});
@@ -49,13 +42,13 @@
 	>
 		<template #header>
 			<div class="inline-flex items-center justify-center gap-2">
-				<span class="font-bold text-xl">Delete Notification?</span>
+				<span class="font-bold text-xl">Delete High Area?</span>
 			</div>
 		</template>
 		<div>
 			<span>
-				This will delete notification
-				<b>{{ data['title'] }}</b>
+				This will delete high area
+				<b>{{ currentHighArea['desc'] }}</b>
 				permanently!
 			</span>
 			<span>You cannot undo this action!</span>

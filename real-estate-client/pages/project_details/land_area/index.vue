@@ -14,9 +14,10 @@
 	zones.value = zones.value.map((zone) => {
 		return { id: zone.id, name: `${zone.name}`, value: `${zone.id}` };
 	});
+	const myZones = ref(zones.value);
 	const currentZone = ref({
-		name: zones.value[0]?.name ?? '',
-		value: zones.value[0]?.value ?? '',
+		name: myZones.value[0]?.name ?? '',
+		value: myZones.value[0]?.value ?? '',
 	});
 
 	const myLandAreasBaseOnZoneID = computed(() => {
@@ -149,7 +150,10 @@
 					header="Buy Status"
 				>
 					<template #body="{ data }">
-						{{ data['buy_status'] }}
+						<Tag
+							:severity="data['buy_status'] == 'booked' ? 'danger' : 'success'"
+							:value="data['buy_status'].toUpperCase()"
+						/>
 					</template>
 				</Column>
 

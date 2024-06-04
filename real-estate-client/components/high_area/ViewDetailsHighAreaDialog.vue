@@ -118,7 +118,7 @@
 
 			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="numberOfRoom">Number of room</label>
+					<label for="numberOfRoom">Number Of Room</label>
 					<InputNumber
 						id="numberOfRoom"
 						mode="decimal"
@@ -127,7 +127,7 @@
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="numberOfWC">Number of WC</label>
+					<label for="numberOfWC">Number Of WC</label>
 					<InputNumber
 						id="numberOfWC"
 						mode="decimal"

@@ -96,7 +96,7 @@
 					header="Description"
 				>
 					<template #body="{ data }">
-						{{ data['desc'] }}
+						{{ hideLongText(data['desc']) }}
 					</template>
 				</Column>
 

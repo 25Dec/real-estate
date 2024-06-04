@@ -1,4 +1,5 @@
 <script setup>
+	const { currentLandArea } = storeToRefs(useLandAreasStore());
 	const { getPaymentMethods } = usePaymentMethodsStore();
 	const { paymentMethodsProcess } = storeToRefs(
 		usePaymentMethodsProcessStore()
@@ -10,7 +11,10 @@
 
 	const myPaymentMethodsProcessBaseOnPMId = computed(() => {
 		return paymentMethodsProcess.value.filter((process) => {
-			return process['payment_method_id'] == 6;
+			return (
+				process['payment_method_id'] ==
+				currentLandArea.value['payment_method_id']
+			);
 		});
 	});
 </script>
