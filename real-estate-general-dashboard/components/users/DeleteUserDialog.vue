@@ -1,19 +1,33 @@
 <script setup>
-	import { accessToken, baseUrl } from '~/constants';
+	const { visible } = defineProps(['visible']);
 
-	const { visible, data } = defineProps(['visible', 'data']);
+	const toast = useToast();
+	const { currentUser } = storeToRefs(useUsersStore());
+	const { deleteUser } = useUsersStore();
+
 	const myVisible = ref(visible);
 
 	const onDelete = async () => {
-		await $fetch(baseUrl + `/auth/account/${data['id']}`, {
-			method: 'delete',
-			headers: {
-				'Content-Type': 'application/json',
-				access_token: accessToken,
-			},
-		});
-
+		const response = await deleteUser(currentUser.value);
 		myVisible.value = false;
+
+		if (response != null && response['result'] == 'ok') {
+			toast.add({
+				severity: 'success',
+				summary: 'Success',
+				detail: 'Delete User Successfully!',
+				group: 'bl',
+				life: 3000,
+			});
+		} else {
+			toast.add({
+				severity: 'warning',
+				summary: 'Error',
+				detail: 'Failed to Delete User',
+				group: 'bl',
+				life: 3000,
+			});
+		}
 	};
 </script>
 
@@ -21,6 +35,7 @@
 	<Dialog
 		v-model:visible="myVisible"
 		modal
+		maximizable
 		header="Header"
 		:style="{ width: '50rem' }"
 		:breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
@@ -32,7 +47,7 @@
 		</template>
 		<div>
 			<span>
-				This will delete user
+				This will delete User
 				<b>{{ `${data['first_name']} ${data['last_name']}` }}</b>
 				permanently!
 			</span>

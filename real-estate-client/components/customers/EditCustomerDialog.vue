@@ -1,27 +1,28 @@
 <script setup>
-	const { visible, roles, data } = defineProps(['visible', 'roles', 'data']);
+	const { visible, roles } = defineProps(['visible', 'roles']);
 
 	const toast = useToast();
-	const { editAccount } = useAccountsStore();
+	const { currentCustomer } = storeToRefs(useCustomersStore());
+	const { editCustomer } = useCustomersStore();
 
 	const myVisible = ref(visible);
-	const socialID = ref(data['social_id']);
-	const phone = ref(data['phone']);
-	const loginName = ref(data['login_name']);
-	const password = ref(data['password']);
-	const firstName = ref(data['first_name']);
-	const lastName = ref(data['last_name']);
-	const email = ref(data['email']);
-	const type = ref(data['type']);
-	const phoneVerified = ref(data['phone_verified']);
-	const emailVerified = ref(data['email_verified']);
-	const socialVerified = ref(data['social_verified']);
-	const createdAt = ref(data['created_at']);
-	const updatedAt = ref(data['updated_at']);
+	const socialID = ref(currentCustomer.value['social_id']);
+	const phone = ref(currentCustomer.value['phone']);
+	const loginName = ref(currentCustomer.value['login_name']);
+	const password = ref(currentCustomer.value['password']);
+	const firstName = ref(currentCustomer.value['first_name']);
+	const lastName = ref(currentCustomer.value['last_name']);
+	const email = ref(currentCustomer.value['email']);
+	const type = ref(currentCustomer.value['type']);
+	const phoneVerified = ref(currentCustomer.value['phone_verified']);
+	const emailVerified = ref(currentCustomer.value['email_verified']);
+	const socialVerified = ref(currentCustomer.value['social_verified']);
+	const createdAt = ref(currentCustomer.value['created_at']);
+	const updatedAt = ref(currentCustomer.value['updated_at']);
 
 	const onSave = async () => {
 		const newCustomerData = {
-			...data,
+			...currentCustomer.value,
 			social_id: socialID.value,
 			phone: phone.value,
 			first_name: firstName.value,
@@ -35,7 +36,7 @@
 			updated_at: new Date().toLocaleString(),
 		};
 
-		const response = await editAccount(data);
+		const response = await editCustomer(newCustomerData);
 		myVisible.value = false;
 
 		if (response != null && response['result'] == 'ok') {

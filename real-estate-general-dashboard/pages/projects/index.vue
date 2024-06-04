@@ -1,45 +1,33 @@
 <script setup>
 	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
-	import { baseUrl, accessToken } from '../../constants/index';
 
-	const { data } = await useFetch(baseUrl + '/auth/project', {
-		headers: {
-			'Content-Type': 'application/json',
-			access_token: accessToken,
-		},
-	});
+	const { projects } = storeToRefs(useProjectsStore());
+	const { getProjects } = useProjectsStore();
 
-	const projects = ref(data.value.data.data);
-	const project = ref({});
+	await getProjects();
+
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
+	const menu = ref();
+
 	const viewDetailsProjectDialogVisible = ref(false);
 	const createProjectDialogVisible = ref(false);
 	const editProjectDialogVisible = ref(false);
 	const deleteProjectDialogVisible = ref(false);
 
-	const viewDetailsProject = (data) => {
-		project.value = data;
+	const toggleViewProjectDetails = async (data) => {
+		currentProject.value = data;
 		viewDetailsProjectDialogVisible.value =
 			!viewDetailsProjectDialogVisible.value;
 	};
-
-	const editProject = async (data) => {
-		project.value = data;
+	const toggleEditProject = async (data) => {
+		currentProject.value = data;
 		editProjectDialogVisible.value = !editProjectDialogVisible.value;
 	};
-
-	const deleteProject = async (data) => {
-		await $fetch(baseUrl + `/auth/project/${data['id']}`, {
-			method: 'delete',
-			headers: {
-				'Content-Type': 'application/json',
-				access_token: accessToken,
-			},
-		});
-		project.value = data;
+	const toggleDeleteProject = async (data) => {
+		currentProject.value = data;
 		deleteProjectDialogVisible.value = !deleteProjectDialogVisible.value;
 	};
 </script>
@@ -50,7 +38,7 @@
 			class="fixed right-0 top-0 z-50 backdrop-blur-xl w-5/6 h-[8%] px-4 border-b flex justify-between items-center"
 		>
 			<div class="flex items-center gap-2">
-				<span class="font-semibold text-lg">Projects</span>
+				<span class="font-semibold text-lg">Project</span>
 				<Tag :value="projects.length"></Tag>
 			</div>
 
@@ -61,12 +49,12 @@
 					</InputIcon>
 					<InputText
 						v-model="filters['global'].value"
-						placeholder="Filter projects..."
+						placeholder="Filter project..."
 					/>
 				</IconField>
 				<Button
 					size="small"
-					label="New Project"
+					label="New"
 					@click="createProjectDialogVisible = !createProjectDialogVisible"
 				/>
 			</div>
@@ -81,59 +69,40 @@
 				:rowsPerPageOptions="[5, 10, 20, 50]"
 				scrollable
 				scrollHeight="flex"
-				sortField="id"
-				:sortOrder="-1"
+				removableSort
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
-						<span>No projects found.</span>
+						<span>No project found.</span>
 					</div>
 				</template>
 
 				<Column
-					field="id"
-					header="ID"
-					sortable
-					class="backdrop-blur-lg"
-				>
-					<template #body="{ data }">
-						{{ data['id'] }}
-					</template>
-				</Column>
-
-				<Column
 					field="name"
 					header="Name"
-					sortable
-					class="backdrop-blur-lg"
 				>
 					<template #body="{ data }">
-						<div class="flex items-center gap-3">
-							<span class="font-semibold">{{ data['name'] }}</span>
-						</div>
+						{{ data['name'] }}
 					</template>
 				</Column>
 
 				<Column
-					field="activated"
-					header="Activated"
-					sortable
-					class="backdrop-blur-lg"
+					field="desc"
+					header="Description"
 				>
 					<template #body="{ data }">
-						{{ data['activated'] }}
+						{{ data['desc'] }}
 					</template>
 				</Column>
 
 				<Column
-					field="project_progress"
+					field="progress"
 					header="Progress"
 					sortable
-					class="backdrop-blur-lg"
 				>
 					<template #body="{ data }">
 						<Knob
-							v-model="data['project_progress']"
+							v-model="data['progress']"
 							readonly
 							:size="50"
 						/>
@@ -145,24 +114,36 @@
 						<Button
 							text
 							severity="secondary"
-							@click="viewDetailsProject(data)"
+							@click="toggleViewProjectDetails(data)"
 						>
 							<Icon name="mdi:eye-outline" />
 						</Button>
 						<Button
 							text
 							severity="secondary"
-							@click="editProject(data)"
+							@click="toggleEditProject(data)"
 						>
 							<Icon name="mdi:edit-outline" />
 						</Button>
 						<Button
 							text
 							severity="danger"
-							@click="deleteProject(data)"
+							@click="toggleDeleteProject(data)"
 						>
 							<Icon name="mdi:delete-outline" />
 						</Button>
+						<Button
+							text
+							severity="secondary"
+							@click="(event) => menu.toggle(event)"
+						>
+							<Icon name="mdi:more-vert" />
+						</Button>
+						<Menu
+							ref="menu"
+							:model="menuItems"
+							:popup="true"
+						/>
 					</template>
 				</Column>
 			</DataTable>
@@ -171,20 +152,18 @@
 	<ViewDetailsProjectDialog
 		v-if="viewDetailsProjectDialogVisible"
 		:visible="viewDetailsProjectDialogVisible"
-		:data="project"
 	/>
 	<CreateProjectDialog
 		v-if="createProjectDialogVisible"
 		:visible="createProjectDialogVisible"
+		:allProjectIDs="allProjectIDs"
 	/>
 	<EditProjectDialog
 		v-if="editProjectDialogVisible"
 		:visible="editProjectDialogVisible"
-		:data="project"
 	/>
 	<DeleteProjectDialog
 		v-if="deleteProjectDialogVisible"
 		:visible="deleteProjectDialogVisible"
-		:data="project"
 	/>
 </template>

@@ -1,29 +1,16 @@
 <script setup>
 	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
-	import { baseUrl, accessToken } from '../../constants/index';
 
-	const messages = await useFetch(baseUrl + '/auth/message', {
-		headers: {
-			'Content-Type': 'application/json',
-			access_token: accessToken,
-		},
-	});
-
-	const projects = await useFetch(baseUrl + '/auth/project', {
-		headers: {
-			'Content-Type': 'application/json',
-			access_token: accessToken,
-		},
-	});
-
-	const notifications = ref(messages.data.value.data.data);
-	const allProjectIDs = ref(
-		projects.data.value.data.data.map((project) => {
-			return { name: `${project.id}`, value: project.id };
-		})
+	const { notifications, currentNotification } = storeToRefs(
+		useNotificationsStore()
 	);
-	const notification = ref({});
+	const { getNotifications } = useNotificationsStore();
+	const { getProjects } = useProjectsStore();
+
+	await getNotifications();
+	await getProjects();
+
 	const statuses = ref([{ name: 'Info', value: 'info' }]);
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -33,26 +20,17 @@
 	const editNotificationDialogVisible = ref(false);
 	const deleteNotificationDialogVisible = ref(false);
 
-	const viewDetailsNotification = async (data) => {
-		notification.value = data;
+	const toggleViewDetailsNotification = async (data) => {
+		currentNotification.value = data;
 		viewDetailsNotificationDialogVisible.value =
 			!viewDetailsNotificationDialogVisible.value;
 	};
-
-	const editNotification = async (data) => {
-		notification.value = data;
+	const toggleEditNotification = async (data) => {
+		currentNotification.value = data;
 		editNotificationDialogVisible.value = !editNotificationDialogVisible.value;
 	};
-
-	const deleteNotification = async (data) => {
-		await $fetch(baseUrl + `/auth/message/${data['id']}`, {
-			method: 'delete',
-			headers: {
-				'Content-Type': 'application/json',
-				access_token: accessToken,
-			},
-		});
-		notification.value = data;
+	const toggleDeleteNotification = async (data) => {
+		currentNotification.value = data;
 		deleteNotificationDialogVisible.value =
 			!deleteNotificationDialogVisible.value;
 	};
@@ -80,7 +58,7 @@
 				</IconField>
 				<Button
 					size="small"
-					label="New Notification"
+					label="New"
 					@click="
 						createNotificationDialogVisible = !createNotificationDialogVisible
 					"
@@ -97,7 +75,7 @@
 				:rowsPerPageOptions="[5, 10, 20, 50]"
 				scrollable
 				scrollHeight="flex"
-				stripedRows
+				removableSort
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
@@ -106,32 +84,8 @@
 				</template>
 
 				<Column
-					field="id"
-					header="ID"
-					sortable
-					class="backdrop-blur-lg"
-				>
-					<template #body="{ data }">
-						{{ data['id'] }}
-					</template>
-				</Column>
-
-				<Column
-					field="projectID"
-					header="Project ID"
-					sortable
-					class="backdrop-blur-lg"
-				>
-					<template #body="{ data }">
-						{{ data['project_id'] }}
-					</template>
-				</Column>
-
-				<Column
 					field="title"
 					header="Title"
-					sortable
-					class="backdrop-blur-lg"
 				>
 					<template #body="{ data }">
 						<div class="flex items-center gap-3">
@@ -143,8 +97,6 @@
 				<Column
 					field="status"
 					header="Status"
-					sortable
-					class="backdrop-blur-lg"
 				>
 					<template #body="{ data }">
 						{{ data['status'] }}
@@ -156,21 +108,21 @@
 						<Button
 							text
 							severity="secondary"
-							@click="viewDetailsNotification(data)"
+							@click="toggleViewDetailsNotification(data)"
 						>
 							<Icon name="mdi:eye-outline" />
 						</Button>
 						<Button
 							text
 							severity="secondary"
-							@click="editNotification(data)"
+							@click="toggleEditNotification(data)"
 						>
 							<Icon name="mdi:edit-outline" />
 						</Button>
 						<Button
 							text
 							severity="danger"
-							@click="deleteNotification(data)"
+							@click="toggleDeleteNotification(data)"
 						>
 							<Icon name="mdi:delete-outline" />
 						</Button>
@@ -182,26 +134,20 @@
 	<ViewDetailsNotificationDialog
 		v-if="viewDetailsNotificationDialogVisible"
 		:visible="viewDetailsNotificationDialogVisible"
-		:data="notification"
-		:allProjectIDs="allProjectIDs"
 		:statuses="statuses"
 	/>
 	<CreateNotificationDialog
 		v-if="createNotificationDialogVisible"
 		:visible="createNotificationDialogVisible"
-		:allProjectIDs="allProjectIDs"
 		:statuses="statuses"
 	/>
 	<EditNotificationDialog
 		v-if="editNotificationDialogVisible"
 		:visible="editNotificationDialogVisible"
-		:data="notification"
-		:allProjectIDs="allProjectIDs"
 		:statuses="statuses"
 	/>
 	<DeleteNotificationDialog
 		v-if="deleteNotificationDialogVisible"
 		:visible="deleteNotificationDialogVisible"
-		:data="notification"
 	/>
 </template>

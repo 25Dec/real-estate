@@ -1,16 +1,8 @@
 <script setup>
-	import { baseUrl, accessToken } from '~/constants';
+	const { statistics } = storeToRefs(useDashboardStore());
+	const { getDashboardStatistics } = useDashboardStore();
 
-	const statistics = ref({});
-
-	const { data } = await useFetch(baseUrl + '/auth/dashboard/getStatistic', {
-		headers: {
-			'Content-Type': 'application/json',
-			access_token: accessToken,
-		},
-	});
-
-	statistics.value = { ...data.value.data };
+	await getDashboardStatistics();
 </script>
 
 <template>
@@ -22,6 +14,7 @@
 				<span class="font-semibold text-lg">Dashboard</span>
 			</div>
 		</div>
+
 		<div class="absolute top-[8%] w-full h-[92%]">
 			<div class="w-full px-4 pt-5 flex justify-between items-center gap-4">
 				<StatisticCard

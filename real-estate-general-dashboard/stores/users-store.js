@@ -1,9 +1,10 @@
 import { baseUrl } from '~/constants';
 
-export const useAccountsStore = defineStore('accounts', () => {
-	const accounts = ref([]);
+export const useUsersStore = defineStore('users', () => {
+	const users = ref([]);
+	const currentUser = ref({});
 
-	const getAccounts = async () => {
+	const getUsers = async () => {
 		const accessToken = useCookie('token');
 		const { data } = await useFetch(baseUrl + '/auth/account', {
 			headers: {
@@ -12,10 +13,10 @@ export const useAccountsStore = defineStore('accounts', () => {
 			},
 		});
 
-		accounts.value = data.value.data;
+		users.value = data.value.data;
 	};
 
-	const addNewAccount = async (data) => {
+	const addNewUser = async (data) => {
 		const accessToken = useCookie('token');
 		const response = await $fetch(baseUrl + `/auth/account`, {
 			method: 'post',
@@ -26,11 +27,11 @@ export const useAccountsStore = defineStore('accounts', () => {
 			body: data,
 		});
 
-		await getAccounts();
+		await getUsers();
 		return response;
 	};
 
-	const editAccount = async (data) => {
+	const editUser = async (data) => {
 		const accessToken = useCookie('token');
 		const response = await $fetch(baseUrl + `/auth/account/${data['id']}`, {
 			method: 'put',
@@ -38,14 +39,14 @@ export const useAccountsStore = defineStore('accounts', () => {
 				'Content-Type': 'application/json',
 				access_token: accessToken.value,
 			},
-			body: newCustomerData,
+			body: data,
 		});
 
-		await getAccounts();
+		await getUsers();
 		return response;
 	};
 
-	const deleteAccount = async (data) => {
+	const deleteUser = async (data) => {
 		const accessToken = useCookie('token');
 		const response = await $fetch(baseUrl + `/auth/account/${data['id']}`, {
 			method: 'delete',
@@ -55,15 +56,16 @@ export const useAccountsStore = defineStore('accounts', () => {
 			},
 		});
 
-		await getAccounts();
+		await getUsers();
 		return response;
 	};
 
 	return {
-		accounts,
-		getAccounts,
-		addNewAccount,
-		editAccount,
-		deleteAccount,
+		users,
+		currentUser,
+		getUsers,
+		addNewUser,
+		editUser,
+		deleteUser,
 	};
 });

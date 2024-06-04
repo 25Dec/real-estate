@@ -1,8 +1,8 @@
 <script setup>
-	import { accessToken, baseUrl } from '~/constants';
-
 	const { visible, roles } = defineProps(['visible', 'roles']);
+
 	const toast = useToast();
+	const { addNewUser } = useUsersStore();
 
 	const myVisible = ref(visible);
 	const socialID = ref('');
@@ -41,15 +41,7 @@
 			updated_at: null,
 		};
 
-		const response = await $fetch(baseUrl + `/auth/account`, {
-			method: 'post',
-			headers: {
-				'Content-Type': 'application/json',
-				access_token: accessToken,
-			},
-			body: newUserData,
-		});
-
+		const response = await addNewAccount(newUserData);
 		myVisible.value = false;
 
 		if (response != null && response['result'] == 'ok') {
@@ -89,33 +81,30 @@
 		<template class="flex flex-col gap-3">
 			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="firstName">First name</label>
+					<label for="firstName">First Name</label>
 					<InputText
 						id="firstName"
-						placeholder="First name"
+						placeholder="First Name"
 						v-model="firstName"
-						required
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="lastName">Last name</label>
+					<label for="lastName">Last Name</label>
 					<InputText
 						id="lastName"
-						placeholder="Last name"
+						placeholder="Last Name"
 						v-model="lastName"
-						required
 					/>
 				</div>
 			</div>
 
 			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="loginName">Login name</label>
+					<label for="loginName">Login Name</label>
 					<InputText
 						id="loginName"
-						placeholder="Login name"
+						placeholder="Login Name"
 						v-model="loginName"
-						required
 					/>
 				</div>
 
@@ -138,26 +127,24 @@
 						id="phone"
 						placeholder="+84 9698 886 660"
 						v-model="phone"
-						required
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="phoneVerified">Phone verified</label>
+					<label for="phoneVerified">Phone Verified</label>
 					<InputText
 						id="phoneVerified"
 						placeholder="+84 9698 886 660"
 						v-model="phoneVerified"
-						required
 					/>
 				</div>
 			</div>
 
 			<div class="flex flex-1 flex-col gap-2">
-				<label for="type">User role</label>
+				<label for="type">User Role</label>
 				<Dropdown
 					id="type"
 					class="flex-1"
-					placeholder="Select user role"
+					placeholder="Select User Role"
 					v-model="type"
 					:options="roles"
 					optionLabel="name"
@@ -171,16 +158,14 @@
 						id="email"
 						placeholder="example@gmail.com"
 						v-model="email"
-						required
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="emailVerified">Email verified</label>
+					<label for="emailVerified">Email Verified</label>
 					<InputText
 						id="emailVerified"
 						placeholder="example@gmail.com"
 						v-model="emailVerified"
-						required
 					/>
 				</div>
 			</div>
@@ -192,16 +177,14 @@
 						id="socialID"
 						placeholder="https://www.facebook.com"
 						v-model="socialID"
-						required
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="socialVerified">Social verified</label>
+					<label for="socialVerified">Social Verified</label>
 					<InputText
 						id="socialVerified"
 						placeholder="https://www.facebook.com"
 						v-model="socialVerified"
-						required
 					/>
 				</div>
 			</div>

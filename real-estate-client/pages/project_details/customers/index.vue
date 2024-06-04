@@ -1,14 +1,12 @@
 <script setup>
 	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
-	import { baseUrl } from '../../constants/index';
 
-	const accessToken = useCookie('token');
-	const { accounts } = storeToRefs(useAccountsStore());
-	const { getAccounts } = useAccountsStore();
-	await getAccounts();
+	const { customers, currentCustomer } = storeToRefs(useCustomersStore());
+	const { getCustomers } = useCustomersStore();
 
-	const customer = ref({});
+	await getCustomers();
+
 	const roles = ref([
 		{ name: 'Super Admin', value: 'super_admin' },
 		{ name: 'Admin', value: 'admin' },
@@ -23,25 +21,18 @@
 	const deleteCustomerDialogVisible = ref(false);
 
 	const viewDetailsCustomer = (data) => {
-		customer.value = data;
+		currentCustomer.value = data;
 		viewDetailsCustomerDialogVisible.value =
 			!viewDetailsCustomerDialogVisible.value;
 	};
 
 	const editCustomer = (data) => {
-		customer.value = data;
+		currentCustomer.value = data;
 		editCustomerDialogVisible.value = !editCustomerDialogVisible.value;
 	};
 
 	const deleteCustomer = async (data) => {
-		await $fetch(baseUrl + `/auth/account/${data['id']}`, {
-			method: 'delete',
-			headers: {
-				'Content-Type': 'application/json',
-				access_token: accessToken.value,
-			},
-		});
-		customer.value = data;
+		currentCustomer.value = data;
 		deleteCustomerDialogVisible.value = !deleteCustomerDialogVisible.value;
 	};
 </script>
@@ -53,7 +44,7 @@
 		>
 			<div class="flex items-center gap-2">
 				<span class="font-semibold text-lg">Customers</span>
-				<Tag :value="accounts.length" />
+				<Tag :value="customers.length" />
 			</div>
 
 			<div class="flex items-center gap-2">
@@ -63,7 +54,7 @@
 					</InputIcon>
 					<InputText
 						v-model="filters['global'].value"
-						placeholder="Filter customers..."
+						placeholder="Filter customer..."
 					/>
 				</IconField>
 				<Button
@@ -76,7 +67,7 @@
 
 		<div class="absolute top-[8%] w-full h-[92%]">
 			<DataTable
-				:value="accounts"
+				:value="customers"
 				v-model:filters="filters"
 				:paginator="true"
 				:rows="50"
@@ -183,7 +174,6 @@
 		v-if="viewDetailsCustomerDialogVisible"
 		:visible="viewDetailsCustomerDialogVisible"
 		:roles="roles"
-		:data="customer"
 	/>
 	<CreateCustomerDialog
 		v-if="createCustomerDialogVisible"
@@ -194,11 +184,9 @@
 		v-if="editCustomerDialogVisible"
 		:visible="editCustomerDialogVisible"
 		:roles="roles"
-		:data="customer"
 	/>
 	<DeleteCustomerDialog
 		v-if="deleteCustomerDialogVisible"
 		:visible="deleteCustomerDialogVisible"
-		:data="customer"
 	/>
 </template>

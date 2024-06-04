@@ -1,18 +1,14 @@
 <script setup>
-	import { accessToken, baseUrl } from '~/constants';
+	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const { visible, allProjectIDs, statuses } = defineProps([
-		'visible',
-		'allProjectIDs',
-		'statuses',
-	]);
 	const toast = useToast();
+	const { currentProjectID } = storeToRefs(useProjectsStore());
+	const { addNewNotification } = useNotificationsStore();
 
 	const myVisible = ref(visible);
 	const title = ref('');
 	const content = ref('');
 	const status = ref('');
-	const projectID = ref('');
 
 	const onSave = async () => {
 		const newNotiData = {
@@ -21,22 +17,14 @@
 			content: content.value,
 			status: status.value.value,
 			deleted: 'false',
-			project_id: projectID.value.value,
+			project_id: currentProjectID.value,
 			created_by: 13,
 			updated_by: 13,
 			created_at: new Date().toLocaleString(),
 			updated_at: null,
 		};
 
-		const response = await $fetch(baseUrl + `/auth/message`, {
-			method: 'post',
-			headers: {
-				'Content-Type': 'application/json',
-				access_token: accessToken,
-			},
-			body: newNotiData,
-		});
-
+		const response = await addNewNotification(newNotiData);
 		myVisible.value = false;
 
 		if (response != null && response['result'] == 'ok') {
@@ -63,6 +51,7 @@
 	<Dialog
 		v-model:visible="myVisible"
 		modal
+		maximizable
 		header="Header"
 		:style="{ width: '50rem' }"
 		:breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
@@ -80,32 +69,21 @@
 						id="title"
 						placeholder="Title"
 						v-model="title"
-						required
 					/>
 				</div>
 			</div>
 
 			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="projectID">Project ID</label>
-					<Dropdown
-						id="projectID"
-						class="flex-1"
-						placeholder="Select project ID"
-						v-model="projectID"
-						:options="allProjectIDs"
-						optionLabel="name"
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
 					<label for="status">Status</label>
 					<Dropdown
 						id="status"
 						class="flex-1"
-						placeholder="Select status"
+						placeholder="Select Status"
 						v-model="status"
 						:options="statuses"
 						optionLabel="name"
+						optionValue="value"
 					/>
 				</div>
 			</div>

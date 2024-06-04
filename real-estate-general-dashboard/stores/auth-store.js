@@ -1,39 +1,39 @@
 import { defineStore } from 'pinia';
 import { baseUrl } from '~/constants';
 
-export const useAuthStore = defineStore('auth', {
-	state: () => ({
-		authenticated: false,
-		user: {},
-	}),
-	actions: {
-		async authenticateUser(loginName, password) {
-			try {
-				const { data } = await $fetch(baseUrl + '/login', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: {
-						login_name: loginName,
-						password,
-					},
-				});
+export const useAuthStore = defineStore('auth', () => {
+	const authenticated = ref(false);
+	const user = ref({});
 
-				if (data != null) {
-					const token = useCookie('token');
-					token.value = data.token;
-					this.user = data;
-					localStorage.setItem('user', JSON.stringify(data));
-					this.authenticated = true;
-				}
-			} catch (error) {
-				this.authenticated = false;
+	const authenticateUser = async (loginName, password) => {
+		try {
+			const { data } = await $fetch(baseUrl + '/login', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: {
+					login_name: loginName,
+					password,
+				},
+			});
+
+			if (data != null) {
+				const token = useCookie('token');
+				token.value = data.token;
+				user.value = data;
+				localStorage.setItem('user', JSON.stringify(data));
+				authenticated.value = true;
 			}
-		},
-		logUserOut() {
-			const token = useCookie('token');
-			this.authenticated = false;
-			token.value = null;
-			localStorage.removeItem('user');
-		},
-	},
+		} catch (error) {
+			authenticated.value = false;
+		}
+	};
+
+	const logUserOut = () => {
+		const token = useCookie('token');
+		authenticated.value = false;
+		token.value = null;
+		localStorage.removeItem('user');
+	};
+
+	return { authenticated, user, authenticateUser, logUserOut };
 });

@@ -2,7 +2,7 @@
 	const { visible, roles } = defineProps(['visible', 'roles']);
 
 	const toast = useToast();
-	const { addNewAccount } = useAccountsStore();
+	const { addNewCustomer } = useCustomersStore();
 
 	const myVisible = ref(visible);
 	const socialID = ref('');

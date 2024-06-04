@@ -28,6 +28,10 @@ export { withCtx, withDirectives, withKeys, withMemo, withModifiers, withScopeId
 export { injectHead, useHead, useSeoMeta, useHeadSafe, useServerHead, useServerSeoMeta, useServerHeadSafe } from '@unhead/vue';
 export { capitalize, convertDateTime, getYearMonthDay } from '../utils/core_utils';
 export { useAuthStore } from '../stores/auth-store';
+export { useDashboardStore } from '../stores/dashboard-store';
+export { useNotificationsStore } from '../stores/notifications-store';
+export { useProjectsStore } from '../stores/projects-store';
+export { useUsersStore } from '../stores/users-store';
 export { usePrimeVue } from 'primevue/config';
 export { useStyle } from 'primevue/usestyle';
 export { useConfirm } from 'primevue/useconfirm';

@@ -1,20 +1,22 @@
 <script setup>
-	import { accessToken, baseUrl } from '~/constants';
+	const { visible, roles } = defineProps(['visible', 'roles']);
 
-	const { visible, roles, data } = defineProps(['visible', 'roles', 'data']);
+	const { currentUser } = storeToRefs(useUsersStore());
+
 	const myVisible = ref(visible);
-
-	const socialID = ref(data['social_id']);
-	const phone = ref(data['phone']);
-	const loginName = ref(data['login_name']);
-	const password = ref(data['password']);
-	const firstName = ref(data['first_name']);
-	const lastName = ref(data['last_name']);
-	const email = ref(data['email']);
-	const type = ref(data['type']);
-	const phoneVerified = ref(data['phone_verified']);
-	const emailVerified = ref(data['email_verified']);
-	const socialVerified = ref(data['social_verified']);
+	const socialID = ref(currentUser.value['social_id']);
+	const phone = ref(currentUser.value['phone']);
+	const loginName = ref(currentUser.value['login_name']);
+	const password = ref(currentUser.value['password']);
+	const firstName = ref(currentUser.value['first_name']);
+	const lastName = ref(currentUser.value['last_name']);
+	const email = ref(currentUser.value['email']);
+	const type = ref(currentUser.value['type']);
+	const phoneVerified = ref(currentUser.value['phone_verified']);
+	const emailVerified = ref(currentUser.value['email_verified']);
+	const socialVerified = ref(currentUser.value['social_verified']);
+	const createdAt = ref(currentUser.value['created_at']);
+	const updatedAt = ref(currentUser.value['updated_at']);
 </script>
 
 <template>
@@ -34,19 +36,19 @@
 		<template class="flex flex-col gap-3">
 			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="firstName">Firste</label>
+					<label for="firstName">First Name</label>
 					<InputText
 						id="firstName"
-						placeholder="First name"
+						placeholder="First Name"
 						v-model.trim="firstName"
 						disabled
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="lastName">Last name</label>
+					<label for="lastName">Last Name</label>
 					<InputText
 						id="lastName"
-						placeholder="Last name"
+						placeholder="Last Name"
 						v-model.trim="lastName"
 						disabled
 					/>
@@ -55,10 +57,10 @@
 
 			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="loginName">Login name</label>
+					<label for="loginName">Login Name</label>
 					<InputText
 						id="loginName"
-						placeholder="Login name"
+						placeholder="Login Name"
 						v-model.trim="loginName"
 						disabled
 					/>
@@ -78,7 +80,7 @@
 
 			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="phone">Phone number</label>
+					<label for="phone">Phone Number</label>
 					<InputText
 						id="phone"
 						placeholder="+84 9698 886 660"
@@ -88,7 +90,7 @@
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="phoneVerified">Phone verified</label>
+					<label for="phoneVerified">Phone Verified</label>
 					<InputText
 						id="phoneVerified"
 						placeholder="+84 9698 886 660"
@@ -100,11 +102,11 @@
 			</div>
 
 			<div class="flex flex-1 flex-col gap-2">
-				<label for="type">User role</label>
+				<label for="type">User Role</label>
 				<Dropdown
 					id="type"
 					class="flex-1"
-					placeholder="Select user role"
+					placeholder="Select User Role"
 					v-model="roles[roles.findIndex((role) => role.value == type)].value"
 					:options="roles"
 					optionLabel="name"
@@ -124,7 +126,7 @@
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="emailVerified">Email verified</label>
+					<label for="emailVerified">Email Verified</label>
 					<InputText
 						id="emailVerified"
 						placeholder="example@gmail.com"
@@ -145,7 +147,7 @@
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="socialVerified">Social verified</label>
+					<label for="socialVerified">Social Verified</label>
 					<InputText
 						id="socialVerified"
 						placeholder="https://www.facebook.com"
@@ -154,15 +156,17 @@
 					/>
 				</div>
 			</div>
+
 			<div class="flex flex-row gap-3 justify-between">
 				<span class="text-xs text-gray-400">
-					Created at: {{ convertDateTime(data['created_at']) }}
+					Created at: {{ convertDateTime(createdAt) }}
 				</span>
 				<span class="text-xs text-gray-400">
-					Updated at: {{ convertDateTime(data['updated_at']) }}
+					Updated at: {{ convertDateTime(updatedAt) }}
 				</span>
 			</div>
 		</template>
+
 		<template #footer>
 			<Button
 				type="button"

@@ -1,17 +1,12 @@
 <script setup>
 	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
-	import { baseUrl, accessToken } from '../../constants/index';
 
-	const { data } = await useFetch(baseUrl + '/auth/account', {
-		headers: {
-			'Content-Type': 'application/json',
-			access_token: accessToken,
-		},
-	});
+	const { users, currentUser } = storeToRefs(useUsersStore());
+	const { getUsers } = useUsersStore();
 
-	const users = ref(data.value.data);
-	const user = ref({});
+	await getUsers();
+
 	const roles = ref([
 		{ name: 'Super Admin', value: 'super_admin' },
 		{ name: 'Admin', value: 'admin' },
@@ -26,24 +21,17 @@
 	const deleteUserDialogVisible = ref(false);
 
 	const viewDetailsUser = (data) => {
-		user.value = data;
+		currentUser.value = data;
 		viewDetailsUserDialogVisible.value = !viewDetailsUserDialogVisible.value;
 	};
 
 	const editUser = (data) => {
-		user.value = data;
+		currentUser.value = data;
 		editUserDialogVisible.value = !editUserDialogVisible.value;
 	};
 
 	const deleteUser = async (data) => {
-		await $fetch(baseUrl + `/auth/account/${data['id']}`, {
-			method: 'delete',
-			headers: {
-				'Content-Type': 'application/json',
-				access_token: accessToken,
-			},
-		});
-		user.value = data;
+		currentUser.value = data;
 		deleteUserDialogVisible.value = !deleteUserDialogVisible.value;
 	};
 </script>
@@ -55,7 +43,7 @@
 		>
 			<div class="flex items-center gap-2">
 				<span class="font-semibold text-lg">Users</span>
-				<Tag :value="users.length"></Tag>
+				<Tag :value="users.length" />
 			</div>
 
 			<div class="flex items-center gap-2">
@@ -65,12 +53,12 @@
 					</InputIcon>
 					<InputText
 						v-model="filters['global'].value"
-						placeholder="Filter users..."
+						placeholder="Filter User..."
 					/>
 				</IconField>
 				<Button
 					size="small"
-					label="New User"
+					label="New"
 					@click="createUserDialogVisible = !createUserDialogVisible"
 				/>
 			</div>
@@ -87,22 +75,13 @@
 				scrollHeight="flex"
 				sortField="id"
 				:sortOrder="-1"
+				removableSort
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
-						<span>No customers found.</span>
+						<span>No Users Found.</span>
 					</div>
 				</template>
-
-				<Column
-					field="id"
-					header="ID"
-					:sortable="true"
-				>
-					<template #body="{ data }">
-						{{ data['id'] }}
-					</template>
-				</Column>
 
 				<Column
 					field="fullname"
@@ -194,7 +173,6 @@
 		v-if="viewDetailsUserDialogVisible"
 		:visible="viewDetailsUserDialogVisible"
 		:roles="roles"
-		:data="user"
 	/>
 	<CreateUserDialog
 		v-if="createUserDialogVisible"
@@ -205,11 +183,9 @@
 		v-if="editUserDialogVisible"
 		:visible="editUserDialogVisible"
 		:roles="roles"
-		:data="user"
 	/>
 	<DeleteUserDialog
 		v-if="deleteUserDialogVisible"
 		:visible="deleteUserDialogVisible"
-		:data="user"
 	/>
 </template>

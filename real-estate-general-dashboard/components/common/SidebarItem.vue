@@ -46,4 +46,9 @@
 		color: var(--black);
 		background-color: var(--onActive);
 	}
+
+	a:hover:not(.router-link-exact-active) {
+		color: var(--black);
+		background-color: var(--onHover);
+	}
 </style>

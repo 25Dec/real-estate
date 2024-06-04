@@ -1,13 +1,14 @@
 <script setup>
-	const { visible, data } = defineProps(['visible', 'data']);
+	const { visible } = defineProps(['visible']);
 
 	const toast = useToast();
-	const { deleteAccount } = useAccountsStore();
+	const { currentCustomer } = storeToRefs(useCustomersStore());
+	const { deleteCustomer } = useCustomersStore();
 
 	const myVisible = ref(visible);
 
 	const onDelete = async () => {
-		const response = await deleteAccount(data);
+		const response = await deleteCustomer(currentCustomer.value);
 		myVisible.value = false;
 
 		if (response != null && response['result'] == 'ok') {

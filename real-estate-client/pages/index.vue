@@ -5,7 +5,9 @@
 
 	const { projects } = storeToRefs(useProjectsStore());
 	const { getProjects } = useProjectsStore();
+
 	await getProjects();
+
 	const TOP_OFFSET = 200;
 	const showBackground = ref(false);
 	const abouts = [

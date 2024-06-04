@@ -1,47 +1,34 @@
 <script setup>
-	import { accessToken, baseUrl } from '~/constants';
-
-	const { visible, data, allProjectIDs, statuses } = defineProps([
-		'visible',
-		'allProjectIDs',
-		'data',
-		'statuses',
-	]);
+	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
 	const toast = useToast();
+	const { currentNotification } = storeToRefs(useNotificationsStore());
+	const { editNotification } = useNotificationsStore();
 
 	const myVisible = ref(visible);
-	const title = ref(data['title']);
-	const content = ref(data['content']);
-	const status = ref(data['status']);
-	const projectID = ref(data['project_id']);
+	const title = ref(currentNotification.value['title']);
+	const content = ref(currentNotification.value['content']);
+	const status = ref(currentNotification.value['status']);
+	const createdAt = ref(currentNotification.value['created_at']);
+	const updatedAt = ref(currentNotification.value['updated_at']);
 
 	const onSave = async () => {
 		const newNotiData = {
-			...data,
+			...currentNotification.value,
 			title: title.value,
 			content: content.value,
 			status: status.value.value,
-			projectID: projectID.value.value,
 			updated_at: new Date().toLocaleString(),
 		};
 
-		const response = await $fetch(baseUrl + `/auth/message/${data['id']}`, {
-			method: 'put',
-			headers: {
-				'Content-Type': 'application/json',
-				access_token: accessToken,
-			},
-			body: newNotiData,
-		});
-
+		const response = await editNotification(newNotiData);
 		myVisible.value = false;
 
 		if (response != null && response['result'] == 'ok') {
 			toast.add({
 				severity: 'success',
 				summary: 'Success',
-				detail: 'Change Notification Successfully!',
+				detail: 'Edit Notification Successfully!',
 				group: 'bl',
 				life: 3000,
 			});
@@ -49,7 +36,7 @@
 			toast.add({
 				severity: 'warning',
 				summary: 'Error',
-				detail: 'Failed to Change Notification',
+				detail: 'Failed to Edit Notification',
 				group: 'bl',
 				life: 3000,
 			});
@@ -79,34 +66,17 @@
 						id="title"
 						placeholder="Title"
 						v-model="title"
-						required
 					/>
 				</div>
 			</div>
 
 			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="projectID">Project ID</label>
-					<Dropdown
-						id="projectID"
-						class="flex-1"
-						placeholder="Select project ID"
-						v-model="
-							allProjectIDs[
-								allProjectIDs.findIndex((id) => id.value == projectID)
-							].value
-						"
-						:options="allProjectIDs"
-						optionLabel="name"
-						optionValue="value"
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
 					<label for="status">Status</label>
 					<Dropdown
 						id="status"
 						class="flex-1"
-						placeholder="Select status"
+						placeholder="Select Status"
 						v-model="status"
 						:options="statuses"
 						optionLabel="name"
@@ -125,6 +95,15 @@
 					rows="5"
 					cols="30"
 				/>
+			</div>
+
+			<div class="flex flex-row gap-3 justify-between">
+				<span class="text-xs text-gray-400">
+					Created at: {{ convertDateTime(createdAt) }}
+				</span>
+				<span class="text-xs text-gray-400">
+					Updated at: {{ convertDateTime(updatedAt) }}
+				</span>
 			</div>
 		</template>
 		<template #footer>

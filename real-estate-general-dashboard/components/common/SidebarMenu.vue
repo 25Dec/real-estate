@@ -1,6 +1,4 @@
 <script setup>
-	import { useAuthStore } from '~/stores/auth';
-
 	const router = useRouter();
 	const { logUserOut } = useAuthStore();
 
@@ -60,3 +58,10 @@
 		</div>
 	</div>
 </template>
+
+<style scoped>
+	a:hover:not(.router-link-exact-active) {
+		color: var(--black);
+		background-color: var(--onHover);
+	}
+</style>

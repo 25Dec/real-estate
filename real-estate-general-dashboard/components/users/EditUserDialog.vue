@@ -1,24 +1,28 @@
 <script setup>
-	import { accessToken, baseUrl } from '~/constants';
+	const { visible, roles } = defineProps(['visible', 'roles']);
 
-	const { visible, roles, data } = defineProps(['visible', 'roles', 'data']);
+	const toast = useToast();
+	const { currentUser } = storeToRefs(useUsersStore());
+	const { editUser } = useUsersStore();
+
 	const myVisible = ref(visible);
-
-	const socialID = ref(data['social_id']);
-	const phone = ref(data['phone']);
-	const loginName = ref(data['login_name']);
-	const password = ref(data['password']);
-	const firstName = ref(data['first_name']);
-	const lastName = ref(data['last_name']);
-	const email = ref(data['email']);
-	const type = ref(data['type']);
-	const phoneVerified = ref(data['phone_verified']);
-	const emailVerified = ref(data['email_verified']);
-	const socialVerified = ref(data['social_verified']);
+	const socialID = ref(currentUser.value['social_id']);
+	const phone = ref(currentUser.value['phone']);
+	const loginName = ref(currentUser.value['login_name']);
+	const password = ref(currentUser.value['password']);
+	const firstName = ref(currentUser.value['first_name']);
+	const lastName = ref(currentUser.value['last_name']);
+	const email = ref(currentUser.value['email']);
+	const type = ref(currentUser.value['type']);
+	const phoneVerified = ref(currentUser.value['phone_verified']);
+	const emailVerified = ref(currentUser.value['email_verified']);
+	const socialVerified = ref(currentUser.value['social_verified']);
+	const createdAt = ref(currentUser.value['created_at']);
+	const updatedAt = ref(currentUser.value['updated_at']);
 
 	const onSave = async () => {
 		const newUserData = {
-			...data,
+			...currentUser.value,
 			social_id: socialID.value,
 			phone: phone.value,
 			first_name: firstName.value,
@@ -32,16 +36,26 @@
 			updated_at: new Date().toLocaleString(),
 		};
 
-		await $fetch(baseUrl + `/auth/account/${data['id']}`, {
-			method: 'put',
-			headers: {
-				'Content-Type': 'application/json',
-				access_token: accessToken,
-			},
-			body: newUserData,
-		});
-
+		const response = await editUser(newUserData);
 		myVisible.value = false;
+
+		if (response != null && response['result'] == 'ok') {
+			toast.add({
+				severity: 'success',
+				summary: 'Success',
+				detail: 'Edit User Successfully!',
+				group: 'bl',
+				life: 3000,
+			});
+		} else {
+			toast.add({
+				severity: 'warning',
+				summary: 'Error',
+				detail: 'Failed to Edit User',
+				group: 'bl',
+				life: 3000,
+			});
+		}
 	};
 </script>
 
@@ -67,7 +81,6 @@
 						id="firstName"
 						placeholder="Firste"
 						v-model.trim="firstName"
-						required
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -76,7 +89,6 @@
 						id="lastName"
 						placeholder="Last name"
 						v-model.trim="lastName"
-						required
 					/>
 				</div>
 			</div>
@@ -88,7 +100,6 @@
 						id="loginName"
 						placeholder="Login name"
 						v-model.trim="loginName"
-						required
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -111,7 +122,6 @@
 						placeholder="+84 9698 886 660"
 						v-model.trim="phone"
 						integeronly
-						required
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -121,7 +131,6 @@
 						placeholder="+84 9698 886 660"
 						v-model.trim="phoneVerified"
 						integeronly
-						required
 					/>
 				</div>
 			</div>
@@ -131,7 +140,7 @@
 				<Dropdown
 					id="type"
 					class="flex-1"
-					placeholder="Select user role"
+					placeholder="Select User Role"
 					v-model="roles[roles.findIndex((role) => role.value == type)].value"
 					:options="roles"
 					optionLabel="name"
@@ -146,7 +155,6 @@
 						id="email"
 						placeholder="example@gmail.com"
 						v-model="email"
-						required
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -155,7 +163,6 @@
 						id="emailVerified"
 						placeholder="example@gmail.com"
 						v-model="emailVerified"
-						required
 					/>
 				</div>
 			</div>
@@ -167,7 +174,6 @@
 						id="socialID"
 						placeholder="https://www.facebook.com"
 						v-model="socialID"
-						required
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -176,16 +182,16 @@
 						id="socialVerified"
 						placeholder="https://www.facebook.com"
 						v-model="socialVerified"
-						required
 					/>
 				</div>
 			</div>
+
 			<div class="flex flex-row gap-3 justify-between">
 				<span class="text-xs text-gray-400">
-					Created at: {{ convertDateTime(data['created_at']) }}
+					Created at: {{ convertDateTime(createdAt) }}
 				</span>
 				<span class="text-xs text-gray-400">
-					Updated at: {{ convertDateTime(data['updated_at']) }}
+					Updated at: {{ convertDateTime(updatedAt) }}
 				</span>
 			</div>
 		</template>

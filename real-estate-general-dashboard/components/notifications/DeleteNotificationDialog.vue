@@ -1,20 +1,13 @@
 <script setup>
-	import { accessToken, baseUrl } from '~/constants';
-
 	const { visible, data } = defineProps(['visible', 'data']);
+
 	const toast = useToast();
+	const { deleteNotification } = useNotificationsStore();
 
 	const myVisible = ref(visible);
 
 	const onDelete = async () => {
-		const response = await $fetch(baseUrl + `/auth/message/${data['id']}`, {
-			method: 'delete',
-			headers: {
-				'Content-Type': 'application/json',
-				access_token: accessToken,
-			},
-		});
-
+		const response = await deleteNotification(data);
 		myVisible.value = false;
 
 		if (response != null && response['result'] == 'ok') {
@@ -41,6 +34,7 @@
 	<Dialog
 		v-model:visible="myVisible"
 		modal
+		maximizable
 		header="Header"
 		:style="{ width: '50rem' }"
 		:breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
@@ -53,7 +47,7 @@
 		<div>
 			<span>
 				This will delete notification
-				<b>{{ data['name'] }}</b>
+				<b>{{ data['title'] }}</b>
 				permanently!
 			</span>
 			<span>You cannot undo this action!</span>
