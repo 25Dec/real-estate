@@ -33,8 +33,7 @@
 
 	const myPaymentBaseOnHighID = computed(() => {
 		return highPaymentProcesses.value.filter((payment) => {
-			// return payment["high_area_id"] == currentHighAreaIDFromLocalStore.value;
-			return true;
+			return payment['high_area_id'] == currentHighAreaIDFromLocalStore.value;
 		});
 	});
 	const statuses = ref([{ name: 'Done', value: 'Done' }]);

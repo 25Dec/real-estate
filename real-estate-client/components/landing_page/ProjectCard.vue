@@ -2,7 +2,6 @@
 	const { data } = defineProps(['data']);
 
 	const router = useRouter();
-	const { currentProject } = storeToRefs(useProjectsStore());
 	const { setCurrentProject, setCurrentProjectID } = useProjectsStore();
 
 	const viewMore = () => {
@@ -30,8 +29,8 @@
 		</template>
 		<template #subtitle>
 			<Tag
-				:severity="data['activated'] == 'Activated' ? 'success' : 'danger'"
-				:value="data['activated'] == true ? 'Activated' : 'Not Activated'"
+				:severity="data['activated'] == 'true' ? 'success' : 'danger'"
+				:value="data['activated'] == 'true' ? 'Activated' : 'Not Activated'"
 			/>
 		</template>
 		<template #content>

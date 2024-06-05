@@ -5,12 +5,19 @@
 	const { currentProjectFromLocalStore, currentProjectIDFromLocalStore } =
 		storeToRefs(useProjectsStore());
 
+	const user = ref({});
+
+	if (process.client) {
+		user.value = JSON.parse(localStorage.getItem('user'));
+	}
+
 	const baseLink = '/project_details';
 	const links = [
 		{
 			name: 'Dashboard',
 			link: baseLink + `/${currentProjectIDFromLocalStore.value}`,
 			icon: 'mdi:view-dashboard-outline',
+			user.value['type']!="super_admin"?
 			items: [
 				{
 					name: 'Zone',
@@ -43,8 +50,9 @@
 							link: baseLink + '/high_area',
 					  }
 					: null,
-			],
+			]:[],
 		},
+		{ name: 'Projects', link: '/projects', icon: 'mdi:home-city-outline' },
 		{
 			name: 'Customers',
 			link: baseLink + '/customers',
@@ -66,11 +74,6 @@
 			icon: 'mdi:bell-outline',
 		},
 	];
-	let user = {};
-
-	if (process.client) {
-		user = JSON.parse(localStorage.getItem('user'));
-	}
 
 	const onLogout = () => {
 		logUserOut();

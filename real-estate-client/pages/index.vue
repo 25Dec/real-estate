@@ -19,22 +19,28 @@
 
 	const services = [
 		{
-			image: '/images/buy_home.png',
-			title: 'Buy a Home',
+			image: '/images/dashboard.png',
+			title: 'Dashboard System',
 			content:
-				'Over 2 million+ homes for sale available on the website, we can match you with a house you will want to call home.',
+				'Provide methods for project, user, and notification management. Manage all projects, users, and notifications in each project within the system.',
+			action: {
+				goto: {
+					path: '#projects',
+					external: true,
+				},
+			},
 		},
 		{
-			image: '/images/rent_home.png',
-			title: 'Rent a Home',
+			image: '/images/detail_project_support.png',
+			title: 'Detailed Project Support For Sales',
 			content:
-				'Over 4 million+ homes for sale available on the website, we can match you with a house you will want to call home.',
-		},
-		{
-			image: '/images/sell_home.png',
-			title: 'Sell a Home',
-			content:
-				'Over 3 million+ homes for sale available on the website, we can match you with a house you will want to call home.',
+				'Provide project, CRM, and sales processes in a project. Support the sales department to enhance performance.',
+			action: {
+				goto: {
+					path: '#projects',
+					external: true,
+				},
+			},
 		},
 	];
 	const features = [
@@ -187,7 +193,7 @@
 		class="relative pt-[100px] px-4 h-fit flex flex-col items-center gap-12"
 	>
 		<span class="text-4xl font-bold p-2 border-b">Our Services</span>
-		<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+		<div class="flex items-center gap-6">
 			<ServiceCard
 				v-for="service in services"
 				:key="services.title"
