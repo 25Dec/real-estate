@@ -21,15 +21,15 @@
 		)
 	);
 
-	const { currentHighArea, currentHighAreaIDFromLocalStore } = storeToRefs(
-		useHighAreasStore()
-	);
+	const { currentHighAreaIDFromLocalStore } = storeToRefs(useHighAreasStore());
 	const { highPaymentProcesses, currentHighPaymentProcess } = storeToRefs(
 		useHighPaymentProcessStore()
 	);
 	const { getHighPaymentProcesses } = useHighPaymentProcessStore();
+	const { getAccounts } = useAccountsStore();
 
 	await getHighPaymentProcesses();
+	await getAccounts();
 
 	const myPaymentBaseOnHighID = computed(() => {
 		return highPaymentProcesses.value.filter((payment) => {

@@ -1,17 +1,29 @@
 <script setup>
 	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const toast = useToast();
+	const { accounts, accountsDropdown: submitters } = storeToRefs(
+		useAccountsStore()
+	);
 	const { currentLandPaymentProcess } = storeToRefs(
 		useLandPaymentProcessStore()
 	);
 	const { editLandPaymentProcess } = useLandPaymentProcessStore();
+	const toast = useToast();
 
 	const myVisible = ref(visible);
 	const paymentTime = ref(currentLandPaymentProcess.value['payment_time']);
 	const amountOfMoney = ref(currentLandPaymentProcess.value['amount_of_money']);
 	const amountOfDebt = ref(currentLandPaymentProcess.value['amount_of_debt']);
-	const submitter = ref(currentLandPaymentProcess.value['submitter']);
+	const submitter = ref({
+		name: accounts.value.filter(
+			(acc) => acc['id'] == currentLandPaymentProcess.value['submitter']
+		)[0]['display_name'],
+		value: `${
+			accounts.value.filter(
+				(acc) => acc['id'] == currentLandPaymentProcess.value['submitter']
+			)[0]['id']
+		}`,
+	});
 	const status = ref(currentLandPaymentProcess.value['status']);
 
 	const onSave = async () => {
@@ -20,7 +32,7 @@
 			payment_time: parseInt(paymentTime.value),
 			amount_of_money: parseInt(amountOfMoney.value),
 			amount_of_debt: parseInt(amountOfDebt.value),
-			submitter: parseInt(46),
+			submitter: parseInt(submitter.value.value),
 			status: '',
 			updated_at: new Date().toLocaleString(),
 		};
@@ -100,27 +112,28 @@
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="submitter">Submitter</label>
-					<InputNumber
+					<Dropdown
 						id="submitter"
-						placeholder="Submitter"
-						mode="decimal"
-						v-model="submitter"
-						:min="0"
+						placeholder="Select Submitter"
+						v-model="submitter.value"
+						:options="submitters"
+						optionLabel="name"
+						optionValue="value"
 					/>
 				</div>
 			</div>
 
-			<div class="flex flex-1 flex-col gap-2">
+			<!-- <div class="flex flex-1 flex-col gap-2">
 				<label for="status">Status</label>
 				<Dropdown
 					id="status"
-					placeholder="Select Status"
+					placeholder="Select status"
 					v-model="status"
 					:options="statuses"
 					optionLabel="name"
 					optionValue="value"
 				/>
-			</div>
+			</div> -->
 		</template>
 		<template #footer>
 			<Button

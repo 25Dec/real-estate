@@ -1,5 +1,6 @@
 <script setup>
 	const router = useRouter();
+	const currentRoute = router['currentRoute'].value;
 
 	const { logUserOut } = useAuthStore();
 	const { currentProjectFromLocalStore, currentProjectIDFromLocalStore } =
@@ -11,69 +12,94 @@
 		user.value = JSON.parse(localStorage.getItem('user'));
 	}
 
-	const baseLink = '/project_details';
-	const links = [
-		{
-			name: 'Dashboard',
-			link: baseLink + `/${currentProjectIDFromLocalStore.value}`,
-			icon: 'mdi:view-dashboard-outline',
-			user.value['type']!="super_admin"?
-			items: [
+	const projectDetailsBaseLink = '/project_details';
+	const adminDashBoardBaseLink = '/admin';
+	const links = currentRoute['path'].includes('project_details')
+		? [
 				{
-					name: 'Zone',
-					link: baseLink + '/zone',
+					name: 'Dashboard',
+					link:
+						projectDetailsBaseLink + `/${currentProjectIDFromLocalStore.value}`,
+					icon: 'mdi:view-dashboard-outline',
+					items: [
+						{
+							name: 'Zone',
+							link: projectDetailsBaseLink + '/zone',
+						},
+						currentProjectFromLocalStore.value['type'] == 'high' ||
+						currentProjectFromLocalStore.value['type'] == 'hybrid'
+							? {
+									name: 'Block',
+									link: projectDetailsBaseLink + '/block',
+							  }
+							: null,
+						currentProjectFromLocalStore.value['type'] == 'high' ||
+						currentProjectFromLocalStore.value['type'] == 'hybrid'
+							? {
+									name: 'Floor',
+									link: projectDetailsBaseLink + '/floor',
+							  }
+							: null,
+						currentProjectFromLocalStore.value['type'] == 'land'
+							? {
+									name: 'Land Area',
+									link: projectDetailsBaseLink + '/land_area',
+							  }
+							: null,
+						currentProjectFromLocalStore.value['type'] == 'high' ||
+						currentProjectFromLocalStore.value['type'] == 'hybrid'
+							? {
+									name: 'High Area',
+									link: projectDetailsBaseLink + '/high_area',
+							  }
+							: null,
+					],
 				},
-				currentProjectFromLocalStore.value['type'] == 'high' ||
-				currentProjectFromLocalStore.value['type'] == 'hybrid'
-					? {
-							name: 'Block',
-							link: baseLink + '/block',
-					  }
-					: null,
-				currentProjectFromLocalStore.value['type'] == 'high' ||
-				currentProjectFromLocalStore.value['type'] == 'hybrid'
-					? {
-							name: 'Floor',
-							link: baseLink + '/floor',
-					  }
-					: null,
-				currentProjectFromLocalStore.value['type'] == 'land'
-					? {
-							name: 'Land Area',
-							link: baseLink + '/land_area',
-					  }
-					: null,
-				currentProjectFromLocalStore.value['type'] == 'high' ||
-				currentProjectFromLocalStore.value['type'] == 'hybrid'
-					? {
-							name: 'High Area',
-							link: baseLink + '/high_area',
-					  }
-					: null,
-			]:[],
-		},
-		{ name: 'Projects', link: '/projects', icon: 'mdi:home-city-outline' },
-		{
-			name: 'Customers',
-			link: baseLink + '/customers',
-			icon: 'mdi:account-supervisor-outline',
-		},
-		{
-			name: 'Payment Method',
-			link: baseLink + '/payment_method',
-			icon: 'mdi:payment',
-		},
-		{
-			name: 'Payment Process',
-			link: baseLink + '/payment_method_process',
-			icon: 'mdi:progress-helper',
-		},
-		{
-			name: 'Notifications',
-			link: baseLink + '/notifications',
-			icon: 'mdi:bell-outline',
-		},
-	];
+				{
+					name: 'Customers',
+					link: projectDetailsBaseLink + '/customers',
+					icon: 'mdi:account-supervisor-outline',
+				},
+				{
+					name: 'Payment Method',
+					link: projectDetailsBaseLink + '/payment_method',
+					icon: 'mdi:payment',
+				},
+				{
+					name: 'Payment Process',
+					link: projectDetailsBaseLink + '/payment_method_process',
+					icon: 'mdi:progress-helper',
+				},
+				{
+					name: 'Notifications',
+					link: projectDetailsBaseLink + '/notifications',
+					icon: 'mdi:bell-outline',
+				},
+		  ]
+		: currentRoute['path'].includes('admin')
+		? [
+				{
+					name: 'Dashboard',
+					link: adminDashBoardBaseLink,
+					icon: 'mdi:view-dashboard-outline',
+				},
+				{
+					name: 'Projects',
+					link: adminDashBoardBaseLink + '/projects',
+					icon: 'mdi:home-city-outline',
+				},
+				{
+					name: 'Users',
+					link: adminDashBoardBaseLink + '/users',
+					icon: 'mdi:account-supervisor-outline',
+				},
+				{
+					name: 'Notifications',
+					link: adminDashBoardBaseLink + '/notifications',
+					icon: 'mdi:bell-outline',
+				},
+		  ]
+		: [];
 
 	const onLogout = () => {
 		logUserOut();

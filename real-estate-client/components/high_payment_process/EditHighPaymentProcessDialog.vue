@@ -1,17 +1,29 @@
 <script setup>
 	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const toast = useToast();
+	const { accounts, accountsDropdown: submitters } = storeToRefs(
+		useAccountsStore()
+	);
 	const { currentHighPaymentProcess } = storeToRefs(
 		useHighPaymentProcessStore()
 	);
 	const { editHighPaymentProcess } = useHighPaymentProcessStore();
+	const toast = useToast();
 
 	const myVisible = ref(visible);
 	const paymentTime = ref(currentHighPaymentProcess.value['payment_time']);
 	const amountOfMoney = ref(currentHighPaymentProcess.value['amount_of_money']);
 	const amountOfDebt = ref(currentHighPaymentProcess.value['amount_of_debt']);
-	const submitter = ref(currentHighPaymentProcess.value['submitter']);
+	const submitter = ref({
+		name: accounts.value.filter(
+			(acc) => acc['id'] == currentHighPaymentProcess.value['submitter']
+		)[0]['display_name'],
+		value: `${
+			accounts.value.filter(
+				(acc) => acc['id'] == currentHighPaymentProcess.value['submitter']
+			)[0]['id']
+		}`,
+	});
 	const status = ref(currentHighPaymentProcess.value['status']);
 
 	const onSave = async () => {
@@ -20,7 +32,7 @@
 			payment_time: parseInt(paymentTime.value),
 			amount_of_money: parseInt(amountOfMoney.value),
 			amount_of_debt: parseInt(amountOfDebt.value),
-			submitter: parseInt(46),
+			submitter: parseInt(submitter.value.value),
 			status: '',
 			updated_at: new Date().toLocaleString(),
 		};
@@ -100,12 +112,13 @@
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="submitter">Submitter</label>
-					<InputNumber
+					<Dropdown
 						id="submitter"
-						placeholder="Submitter"
-						mode="decimal"
-						v-model="submitter"
-						:min="0"
+						placeholder="Select Submitter"
+						v-model="submitter.value"
+						:options="submitters"
+						optionLabel="name"
+						optionValue="value"
 					/>
 				</div>
 			</div>

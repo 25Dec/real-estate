@@ -1,1 +1,0 @@
-export { default } from "file:///home/thiennhan/Coding/real-estate/real-estate-general-dashboard/node_modules/@nuxt/vite-builder/dist/runtime/client.manifest.mjs"

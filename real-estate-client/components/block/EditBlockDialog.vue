@@ -85,15 +85,6 @@
 
 		<template class="flex flex-col gap-3">
 			<div class="flex flex-1 flex-col gap-2">
-				<label for="desc">Name</label>
-				<InputText
-					id="desc"
-					placeholder="Name"
-					v-model="desc"
-				/>
-			</div>
-
-			<div class="flex flex-1 flex-col gap-2">
 				<label for="zone_id">Zone</label>
 				<Dropdown
 					id="zone"
@@ -102,6 +93,15 @@
 					:options="zones"
 					optionLabel="name"
 					optionValue="value"
+				/>
+			</div>
+
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="desc">Name</label>
+				<InputText
+					id="desc"
+					placeholder="Name"
+					v-model="desc"
 				/>
 			</div>
 
@@ -155,6 +155,7 @@
 						mode="decimal"
 						prefix="%"
 						:min="0"
+						:max="100"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">

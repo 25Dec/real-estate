@@ -28,15 +28,25 @@
 	const numberOfWC = ref(currentLandArea.value['number_of_wc']);
 	const price = ref(currentLandArea.value['price']);
 	const owner = ref(currentLandArea.value['owner']);
-	const buyStatus = ref(currentLandArea.value['buy_status']);
+	const buyStatus = ref({
+		name: statuses.value.filter(
+			(status) => status['value'] == currentLandArea.value['buy_status']
+		)[0]['name'],
+		value: statuses.value.filter(
+			(status) => status['value'] == currentLandArea.value['buy_status']
+		)[0]['value'],
+	});
 	const desc = ref(currentLandArea.value['desc']);
-	const paymentMethod = ref(
-		paymentMethodsDropdown.value.filter(
+	const paymentMethod = ref({
+		name: paymentMethodsDropdown.value.filter(
 			(payment) =>
 				payment['value'] == currentLandArea.value['payment_method_id']
-		)?.[0]?.['value']
-	);
-	console.log(paymentMethodsDropdown.value);
+		)?.[0]?.['name'],
+		value: paymentMethodsDropdown.value.filter(
+			(payment) =>
+				payment['value'] == currentLandArea.value['payment_method_id']
+		)?.[0]?.['value'],
+	});
 	const createdAt = ref(currentLandArea.value['created_at']);
 	const updatedAt = ref(currentLandArea.value['updated_at']);
 
@@ -44,7 +54,7 @@
 		const newLandAreaData = {
 			...currentLandArea.value,
 			zone_id: parseInt(zone.value),
-			land_direction: parseInt(landAreaDirection.value),
+			land_direction: landAreaDirection.value,
 			is_front: isFront.value,
 			lat: parseInt(lat.value),
 			long: parseInt(long.value),
@@ -56,7 +66,7 @@
 			number_of_wc: parseInt(numberOfWC.value),
 			price: parseInt(price.value),
 			owner: parseInt(owner.value),
-			buy_status: buyStatus.value,
+			buy_status: buyStatus.value.value,
 			desc: desc.value,
 			payment_method_id: parseInt(paymentMethod.value),
 			updated_at: new Date().toLocaleString(),
@@ -237,6 +247,7 @@
 						mode="decimal"
 						prefix="%"
 						:min="0"
+						:max="100"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -244,7 +255,7 @@
 					<Dropdown
 						id="buyStatus"
 						placeholder="Select Status"
-						v-model="buyStatus"
+						v-model="buyStatus.value"
 						:options="statuses"
 						optionLabel="name"
 						optionValue="value"

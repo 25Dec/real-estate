@@ -2,7 +2,7 @@
 	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
 
-	const { users: customers, currentUser: currentCustomer } = storeToRefs(
+	const { accounts: customers, currentAccount: currentCustomer } = storeToRefs(
 		useAccountsStore()
 	);
 	const { getAccounts } = useAccountsStore();

@@ -1,7 +1,7 @@
 <script setup>
 	const { visible, roles } = defineProps(['visible', 'roles']);
 
-	const { currentCustomer } = storeToRefs(useCustomersStore());
+	const { currentUser: currentCustomer } = storeToRefs(useAccountsStore());
 
 	const myVisible = ref(visible);
 	const socialID = ref(currentCustomer.value['social_id']);

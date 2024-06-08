@@ -2,8 +2,8 @@
 	const { visible } = defineProps(['visible']);
 
 	const toast = useToast();
-	const { currentCustomer } = storeToRefs(useCustomersStore());
-	const { deleteCustomer } = useCustomersStore();
+	const { currentUser: currentCustomer } = storeToRefs(useAccountsStore());
+	const { deleteUser: deleteCustomer } = useAccountsStore();
 
 	const myVisible = ref(visible);
 

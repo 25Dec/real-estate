@@ -1,44 +1,14 @@
 <script setup>
-	const { currentProject } = storeToRefs(useProjectsStore());
 	const { statistics } = storeToRefs(useDashboardStore());
 	const { getDashboardStatistics } = useDashboardStore();
-	const { getZones } = useZonesStore();
+	const { getProjects } = useProjectsStore();
 	const { getAccounts } = useAccountsStore();
 	const { getNotifications } = useNotificationsStore();
-	const { getPaymentMethods } = usePaymentMethodsStore();
-	const { getPaymentMethodsProcess } = usePaymentMethodsProcessStore();
-	const user = ref({});
 
 	await getDashboardStatistics();
-	await getZones();
+	await getProjects();
 	await getAccounts();
 	await getNotifications();
-	await getPaymentMethods();
-	await getPaymentMethodsProcess();
-
-	if (process.client) {
-		user.value = JSON.parse(localStorage.getItem('user'));
-	}
-
-	if (currentProject.value['type'] == 'land') {
-		const { getLandAreas } = useLandAreasStore();
-		const { getLandPaymentProcesses } = useLandPaymentProcessStore();
-
-		await getLandAreas();
-		await getLandPaymentProcesses();
-	}
-
-	if (currentProject.value['type'] == 'high') {
-		const { getBlocks } = useBlocksStore();
-		const { getFloors } = useFloorsStore();
-		const { getHighAreas } = useHighAreasStore();
-		const { getHighPaymentProcesses } = useHighPaymentProcessStore();
-
-		await getBlocks();
-		await getFloors();
-		await getHighAreas();
-		await getHighPaymentProcesses();
-	}
 </script>
 
 <template>

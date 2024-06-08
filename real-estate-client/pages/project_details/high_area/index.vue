@@ -12,9 +12,6 @@
 	const { highAreas } = storeToRefs(useHighAreasStore());
 	const { getHighAreas, setCurrentHighArea } = useHighAreasStore();
 
-	await getZones();
-	await getBlocks();
-	await getFloors();
 	await getHighAreas();
 
 	zones.value = zones.value.map((zone) => {

@@ -2,8 +2,8 @@
 	const { visible, roles } = defineProps(['visible', 'roles']);
 
 	const toast = useToast();
-	const { currentCustomer } = storeToRefs(useCustomersStore());
-	const { editCustomer } = useCustomersStore();
+	const { currentUser: currentCustomer } = storeToRefs(useAccountsStore());
+	const { editUser: editCustomer } = useAccountsStore();
 
 	const myVisible = ref(visible);
 	const socialID = ref(currentCustomer.value['social_id']);

@@ -37,8 +37,8 @@
 				'Provide project, CRM, and sales processes in a project. Support the sales department to enhance performance.',
 			action: {
 				goto: {
-					path: '#projects',
-					external: true,
+					path: 'admin',
+					external: false,
 				},
 			},
 		},

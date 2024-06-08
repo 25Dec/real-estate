@@ -2,7 +2,7 @@
 	const { visible, roles } = defineProps(['visible', 'roles']);
 
 	const toast = useToast();
-	const { addNewCustomer } = useCustomersStore();
+	const { addNewAccount: addNewCustomer } = useAccountsStore();
 
 	const myVisible = ref(visible);
 	const socialID = ref('');
@@ -41,7 +41,7 @@
 			updated_at: null,
 		};
 
-		const response = await addNewAccount(newCustomerData);
+		const response = await addNewCustomer(newCustomerData);
 		myVisible.value = false;
 
 		if (response != null && response['result'] == 'ok') {

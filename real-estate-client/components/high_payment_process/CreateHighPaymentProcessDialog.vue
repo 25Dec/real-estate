@@ -1,6 +1,7 @@
 <script setup>
 	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
+	const { accountsDropdown: submitters } = storeToRefs(useAccountsStore());
 	const { currentHighAreaIDFromLocalStore } = storeToRefs(useHighAreasStore());
 	const { addNewHighPaymentProcess } = useHighPaymentProcessStore();
 	const toast = useToast();
@@ -9,7 +10,7 @@
 	const paymentTime = ref(0);
 	const amountOfMoney = ref(0);
 	const amountOfDebt = ref(0);
-	const submitter = ref(0);
+	const submitter = ref({});
 	const status = ref('');
 
 	const onSave = async () => {
@@ -19,7 +20,7 @@
 			payment_time: parseInt(paymentTime.value),
 			amount_of_money: parseInt(amountOfMoney.value),
 			amount_of_debt: parseInt(amountOfDebt.value),
-			submitter: parseInt(46),
+			submitter: parseInt(submitter.value.value),
 			status: '',
 			created_by: 13,
 			updated_by: 13,
@@ -102,12 +103,13 @@
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="submitter">Submitter</label>
-					<InputNumber
+					<Dropdown
 						id="submitter"
-						placeholder="Submitter"
-						mode="decimal"
-						v-model="submitter"
-						:min="0"
+						placeholder="Select Submitter"
+						v-model="submitter.value"
+						:options="submitters"
+						optionLabel="name"
+						optionValue="value"
 					/>
 				</div>
 			</div>

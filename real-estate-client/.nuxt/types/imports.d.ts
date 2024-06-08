@@ -104,6 +104,7 @@ declare global {
   const tryUseNuxtApp: typeof import('../../node_modules/nuxt/dist/app/nuxt')['tryUseNuxtApp']
   const unref: typeof import('../../node_modules/vue')['unref']
   const updateAppConfig: typeof import('../../node_modules/nuxt/dist/app/config')['updateAppConfig']
+  const useAccountsStore: typeof import('../../stores/accounts-store')['useAccountsStore']
   const useAppConfig: typeof import('../../node_modules/nuxt/dist/app/config')['useAppConfig']
   const useAsyncData: typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useAsyncData']
   const useAttrs: typeof import('../../node_modules/vue')['useAttrs']
@@ -113,7 +114,6 @@ declare global {
   const useCookie: typeof import('../../node_modules/nuxt/dist/app/composables/cookie')['useCookie']
   const useCssModule: typeof import('../../node_modules/vue')['useCssModule']
   const useCssVars: typeof import('../../node_modules/vue')['useCssVars']
-  const useCustomersStore: typeof import('../../stores/customers-store')['useCustomersStore']
   const useDashboardStore: typeof import('../../stores/dashboard-store')['useDashboardStore']
   const useDialog: typeof import('primevue/usedialog')['useDialog']
   const useElementStyle: typeof import('../../node_modules/@vueuse/motion/dist/runtime/composables/index')['useElementStyle']
@@ -294,6 +294,7 @@ declare module 'vue' {
     readonly tryUseNuxtApp: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/nuxt')['tryUseNuxtApp']>
     readonly unref: UnwrapRef<typeof import('../../node_modules/vue')['unref']>
     readonly updateAppConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/config')['updateAppConfig']>
+    readonly useAccountsStore: UnwrapRef<typeof import('../../stores/accounts-store')['useAccountsStore']>
     readonly useAppConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/config')['useAppConfig']>
     readonly useAsyncData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useAsyncData']>
     readonly useAttrs: UnwrapRef<typeof import('../../node_modules/vue')['useAttrs']>
@@ -303,7 +304,6 @@ declare module 'vue' {
     readonly useCookie: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/cookie')['useCookie']>
     readonly useCssModule: UnwrapRef<typeof import('../../node_modules/vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('../../node_modules/vue')['useCssVars']>
-    readonly useCustomersStore: UnwrapRef<typeof import('../../stores/customers-store')['useCustomersStore']>
     readonly useDashboardStore: UnwrapRef<typeof import('../../stores/dashboard-store')['useDashboardStore']>
     readonly useDialog: UnwrapRef<typeof import('primevue/usedialog')['useDialog']>
     readonly useElementStyle: UnwrapRef<typeof import('../../node_modules/@vueuse/motion/dist/runtime/composables/index')['useElementStyle']>
@@ -477,6 +477,7 @@ declare module '@vue/runtime-core' {
     readonly tryUseNuxtApp: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/nuxt')['tryUseNuxtApp']>
     readonly unref: UnwrapRef<typeof import('../../node_modules/vue')['unref']>
     readonly updateAppConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/config')['updateAppConfig']>
+    readonly useAccountsStore: UnwrapRef<typeof import('../../stores/accounts-store')['useAccountsStore']>
     readonly useAppConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/config')['useAppConfig']>
     readonly useAsyncData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useAsyncData']>
     readonly useAttrs: UnwrapRef<typeof import('../../node_modules/vue')['useAttrs']>
@@ -486,7 +487,6 @@ declare module '@vue/runtime-core' {
     readonly useCookie: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/cookie')['useCookie']>
     readonly useCssModule: UnwrapRef<typeof import('../../node_modules/vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('../../node_modules/vue')['useCssVars']>
-    readonly useCustomersStore: UnwrapRef<typeof import('../../stores/customers-store')['useCustomersStore']>
     readonly useDashboardStore: UnwrapRef<typeof import('../../stores/dashboard-store')['useDashboardStore']>
     readonly useDialog: UnwrapRef<typeof import('primevue/usedialog')['useDialog']>
     readonly useElementStyle: UnwrapRef<typeof import('../../node_modules/@vueuse/motion/dist/runtime/composables/index')['useElementStyle']>

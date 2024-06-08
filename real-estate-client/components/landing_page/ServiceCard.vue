@@ -1,11 +1,18 @@
 <script setup>
 	const { data } = defineProps(['data']);
+
+	const external = data['action']['goto']['external'];
+	const path =
+		external == true
+			? { hash: data['action']['goto']['path'] }
+			: data['action']['goto']['path'];
 </script>
 
 <template>
 	<NuxtLink
-		:to="{ hash: data['action']['goto']['path'] }"
-		:external="data['action']['goto']['external']"
+		:to="path"
+		:external="external"
+		class="transition hover:scale-105"
 	>
 		<Card
 			v-motion-pop-visible

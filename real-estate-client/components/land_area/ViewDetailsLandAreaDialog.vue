@@ -28,14 +28,25 @@
 	const numberOfWC = ref(currentLandArea.value['number_of_wc']);
 	const price = ref(currentLandArea.value['price']);
 	const owner = ref(currentLandArea.value['owner']);
-	const buyStatus = ref(currentLandArea.value['buy_status']);
+	const buyStatus = ref({
+		name: statuses.filter(
+			(status) => status['value'] == currentLandArea.value['buy_status']
+		)[0]['name'],
+		value: statuses.filter(
+			(status) => status['value'] == currentLandArea.value['buy_status']
+		)[0]['value'],
+	});
 	const desc = ref(currentLandArea.value['desc']);
-	const paymentMethod = ref(
-		paymentMethodsDropdown.value.filter(
+	const paymentMethod = ref({
+		name: paymentMethodsDropdown.value.filter(
 			(payment) =>
 				payment['value'] == currentLandArea.value['payment_method_id']
-		)?.[0]?.['value']
-	);
+		)?.[0]?.['name'],
+		value: paymentMethodsDropdown.value.filter(
+			(payment) =>
+				payment['value'] == currentLandArea.value['payment_method_id']
+		)?.[0]?.['value'],
+	});
 	const createdAt = ref(currentLandArea.value['created_at']);
 	const updatedAt = ref(currentLandArea.value['updated_at']);
 </script>
@@ -212,7 +223,7 @@
 					<Dropdown
 						id="buyStatus"
 						placeholder="Select Status"
-						v-model="buyStatus"
+						v-model="buyStatus.value"
 						:options="statuses"
 						optionLabel="name"
 						optionValue="value"

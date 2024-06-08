@@ -129,6 +129,7 @@
 						prefix="%"
 						mode="decimal"
 						:min="0"
+						:max="100"
 					/>
 				</div>
 			</div>

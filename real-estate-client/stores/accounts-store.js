@@ -1,10 +1,11 @@
 import { baseUrl } from '~/constants';
 
-export const useCustomersStore = defineStore('customers', () => {
-	const customers = ref([]);
-	const currentCustomer = ref({});
+export const useAccountsStore = defineStore('Accounts', () => {
+	const accounts = ref([]);
+	const accountsDropdown = ref([]);
+	const currentAccount = ref({});
 
-	const getCustomers = async () => {
+	const getAccounts = async () => {
 		const accessToken = useCookie('token');
 		const { data } = await useFetch(baseUrl + '/auth/account', {
 			headers: {
@@ -13,10 +14,19 @@ export const useCustomersStore = defineStore('customers', () => {
 			},
 		});
 
-		customers.value = data.value.data;
+		accounts.value = data.value.data;
+
+		if (data.value.data.length)
+			accountsDropdown.value = accounts.value.map((acc) => {
+				return {
+					name: `${acc['display_name']}`,
+					value: `${acc['id']}`,
+				};
+			});
+		else accountsDropdown.value = [];
 	};
 
-	const addNewCustomer = async (data) => {
+	const addNewAccount = async (data) => {
 		const accessToken = useCookie('token');
 		const response = await $fetch(baseUrl + `/auth/account`, {
 			method: 'post',
@@ -27,11 +37,11 @@ export const useCustomersStore = defineStore('customers', () => {
 			body: data,
 		});
 
-		await getCustomers();
+		await getAccounts();
 		return response;
 	};
 
-	const editCustomer = async (data) => {
+	const editAccount = async (data) => {
 		const accessToken = useCookie('token');
 		const response = await $fetch(baseUrl + `/auth/account/${data['id']}`, {
 			method: 'put',
@@ -42,11 +52,11 @@ export const useCustomersStore = defineStore('customers', () => {
 			body: data,
 		});
 
-		await getCustomers();
+		await getAccounts();
 		return response;
 	};
 
-	const deleteCustomer = async (data) => {
+	const deleteAccount = async (data) => {
 		const accessToken = useCookie('token');
 		const response = await $fetch(baseUrl + `/auth/account/${data['id']}`, {
 			method: 'delete',
@@ -56,16 +66,17 @@ export const useCustomersStore = defineStore('customers', () => {
 			},
 		});
 
-		await getCustomers();
+		await getAccounts();
 		return response;
 	};
 
 	return {
-		customers,
-		currentCustomer,
-		getCustomers,
-		addNewCustomer,
-		editCustomer,
-		deleteCustomer,
+		accounts,
+		accountsDropdown,
+		currentAccount,
+		getAccounts,
+		addNewAccount,
+		editAccount,
+		deleteAccount,
 	};
 });

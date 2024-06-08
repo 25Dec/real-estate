@@ -141,6 +141,7 @@
 						mode="decimal"
 						prefix="%"
 						:min="0"
+						:max="100"
 					/>
 				</div>
 

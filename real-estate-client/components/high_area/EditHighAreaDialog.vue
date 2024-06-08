@@ -25,14 +25,25 @@
 	const numberOfRoom = ref(currentHighArea.value['number_of_room']);
 	const price = ref(currentHighArea.value['price']);
 	const owner = ref(currentHighArea.value['owner']);
-	const buyStatus = ref(currentHighArea.value['buy_status']);
+	const buyStatus = ref({
+		name: statuses.filter(
+			(status) => status['value'] == currentHighArea.value['buy_status']
+		)[0]['name'],
+		value: statuses.filter(
+			(status) => status['value'] == currentHighArea.value['buy_status']
+		)[0]['value'],
+	});
 	const desc = ref(currentHighArea.value['desc']);
-	const paymentMethod = ref(
-		paymentMethodsDropdown.value.filter(
+	const paymentMethod = ref({
+		name: paymentMethodsDropdown.value.filter(
 			(payment) =>
 				payment['value'] == currentHighArea.value['payment_method_id']
-		)?.[0]?.['value']
-	);
+		)?.[0]?.['name'],
+		value: paymentMethodsDropdown.value.filter(
+			(payment) =>
+				payment['value'] == currentHighArea.value['payment_method_id']
+		)?.[0]?.['value'],
+	});
 	const createdAt = ref(currentHighArea.value['created_at']);
 	const updatedAt = ref(currentHighArea.value['updated_at']);
 
@@ -49,7 +60,7 @@
 			number_of_room: parseInt(numberOfRoom.value),
 			price: parseInt(price.value),
 			owner: parseInt(owner.value),
-			buy_status: buyStatus.value,
+			buy_status: buyStatus.value.value,
 			desc: desc.value,
 			payment_method_id: parseInt(paymentMethod.value),
 			updated_at: new Date().toLocaleString(),
@@ -209,13 +220,14 @@
 						mode="decimal"
 						prefix="%"
 						:min="0"
+						:max="100"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="buyStatus">Buy Status</label>
 					<Dropdown
 						id="buyStatus"
-						v-model="buyStatus"
+						v-model="buyStatus.value"
 						placeholder="Select Status"
 						:options="statuses"
 						optionLabel="name"

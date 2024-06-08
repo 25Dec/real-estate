@@ -23,7 +23,7 @@
 	const numberOfWC = ref(0);
 	const price = ref(0);
 	const owner = ref(0);
-	const buyStatus = ref('');
+	const buyStatus = ref({});
 	const desc = ref('');
 	const paymentMethod = ref(0);
 
@@ -31,7 +31,7 @@
 		const newLandAreaData = {
 			id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1,
 			zone_id: parseInt(zone.value),
-			land_direction: parseInt(landAreaDirection.value),
+			land_direction: landAreaDirection.value,
 			is_front: isFront.value,
 			lat: parseInt(lat.value),
 			long: parseInt(long.value),
@@ -230,6 +230,7 @@
 						mode="decimal"
 						prefix="%"
 						:min="0"
+						:max="100"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">

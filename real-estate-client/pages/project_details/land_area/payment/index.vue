@@ -21,13 +21,17 @@
 		)
 	);
 
-	const { currentLandAreaIDFromLocalStore } = storeToRefs(useLandAreasStore());
-	const { landPaymentProcesses, currentLandPaymentProcess } = storeToRefs(
+	const { currentLandArea, currentLandAreaIDFromLocalStore } = storeToRefs(
+		useLandAreasStore()
+	);
+	const { LandPaymentProcesses, currentLandPaymentProcess } = storeToRefs(
 		useLandPaymentProcessStore()
 	);
 	const { getLandPaymentProcesses } = useLandPaymentProcessStore();
+	const { getAccounts } = useAccountsStore();
 
 	await getLandPaymentProcesses();
+	await getAccounts();
 
 	const myPaymentBaseOnLandID = computed(() => {
 		return landPaymentProcesses.value.filter((payment) => {
@@ -42,12 +46,12 @@
 	const editLandPaymentProcessDialogVisible = ref(false);
 	const deleteLandPaymentProcessDialogVisible = ref(false);
 
-	const toggleEditPayment = async (data) => {
+	const toggleEditPayment = (data) => {
 		currentLandPaymentProcess.value = data;
 		editLandPaymentProcessDialogVisible.value =
 			!editLandPaymentProcessDialogVisible.value;
 	};
-	const toggleDeletePayment = async (data) => {
+	const toggleDeletePayment = (data) => {
 		currentLandPaymentProcess.value = data;
 		deleteLandPaymentProcessDialogVisible.value =
 			!deleteLandPaymentProcessDialogVisible.value;
