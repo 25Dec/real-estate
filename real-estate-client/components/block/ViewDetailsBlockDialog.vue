@@ -1,21 +1,31 @@
 <script setup>
-	const { visible } = defineProps(['visible']);
+	const { visible, types } = defineProps(['visible', 'types']);
 
-	const { blocks, currentBlock } = storeToRefs(useBlocksStore());
 	const { zones } = storeToRefs(useZonesStore());
+	const { blocks, currentBlock } = storeToRefs(useBlocksStore());
 
 	const myVisible = ref(visible);
-	const id = ref(currentBlock.value['id']);
-	const zoneID = ref(currentBlock.value['zone_id']);
-	const currentZone = ref(
-		zones.value.find((zone) => zone['id'] == zoneID.value)
-	);
+	const currentZone = ref({
+		name: zones.value.filter(
+			(zone) => zone['id'] == currentBlock.value['zone_id']
+		)?.[0]?.['name'],
+		value: zones.value.filter(
+			(zone) => zone['id'] == currentBlock.value['zone_id']
+		)?.[0]?.['value'],
+	});
 	const numberOfFloor = ref(currentBlock.value['number_of_floor']);
 	const lat = ref(currentBlock.value['lat']);
 	const long = ref(currentBlock.value['long']);
 	const isService = ref(currentBlock.value['is_service'] == 1 ? true : false);
 	const desc = ref(currentBlock.value['desc']);
-	const type = ref(currentBlock.value['type']);
+	const type = ref({
+		name: types.filter(
+			(type) => type['value'] == currentBlock.value['type']
+		)?.[0]?.['name'],
+		value: types.filter(
+			(type) => type['value'] == currentBlock.value['type']
+		)?.[0]?.['value'],
+	});
 	const progress = ref(currentBlock.value['progress']);
 	const startedDay = ref(getYearMonthDay(currentBlock.value['started_day']));
 	const createdAt = ref(currentBlock.value['created_at']);
@@ -38,15 +48,17 @@
 		</template>
 
 		<template class="flex flex-col gap-3">
-			<div class="flex gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="zone">Zone</label>
-					<InputText
-						id="zone"
-						v-model="currentZone['name']"
-						disabled
-					/>
-				</div>
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="zone">Zone</label>
+				<Dropdown
+					id="zone"
+					placeholder="Select Zone"
+					v-model="currentZone.value"
+					:options="zones"
+					optionLabel="name"
+					optionValue="value"
+					disabled
+				/>
 			</div>
 
 			<div class="flex flex-1 flex-col gap-2">
@@ -79,9 +91,13 @@
 
 			<div class="flex flex-1 flex-col gap-2">
 				<label for="type">Type</label>
-				<InputText
+				<Dropdown
 					id="type"
-					v-model="type"
+					placeholder="Select Type"
+					v-model="type.value"
+					:options="types"
+					optionLabel="name"
+					optionValue="value"
 					disabled
 				/>
 			</div>

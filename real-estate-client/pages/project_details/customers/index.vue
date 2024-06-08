@@ -2,7 +2,7 @@
 	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
 
-	const { users: customers, currentUser: currentCustomer } = storeToRefs(
+	const { accounts: customers, currentAccount: currentCustomer } = storeToRefs(
 		useAccountsStore()
 	);
 	const { getAccounts } = useAccountsStore();
@@ -27,12 +27,10 @@
 		viewDetailsCustomerDialogVisible.value =
 			!viewDetailsCustomerDialogVisible.value;
 	};
-
 	const editCustomer = (data) => {
 		currentCustomer.value = data;
 		editCustomerDialogVisible.value = !editCustomerDialogVisible.value;
 	};
-
 	const deleteCustomer = async (data) => {
 		currentCustomer.value = data;
 		deleteCustomerDialogVisible.value = !deleteCustomerDialogVisible.value;
@@ -82,7 +80,7 @@
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
-						<span>No customers found.</span>
+						<span>No Customers Found.</span>
 					</div>
 				</template>
 
@@ -109,7 +107,6 @@
 				<Column
 					field="login_name"
 					header="Login Name"
-					sortable
 				>
 					<template #body="{ data }">
 						{{ data['login_name'] }}
@@ -119,7 +116,6 @@
 				<Column
 					field="phone"
 					header="Phone"
-					sortable
 				>
 					<template #body="{ data }">
 						{{ data['phone'] }}

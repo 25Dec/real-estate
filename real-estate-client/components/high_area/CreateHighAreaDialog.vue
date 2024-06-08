@@ -12,10 +12,10 @@
 	const { getPaymentMethods } = usePaymentMethodsStore();
 	const toast = useToast();
 
-	await getPaymentMethods();
 	await getZones();
 	await getBlocks();
 	await getFloors();
+	await getPaymentMethods();
 
 	zones.value = zones.value.map((zone) => {
 		return { id: zone.id, name: `${zone.name}`, value: `${zone.id}` };

@@ -1,35 +1,28 @@
 <script setup>
 	const { visible, roles } = defineProps(['visible', 'roles']);
 
-	const { currentAccount: currentCustomer } = storeToRefs(useAccountsStore());
+	const { currentAccount } = storeToRefs(useAccountsStore());
 	const { editAccount } = useAccountsStore();
 	const toast = useToast();
 
 	const myVisible = ref(visible);
-	const socialID = ref(currentCustomer.value['social_id']);
-	const phone = ref(currentCustomer.value['phone']);
-	const loginName = ref(currentCustomer.value['login_name']);
-	const password = ref(currentCustomer.value['password']);
-	const firstName = ref(currentCustomer.value['first_name']);
-	const lastName = ref(currentCustomer.value['last_name']);
-	const email = ref(currentCustomer.value['email']);
-	const type = ref({
-		name: roles.filter(
-			(role) => role['value'] == currentCustomer.value['type']
-		)?.[0]?.['name'],
-		value: roles.filter(
-			(role) => role['value'] == currentCustomer.value['type']
-		)?.[0]?.['value'],
-	});
-	const phoneVerified = ref(currentCustomer.value['phone_verified']);
-	const emailVerified = ref(currentCustomer.value['email_verified']);
-	const socialVerified = ref(currentCustomer.value['social_verified']);
-	const createdAt = ref(currentCustomer.value['created_at']);
-	const updatedAt = ref(currentCustomer.value['updated_at']);
+	const socialID = ref(currentAccount.value['social_id']);
+	const phone = ref(currentAccount.value['phone']);
+	const loginName = ref(currentAccount.value['login_name']);
+	const password = ref(currentAccount.value['password']);
+	const firstName = ref(currentAccount.value['first_name']);
+	const lastName = ref(currentAccount.value['last_name']);
+	const email = ref(currentAccount.value['email']);
+	const type = ref(currentAccount.value['type']);
+	const phoneVerified = ref(currentAccount.value['phone_verified']);
+	const emailVerified = ref(currentAccount.value['email_verified']);
+	const socialVerified = ref(currentAccount.value['social_verified']);
+	const createdAt = ref(currentAccount.value['created_at']);
+	const updatedAt = ref(currentAccount.value['updated_at']);
 
 	const onSave = async () => {
-		const newCustomerData = {
-			...currentCustomer.value,
+		const newAccountData = {
+			...currentAccount.value,
 			social_id: socialID.value,
 			phone: phone.value,
 			first_name: firstName.value,
@@ -43,14 +36,14 @@
 			updated_at: new Date().toLocaleString(),
 		};
 
-		const response = await editCustomer(newCustomerData);
+		const response = await editAccount(newAccountData);
 		myVisible.value = false;
 
 		if (response != null && response['result'] == 'ok') {
 			toast.add({
 				severity: 'success',
 				summary: 'Success',
-				detail: 'Edit Customer Successfully!',
+				detail: 'Edit User Successfully!',
 				group: 'bl',
 				life: 3000,
 			});
@@ -58,7 +51,7 @@
 			toast.add({
 				severity: 'warning',
 				summary: 'Error',
-				detail: 'Failed to Edit Customer',
+				detail: 'Failed to Edit User',
 				group: 'bl',
 				life: 3000,
 			});
@@ -77,7 +70,7 @@
 	>
 		<template #header>
 			<div class="inline-flex items-center justify-center gap-2">
-				<span class="font-bold text-xl">Customer Details</span>
+				<span class="font-bold text-xl">User Details</span>
 			</div>
 		</template>
 		<template class="flex flex-col gap-3">
@@ -148,7 +141,7 @@
 					id="type"
 					class="flex-1"
 					placeholder="Select User Role"
-					v-model="type.value"
+					v-model="roles[roles.findIndex((role) => role.value == type)].value"
 					:options="roles"
 					optionLabel="name"
 					optionValue="value"

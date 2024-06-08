@@ -117,10 +117,27 @@
 				class="flex justify-center items-center gap-1"
 			>
 				<Icon
+					v-if="currentRoute['path'].includes('project_details')"
 					name="line-md:home-simple"
 					class="text-2xl text-[#10b981]"
 				/>
-				<span class="font-bold text-xl text-[#10b981]"> Propertier </span>
+				<Icon
+					v-else
+					name="mdi:view-dashboard-outline"
+					class="text-2xl text-[#10b981]"
+				/>
+				<span
+					v-if="currentRoute['path'].includes('project_details')"
+					class="font-bold text-xl text-[#10b981]"
+				>
+					Propertier
+				</span>
+				<span
+					v-else
+					class="font-bold text-xl text-[#10b981]"
+				>
+					Overrall Dashboard
+				</span>
 			</NuxtLink>
 		</div>
 

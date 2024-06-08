@@ -25,8 +25,8 @@
 				'Provide methods for project, user, and notification management. Manage all projects, users, and notifications in each project within the system.',
 			action: {
 				goto: {
-					path: '#projects',
-					external: true,
+					path: 'admin',
+					external: false,
 				},
 			},
 		},
@@ -37,8 +37,8 @@
 				'Provide project, CRM, and sales processes in a project. Support the sales department to enhance performance.',
 			action: {
 				goto: {
-					path: 'admin',
-					external: false,
+					path: '#projects',
+					external: true,
 				},
 			},
 		},

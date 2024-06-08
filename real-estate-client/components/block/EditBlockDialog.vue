@@ -4,26 +4,29 @@
 	const { zones } = storeToRefs(useZonesStore());
 	const { currentBlock } = storeToRefs(useBlocksStore());
 	const { editBlock } = useBlocksStore();
-
 	const toast = useToast();
+
 	const myVisible = ref(visible);
-	const zone = ref({
+	const currentZone = ref({
 		name: zones.value.filter(
 			(zone) => zone['id'] == currentBlock.value['zone_id']
-		)[0]['name'],
-		value: `${currentBlock.value['zone_id']}`,
+		)?.[0]?.['name'],
+		value: zones.value.filter(
+			(zone) => zone['id'] == currentBlock.value['zone_id']
+		)?.[0]?.['value'],
 	});
 	const numberOfFloor = ref(currentBlock.value['number_of_floor']);
 	const lat = ref(currentBlock.value['lat']);
 	const long = ref(currentBlock.value['long']);
 	const isService = ref(currentBlock.value['is_service']);
 	const desc = ref(currentBlock.value['desc']);
-
 	const type = ref({
 		name: types.filter(
 			(type) => type['value'] == currentBlock.value['type']
-		)[0]['name'],
-		value: currentBlock.value['type'],
+		)?.[0]?.['name'],
+		value: types.filter(
+			(type) => type['value'] == currentBlock.value['type']
+		)?.[0]?.['value'],
 	});
 	const progress = ref(currentBlock.value['progress']);
 	const startedDay = ref(getYearMonthDay(currentBlock.value['started_day']));
@@ -85,11 +88,11 @@
 
 		<template class="flex flex-col gap-3">
 			<div class="flex flex-1 flex-col gap-2">
-				<label for="zone_id">Zone</label>
+				<label for="zone">Zone</label>
 				<Dropdown
 					id="zone"
 					placeholder="Select Zone"
-					v-model="zone.value"
+					v-model="currentZone.value"
 					:options="zones"
 					optionLabel="name"
 					optionValue="value"

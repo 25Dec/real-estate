@@ -12,7 +12,6 @@
 	await getBlocks();
 
 	const myVisible = ref(visible);
-	const blockID = ref(0);
 	const numberOfHighArea = ref(0);
 	const publicArea = ref(0);
 	const totalArea = ref(0);
@@ -53,7 +52,7 @@
 	const onSave = async () => {
 		const newFloorData = {
 			id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1,
-			block_id: parseInt(blockID.value),
+			block_id: parseInt(currentBlock.value.value),
 			number_of_high_area: parseInt(numberOfHighArea.value),
 			public_area: parseInt(publicArea.value),
 			total_area: parseInt(totalArea.value),
@@ -135,8 +134,9 @@
 					@change="(event) => handleDropdown(event, 'zone')"
 				/>
 			</div>
+
 			<div class="flex flex-col gap-2">
-				<label for="currentZone">Block</label>
+				<label for="currentBlock">Block</label>
 				<Dropdown
 					id="currentBlock"
 					placeholder="Select block"

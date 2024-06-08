@@ -1,7 +1,7 @@
 <script setup>
 	const { visible, roles } = defineProps(['visible', 'roles']);
 
-	const { currentUser: currentCustomer } = storeToRefs(useAccountsStore());
+	const { currentAccount: currentCustomer } = storeToRefs(useAccountsStore());
 
 	const myVisible = ref(visible);
 	const socialID = ref(currentCustomer.value['social_id']);
@@ -11,7 +11,14 @@
 	const firstName = ref(currentCustomer.value['first_name']);
 	const lastName = ref(currentCustomer.value['last_name']);
 	const email = ref(currentCustomer.value['email']);
-	const type = ref(currentCustomer.value['type']);
+	const type = ref({
+		name: roles.filter(
+			(role) => role['value'] == currentCustomer.value['type']
+		)?.[0]?.['name'],
+		value: roles.filter(
+			(role) => role['value'] == currentCustomer.value['type']
+		)?.[0]?.['value'],
+	});
 	const phoneVerified = ref(currentCustomer.value['phone_verified']);
 	const emailVerified = ref(currentCustomer.value['email_verified']);
 	const socialVerified = ref(currentCustomer.value['social_verified']);
@@ -107,7 +114,7 @@
 					id="type"
 					class="flex-1"
 					placeholder="Select User Role"
-					v-model="roles[roles.findIndex((role) => role.value == type)].value"
+					v-model="type.value"
 					:options="roles"
 					optionLabel="name"
 					optionValue="value"

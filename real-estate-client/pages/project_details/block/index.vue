@@ -22,6 +22,10 @@
 			return block['zone_id'] == currentZone.value.value;
 		});
 	});
+	const types = ref([
+		{ name: 'Normal', value: 'normal' },
+		{ name: 'Luxury', value: 'luxury' },
+	]);
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
@@ -32,10 +36,7 @@
 			command: () => {},
 		},
 	]);
-	const types = ref([
-		{ name: 'Normal', value: 'normal' },
-		{ name: 'Luxury', value: 'luxury' },
-	]);
+
 	const viewDetailsBlockDialogVisible = ref(false);
 	const createBlockDialogVisible = ref(false);
 	const editBlockDialogVisible = ref(false);

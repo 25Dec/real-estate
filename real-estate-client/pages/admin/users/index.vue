@@ -2,9 +2,7 @@
 	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
 
-	const { accounts: customers, currentAccount: currentCustomer } = storeToRefs(
-		useAccountsStore()
-	);
+	const { accounts, currentAccount } = storeToRefs(useAccountsStore());
 	const { getAccounts } = useAccountsStore();
 
 	await getAccounts();
@@ -17,25 +15,25 @@
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
-	const viewDetailsCustomerDialogVisible = ref(false);
-	const createCustomerDialogVisible = ref(false);
-	const editCustomerDialogVisible = ref(false);
-	const deleteCustomerDialogVisible = ref(false);
+	const viewDetailsAccountDialogVisible = ref(false);
+	const createAccountDialogVisible = ref(false);
+	const editAccountDialogVisible = ref(false);
+	const deleteAccountDialogVisible = ref(false);
 
-	const viewDetailsCustomer = (data) => {
-		currentCustomer.value = data;
-		viewDetailsCustomerDialogVisible.value =
-			!viewDetailsCustomerDialogVisible.value;
+	const viewDetailsAccount = (data) => {
+		currentAccount.value = data;
+		viewDetailsAccountDialogVisible.value =
+			!viewDetailsAccountDialogVisible.value;
 	};
 
-	const editCustomer = (data) => {
-		currentCustomer.value = data;
-		editCustomerDialogVisible.value = !editCustomerDialogVisible.value;
+	const editAccount = (data) => {
+		currentAccount.value = data;
+		editAccountDialogVisible.value = !editAccountDialogVisible.value;
 	};
 
-	const deleteCustomer = async (data) => {
-		currentCustomer.value = data;
-		deleteCustomerDialogVisible.value = !deleteCustomerDialogVisible.value;
+	const deleteAccount = async (data) => {
+		currentAccount.value = data;
+		deleteAccountDialogVisible.value = !deleteAccountDialogVisible.value;
 	};
 </script>
 
@@ -45,8 +43,8 @@
 			class="fixed right-0 top-0 z-50 backdrop-blur-xl w-5/6 h-[8%] px-4 border-b flex justify-between items-center"
 		>
 			<div class="flex items-center gap-2">
-				<span class="font-semibold text-lg">Customers</span>
-				<Tag :value="customers.length" />
+				<span class="font-semibold text-lg">Users</span>
+				<Tag :value="accounts.length" />
 			</div>
 
 			<div class="flex items-center gap-2">
@@ -56,20 +54,20 @@
 					</InputIcon>
 					<InputText
 						v-model="filters['global'].value"
-						placeholder="Filter customer..."
+						placeholder="Filter user..."
 					/>
 				</IconField>
 				<Button
 					size="small"
 					label="New"
-					@click="createCustomerDialogVisible = !createCustomerDialogVisible"
+					@click="createAccountDialogVisible = !createAccountDialogVisible"
 				/>
 			</div>
 		</div>
 
 		<div class="absolute top-[8%] w-full h-[92%]">
 			<DataTable
-				:value="customers"
+				:value="accounts"
 				v-model:filters="filters"
 				:paginator="true"
 				:rows="50"
@@ -82,7 +80,7 @@
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
-						<span>No customers found.</span>
+						<span>No Users Found.</span>
 					</div>
 				</template>
 
@@ -149,21 +147,21 @@
 						<Button
 							text
 							severity="secondary"
-							@click="viewDetailsCustomer(data)"
+							@click="viewDetailsAccount(data)"
 						>
 							<Icon name="mdi:eye-outline" />
 						</Button>
 						<Button
 							text
 							severity="secondary"
-							@click="editCustomer(data)"
+							@click="editAccount(data)"
 						>
 							<Icon name="mdi:edit-outline" />
 						</Button>
 						<Button
 							text
 							severity="danger"
-							@click="deleteCustomer(data)"
+							@click="deleteAccount(data)"
 						>
 							<Icon name="mdi:delete-outline" />
 						</Button>
@@ -172,23 +170,23 @@
 			</DataTable>
 		</div>
 	</div>
-	<ViewDetailsCustomerDialog
-		v-if="viewDetailsCustomerDialogVisible"
-		:visible="viewDetailsCustomerDialogVisible"
+	<ViewDetailsAccountDialog
+		v-if="viewDetailsAccountDialogVisible"
+		:visible="viewDetailsAccountDialogVisible"
 		:roles="roles"
 	/>
-	<CreateCustomerDialog
-		v-if="createCustomerDialogVisible"
-		:visible="createCustomerDialogVisible"
+	<CreateAccountDialog
+		v-if="createAccountDialogVisible"
+		:visible="createAccountDialogVisible"
 		:roles="roles"
 	/>
-	<EditCustomerDialog
-		v-if="editCustomerDialogVisible"
-		:visible="editCustomerDialogVisible"
+	<EditAccountDialog
+		v-if="editAccountDialogVisible"
+		:visible="editAccountDialogVisible"
 		:roles="roles"
 	/>
-	<DeleteCustomerDialog
-		v-if="deleteCustomerDialogVisible"
-		:visible="deleteCustomerDialogVisible"
+	<DeleteAccountDialog
+		v-if="deleteAccountDialogVisible"
+		:visible="deleteAccountDialogVisible"
 	/>
 </template>

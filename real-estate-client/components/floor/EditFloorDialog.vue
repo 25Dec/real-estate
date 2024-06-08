@@ -1,16 +1,18 @@
 <script setup>
 	const { visible } = defineProps(['visible']);
 
+	const { zones } = storeToRefs(useZonesStore());
+	const { getZones } = useZonesStore();
 	const { blocks } = storeToRefs(useBlocksStore());
-	const { editFloor } = useFloorsStore();
+	const { getBlocks } = useBlocksStore();
 	const { currentFloor } = storeToRefs(useFloorsStore());
+	const { editFloor } = useFloorsStore();
 	const toast = useToast();
 
-	const myVisible = ref(visible);
-	const blockID = ref(
-		blocks.value.find((block) => block['id'] == currentFloor.value['block_id'])
-	);
+	await getZones();
+	await getBlocks();
 
+	const myVisible = ref(visible);
 	const numberOfHighArea = ref(currentFloor.value['number_of_high_area']);
 	const publicArea = ref(currentFloor.value['public_area']);
 	const totalArea = ref(currentFloor.value['total_area']);
@@ -19,10 +21,41 @@
 	const createdAt = ref(currentFloor.value['created_at']);
 	const updatedAt = ref(currentFloor.value['updated_at']);
 
+	zones.value = zones.value.map((zone) => {
+		return { id: zone.id, name: `${zone.name}`, value: `${zone.id}` };
+	});
+	const myZones = ref(zones.value);
+	const currentZone = ref({
+		name: myZones.value[0]?.name ?? '',
+		value: myZones.value[0]?.value ?? '',
+	});
+
+	blocks.value = blocks.value.map((block) => {
+		return {
+			id: block['id'],
+			name: `${block['desc']}`,
+			value: `${block['id']}`,
+			zone_id: `${block['zone_id']}`,
+		};
+	});
+	const myBlocks = ref(
+		blocks.value.filter((block) => block['zone_id'] == currentZone.value.value)
+	);
+	const currentBlock = ref({
+		name:
+			myBlocks.value.filter(
+				(block) => block['zone_id'] == currentZone.value.value
+			)?.[0]?.name ?? '',
+		value:
+			myBlocks.value.filter(
+				(block) => block['zone_id'] == currentZone.value.value
+			)?.[0]?.value ?? '',
+	});
+
 	const onSave = async () => {
 		const newFloorData = {
 			...currentFloor.value,
-			block_id: parseInt(blockID.value),
+			block_id: parseInt(currentBlock.value.value),
 			number_of_high_area: parseInt(numberOfHighArea.value),
 			public_area: parseInt(publicArea.value),
 			total_area: parseInt(totalArea.value),
@@ -52,6 +85,24 @@
 			});
 		}
 	};
+
+	const handleDropdown = (event, type) => {
+		if (type == 'zone') {
+			myBlocks.value = blocks.value.filter(
+				(block) => block['zone_id'] == event.value
+			);
+			currentBlock.value = {
+				name:
+					myBlocks.value.filter(
+						(block) => block['zone_id'] == currentZone.value.value
+					)?.[0]?.name ?? '',
+				value:
+					myBlocks.value.filter(
+						(block) => block['zone_id'] == currentZone.value.value
+					)?.[0]?.value ?? '',
+			};
+		}
+	};
 </script>
 
 <template>
@@ -70,15 +121,29 @@
 		</template>
 
 		<template class="flex flex-col gap-3">
-			<div class="flex flex-1 flex-col gap-2">
-				<label for="blockID">Block</label>
+			<div class="flex flex-col gap-2">
+				<label for="currentZone">Zone</label>
 				<Dropdown
-					id="blockID"
-					placeholder="Select Block"
-					v-model="blockID.value"
-					:options="blocks"
+					id="currentZone"
+					placeholder="Select zone"
+					v-model="currentZone.value"
+					:options="myZones"
 					optionLabel="name"
 					optionValue="value"
+					@change="(event) => handleDropdown(event, 'zone')"
+				/>
+			</div>
+
+			<div class="flex flex-col gap-2">
+				<label for="currentBlock">Block</label>
+				<Dropdown
+					id="currentBlock"
+					placeholder="Select block"
+					v-model="currentBlock.value"
+					:options="myBlocks"
+					optionLabel="name"
+					optionValue="value"
+					@change="(event) => handleDropdown(event, 'block')"
 				/>
 			</div>
 

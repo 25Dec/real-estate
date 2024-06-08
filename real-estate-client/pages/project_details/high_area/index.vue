@@ -2,7 +2,6 @@
 	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
 
-	const router = useRouter();
 	const { zones } = storeToRefs(useZonesStore());
 	const { getZones } = useZonesStore();
 	const { blocks } = storeToRefs(useBlocksStore());
@@ -11,7 +10,11 @@
 	const { getFloors } = useFloorsStore();
 	const { highAreas } = storeToRefs(useHighAreasStore());
 	const { getHighAreas, setCurrentHighArea } = useHighAreasStore();
+	const router = useRouter();
 
+	await getZones();
+	await getBlocks();
+	await getFloors();
 	await getHighAreas();
 
 	zones.value = zones.value.map((zone) => {
@@ -257,7 +260,7 @@
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
-						<span>No high area found.</span>
+						<span>No High Area Found.</span>
 					</div>
 				</template>
 

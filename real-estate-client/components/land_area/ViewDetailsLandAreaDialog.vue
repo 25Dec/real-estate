@@ -67,28 +67,27 @@
 		</template>
 
 		<template class="flex flex-col gap-3">
-			<div class="flex gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="desc">Name</label>
-					<InputText
-						id="desc"
-						v-model="desc"
-						placeholder="Name"
-						disabled
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="zone">Zone</label>
-					<Dropdown
-						id="zone"
-						placeholder="Select Zone"
-						v-model="zone"
-						:options="zonesDropdown"
-						optionLabel="name"
-						optionValue="value"
-						disabled
-					/>
-				</div>
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="zone">Zone</label>
+				<Dropdown
+					id="zone"
+					placeholder="Select Zone"
+					v-model="zone"
+					:options="zonesDropdown"
+					optionLabel="name"
+					optionValue="value"
+					disabled
+				/>
+			</div>
+
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="desc">Name</label>
+				<InputText
+					id="desc"
+					v-model="desc"
+					placeholder="Name"
+					disabled
+				/>
 			</div>
 
 			<div class="flex gap-3">
@@ -196,7 +195,7 @@
 					<label for="paymentMethod">Payment Method</label>
 					<Dropdown
 						id="paymentMethod"
-						v-model="paymentMethod"
+						v-model="paymentMethod.value"
 						placeholder="Select Payment Method"
 						:options="paymentMethodsDropdown"
 						optionLabel="name"

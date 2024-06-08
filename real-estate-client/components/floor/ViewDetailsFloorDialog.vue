@@ -1,16 +1,16 @@
 <script setup>
 	const { visible } = defineProps(['visible']);
 
+	const { zones } = storeToRefs(useZonesStore());
+	const { getZones } = useZonesStore();
 	const { blocks } = storeToRefs(useBlocksStore());
+	const { getBlocks } = useBlocksStore();
 	const { currentFloor } = storeToRefs(useFloorsStore());
-
 	const myVisible = ref(visible);
-	const id = ref(currentFloor.value['id']);
-	const blockName = ref(
-		blocks.value.find((block) => block['id'] == currentFloor.value['block_id'])[
-			'name'
-		]
-	);
+
+	await getZones();
+	await getBlocks();
+
 	const numberOfHighArea = ref(currentFloor.value['number_of_high_area']);
 	const publicArea = ref(currentFloor.value['public_area']);
 	const totalArea = ref(currentFloor.value['total_area']);
@@ -18,6 +18,37 @@
 	const desc = ref(currentFloor.value['desc']);
 	const createdAt = ref(currentFloor.value['created_at']);
 	const updatedAt = ref(currentFloor.value['updated_at']);
+
+	zones.value = zones.value.map((zone) => {
+		return { id: zone.id, name: `${zone.name}`, value: `${zone.id}` };
+	});
+	const myZones = ref(zones.value);
+	const currentZone = ref({
+		name: myZones.value[0]?.name ?? '',
+		value: myZones.value[0]?.value ?? '',
+	});
+
+	blocks.value = blocks.value.map((block) => {
+		return {
+			id: block['id'],
+			name: `${block['desc']}`,
+			value: `${block['id']}`,
+			zone_id: `${block['zone_id']}`,
+		};
+	});
+	const myBlocks = ref(
+		blocks.value.filter((block) => block['zone_id'] == currentZone.value.value)
+	);
+	const currentBlock = ref({
+		name:
+			myBlocks.value.filter(
+				(block) => block['zone_id'] == currentZone.value.value
+			)?.[0]?.name ?? '',
+		value:
+			myBlocks.value.filter(
+				(block) => block['zone_id'] == currentZone.value.value
+			)?.[0]?.value ?? '',
+	});
 </script>
 
 <template>
@@ -36,23 +67,17 @@
 		</template>
 
 		<template class="flex flex-col gap-3">
-			<div class="flex gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="id">ID</label>
-					<InputText
-						id="id"
-						v-model="id"
-						disabled
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="blockName"> Block Name</label>
-					<InputText
-						id="blockName"
-						v-model="blockName"
-						disabled
-					/>
-				</div>
+			<div class="flex flex-col gap-2">
+				<label for="currentBlock">Block</label>
+				<Dropdown
+					id="currentBlock"
+					placeholder="Select block"
+					v-model="currentBlock.value"
+					:options="myBlocks"
+					optionLabel="name"
+					optionValue="value"
+					disabled
+				/>
 			</div>
 
 			<div class="flex flex-1 flex-col gap-2">

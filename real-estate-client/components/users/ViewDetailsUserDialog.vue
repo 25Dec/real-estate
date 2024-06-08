@@ -1,69 +1,22 @@
 <script setup>
 	const { visible, roles } = defineProps(['visible', 'roles']);
 
-	const { currentAccount: currentCustomer } = storeToRefs(useAccountsStore());
-	const { editAccount } = useAccountsStore();
-	const toast = useToast();
+	const { currentAccount } = storeToRefs(useAccountsStore());
 
 	const myVisible = ref(visible);
-	const socialID = ref(currentCustomer.value['social_id']);
-	const phone = ref(currentCustomer.value['phone']);
-	const loginName = ref(currentCustomer.value['login_name']);
-	const password = ref(currentCustomer.value['password']);
-	const firstName = ref(currentCustomer.value['first_name']);
-	const lastName = ref(currentCustomer.value['last_name']);
-	const email = ref(currentCustomer.value['email']);
-	const type = ref({
-		name: roles.filter(
-			(role) => role['value'] == currentCustomer.value['type']
-		)?.[0]?.['name'],
-		value: roles.filter(
-			(role) => role['value'] == currentCustomer.value['type']
-		)?.[0]?.['value'],
-	});
-	const phoneVerified = ref(currentCustomer.value['phone_verified']);
-	const emailVerified = ref(currentCustomer.value['email_verified']);
-	const socialVerified = ref(currentCustomer.value['social_verified']);
-	const createdAt = ref(currentCustomer.value['created_at']);
-	const updatedAt = ref(currentCustomer.value['updated_at']);
-
-	const onSave = async () => {
-		const newCustomerData = {
-			...currentCustomer.value,
-			social_id: socialID.value,
-			phone: phone.value,
-			first_name: firstName.value,
-			last_name: lastName.value,
-			display_name: `${firstName.value} ${lastName.value}`,
-			email: email.value,
-			type: type.value['value'],
-			phone_verified: phoneVerified.value,
-			email_verified: emailVerified.value,
-			social_verified: socialVerified.value,
-			updated_at: new Date().toLocaleString(),
-		};
-
-		const response = await editCustomer(newCustomerData);
-		myVisible.value = false;
-
-		if (response != null && response['result'] == 'ok') {
-			toast.add({
-				severity: 'success',
-				summary: 'Success',
-				detail: 'Edit Customer Successfully!',
-				group: 'bl',
-				life: 3000,
-			});
-		} else {
-			toast.add({
-				severity: 'warning',
-				summary: 'Error',
-				detail: 'Failed to Edit Customer',
-				group: 'bl',
-				life: 3000,
-			});
-		}
-	};
+	const socialID = ref(currentAccount.value['social_id']);
+	const phone = ref(currentAccount.value['phone']);
+	const loginName = ref(currentAccount.value['login_name']);
+	const password = ref(currentAccount.value['password']);
+	const firstName = ref(currentAccount.value['first_name']);
+	const lastName = ref(currentAccount.value['last_name']);
+	const email = ref(currentAccount.value['email']);
+	const type = ref(currentAccount.value['type']);
+	const phoneVerified = ref(currentAccount.value['phone_verified']);
+	const emailVerified = ref(currentAccount.value['email_verified']);
+	const socialVerified = ref(currentAccount.value['social_verified']);
+	const createdAt = ref(currentAccount.value['created_at']);
+	const updatedAt = ref(currentAccount.value['updated_at']);
 </script>
 
 <template>
@@ -77,7 +30,7 @@
 	>
 		<template #header>
 			<div class="inline-flex items-center justify-center gap-2">
-				<span class="font-bold text-xl">Customer Details</span>
+				<span class="font-bold text-xl">User Details</span>
 			</div>
 		</template>
 		<template class="flex flex-col gap-3">
@@ -88,6 +41,7 @@
 						id="firstName"
 						placeholder="First Name"
 						v-model.trim="firstName"
+						disabled
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -96,6 +50,7 @@
 						id="lastName"
 						placeholder="Last Name"
 						v-model.trim="lastName"
+						disabled
 					/>
 				</div>
 			</div>
@@ -107,6 +62,7 @@
 						id="loginName"
 						placeholder="Login Name"
 						v-model.trim="loginName"
+						disabled
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -117,6 +73,7 @@
 						v-model="password"
 						:feedback="false"
 						toggleMask
+						disabled
 					/>
 				</div>
 			</div>
@@ -129,6 +86,7 @@
 						placeholder="+84 9698 886 660"
 						v-model.trim="phone"
 						integeronly
+						disabled
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -138,6 +96,7 @@
 						placeholder="+84 9698 886 660"
 						v-model.trim="phoneVerified"
 						integeronly
+						disabled
 					/>
 				</div>
 			</div>
@@ -148,10 +107,11 @@
 					id="type"
 					class="flex-1"
 					placeholder="Select User Role"
-					v-model="type.value"
+					v-model="roles[roles.findIndex((role) => role.value == type)].value"
 					:options="roles"
 					optionLabel="name"
 					optionValue="value"
+					disabled
 				/>
 			</div>
 
@@ -162,6 +122,7 @@
 						id="email"
 						placeholder="example@gmail.com"
 						v-model="email"
+						disabled
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -170,6 +131,7 @@
 						id="emailVerified"
 						placeholder="example@gmail.com"
 						v-model="emailVerified"
+						disabled
 					/>
 				</div>
 			</div>
@@ -181,6 +143,7 @@
 						id="socialID"
 						placeholder="https://www.facebook.com"
 						v-model="socialID"
+						disabled
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -189,6 +152,7 @@
 						id="socialVerified"
 						placeholder="https://www.facebook.com"
 						v-model="socialVerified"
+						disabled
 					/>
 				</div>
 			</div>
@@ -202,18 +166,12 @@
 				</span>
 			</div>
 		</template>
+
 		<template #footer>
 			<Button
 				type="button"
-				label="Cancel"
-				text
-				severity="secondary"
+				label="Close"
 				@click="myVisible = false"
-			/>
-			<Button
-				type="submit"
-				label="Save"
-				@click="onSave"
 			/>
 		</template>
 	</Dialog>

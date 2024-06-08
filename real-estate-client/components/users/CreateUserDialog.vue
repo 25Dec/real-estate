@@ -1,56 +1,54 @@
 <script setup>
 	const { visible, roles } = defineProps(['visible', 'roles']);
 
-	const { currentAccount: currentCustomer } = storeToRefs(useAccountsStore());
-	const { editAccount } = useAccountsStore();
+	const { addNewAccount } = useAccountsStore();
 	const toast = useToast();
 
 	const myVisible = ref(visible);
-	const socialID = ref(currentCustomer.value['social_id']);
-	const phone = ref(currentCustomer.value['phone']);
-	const loginName = ref(currentCustomer.value['login_name']);
-	const password = ref(currentCustomer.value['password']);
-	const firstName = ref(currentCustomer.value['first_name']);
-	const lastName = ref(currentCustomer.value['last_name']);
-	const email = ref(currentCustomer.value['email']);
-	const type = ref({
-		name: roles.filter(
-			(role) => role['value'] == currentCustomer.value['type']
-		)?.[0]?.['name'],
-		value: roles.filter(
-			(role) => role['value'] == currentCustomer.value['type']
-		)?.[0]?.['value'],
-	});
-	const phoneVerified = ref(currentCustomer.value['phone_verified']);
-	const emailVerified = ref(currentCustomer.value['email_verified']);
-	const socialVerified = ref(currentCustomer.value['social_verified']);
-	const createdAt = ref(currentCustomer.value['created_at']);
-	const updatedAt = ref(currentCustomer.value['updated_at']);
+	const socialID = ref('');
+	const phone = ref('');
+	const loginName = ref('');
+	const password = ref('');
+	const firstName = ref('');
+	const lastName = ref('');
+	const email = ref('');
+	const type = ref('');
+	const phoneVerified = ref('');
+	const emailVerified = ref('');
+	const socialVerified = ref('');
 
 	const onSave = async () => {
-		const newCustomerData = {
-			...currentCustomer.value,
+		const newAccountData = {
+			id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1,
 			social_id: socialID.value,
 			phone: phone.value,
+			login_name: loginName.value,
+			password: password.value,
 			first_name: firstName.value,
 			last_name: lastName.value,
 			display_name: `${firstName.value} ${lastName.value}`,
 			email: email.value,
+			language: 'vi',
 			type: type.value['value'],
 			phone_verified: phoneVerified.value,
 			email_verified: emailVerified.value,
 			social_verified: socialVerified.value,
-			updated_at: new Date().toLocaleString(),
+			activated: 'true',
+			deleted: 'false',
+			created_by: 1,
+			updated_by: 1,
+			created_at: new Date().toLocaleString(),
+			updated_at: null,
 		};
 
-		const response = await editCustomer(newCustomerData);
+		const response = await addNewAccount(newAccountData);
 		myVisible.value = false;
 
 		if (response != null && response['result'] == 'ok') {
 			toast.add({
 				severity: 'success',
 				summary: 'Success',
-				detail: 'Edit Customer Successfully!',
+				detail: 'Create New User Successfully!',
 				group: 'bl',
 				life: 3000,
 			});
@@ -58,7 +56,7 @@
 			toast.add({
 				severity: 'warning',
 				summary: 'Error',
-				detail: 'Failed to Edit Customer',
+				detail: 'Failed to Create New User',
 				group: 'bl',
 				life: 3000,
 			});
@@ -77,7 +75,7 @@
 	>
 		<template #header>
 			<div class="inline-flex items-center justify-center gap-2">
-				<span class="font-bold text-xl">Customer Details</span>
+				<span class="font-bold text-xl">Create New User</span>
 			</div>
 		</template>
 		<template class="flex flex-col gap-3">
@@ -87,7 +85,7 @@
 					<InputText
 						id="firstName"
 						placeholder="First Name"
-						v-model.trim="firstName"
+						v-model="firstName"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -95,7 +93,7 @@
 					<InputText
 						id="lastName"
 						placeholder="Last Name"
-						v-model.trim="lastName"
+						v-model="lastName"
 					/>
 				</div>
 			</div>
@@ -106,9 +104,10 @@
 					<InputText
 						id="loginName"
 						placeholder="Login Name"
-						v-model.trim="loginName"
+						v-model="loginName"
 					/>
 				</div>
+
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="password">Password</label>
 					<Password
@@ -127,8 +126,7 @@
 					<InputText
 						id="phone"
 						placeholder="+84 9698 886 660"
-						v-model.trim="phone"
-						integeronly
+						v-model="phone"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -136,8 +134,7 @@
 					<InputText
 						id="phoneVerified"
 						placeholder="+84 9698 886 660"
-						v-model.trim="phoneVerified"
-						integeronly
+						v-model="phoneVerified"
 					/>
 				</div>
 			</div>
@@ -148,10 +145,9 @@
 					id="type"
 					class="flex-1"
 					placeholder="Select User Role"
-					v-model="type.value"
+					v-model="type"
 					:options="roles"
 					optionLabel="name"
-					optionValue="value"
 				/>
 			</div>
 
@@ -191,15 +187,6 @@
 						v-model="socialVerified"
 					/>
 				</div>
-			</div>
-
-			<div class="flex flex-row gap-3 justify-between">
-				<span class="text-xs text-gray-400">
-					Created at: {{ convertDateTime(createdAt) }}
-				</span>
-				<span class="text-xs text-gray-400">
-					Updated at: {{ convertDateTime(updatedAt) }}
-				</span>
 			</div>
 		</template>
 		<template #footer>

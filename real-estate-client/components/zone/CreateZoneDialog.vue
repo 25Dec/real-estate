@@ -3,6 +3,7 @@
 
 	const { currentProjectID } = storeToRefs(useProjectsStore());
 	const { addNewZone } = useZonesStore();
+	const toast = useToast();
 
 	const myVisible = ref(visible);
 	const zoneName = ref('');

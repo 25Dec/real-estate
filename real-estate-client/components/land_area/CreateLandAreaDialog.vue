@@ -53,8 +53,6 @@
 			updated_at: null,
 		};
 
-		console.log(newLandAreaData);
-
 		const response = await addNewLandArea(newLandAreaData);
 		myVisible.value = false;
 
@@ -94,26 +92,25 @@
 		</template>
 
 		<template class="flex flex-col gap-3">
-			<div class="flex gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="desc">Name</label>
-					<InputText
-						id="desc"
-						v-model="desc"
-						placeholder="Name"
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="zone">Zone</label>
-					<Dropdown
-						id="zone"
-						placeholder="Select Zone"
-						v-model="zone"
-						:options="zonesDropdown"
-						optionLabel="name"
-						optionValue="value"
-					/>
-				</div>
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="zone">Zone</label>
+				<Dropdown
+					id="zone"
+					placeholder="Select Zone"
+					v-model="zone"
+					:options="zonesDropdown"
+					optionLabel="name"
+					optionValue="value"
+				/>
+			</div>
+
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="desc">Name</label>
+				<InputText
+					id="desc"
+					v-model="desc"
+					placeholder="Name"
+				/>
 			</div>
 
 			<div class="flex gap-3">
