@@ -1,6 +1,24 @@
 export const capitalize = (str) => {
-	return str.charAt(0).toUpperCase() + str.slice(1);
+	if (str === '') {
+		return '';
+	}
+
+	return str
+		.split(' ')
+		.map((word) => {
+			if (word.includes('_')) {
+				return word
+					.split('_')
+					.map((part) => {
+						return part.charAt(0).toUpperCase() + part.slice(1);
+					})
+					.join(' ');
+			}
+			return word.charAt(0).toUpperCase() + word.slice(1);
+		})
+		.join(' ');
 };
+
 export const convertDateTime = (rawDateTime) => {
 	let result = new Date(rawDateTime);
 	return result.toLocaleString();

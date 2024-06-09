@@ -1,3 +1,0 @@
-export const baseUrl = 'http://localhost:3003/v1';
-export const accessToken =
-	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDYsImxvZ2luX25hbWUiOiJzdXBlcmFkbWluIiwiZGlzcGxheV9uYW1lIjoic3VwZXJhZG1pbiIsImVtYWlsIjoic3VwZXJhZG1pbkBnbWFpbC5jb20iLCJ0eXBlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3MTE5MDQzMjQsImV4cCI6MTcxNDA2NDMyNH0.Vx-_aI-24eLdr4CN9WIEn-dnl5WCIbDyqzp4_Sbyxlo';

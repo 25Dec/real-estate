@@ -14,11 +14,11 @@
 	const address = ref(currentProject.value['address']);
 	const phone = ref(currentProject.value['phone']);
 	const email = ref(currentProject.value['email']);
-	const openAt = ref(currentProject.value['open_at']);
+	const openAt = ref(getYearMonthDay(currentProject.value['open_at']));
 	const activated = ref(currentProject.value['activated']);
 	const projectProgress = ref(currentProject.value['project_progress']);
 	const desc = ref(currentProject.value['desc']);
-	const startedDay = ref(currentProject.value['started_day']);
+	const startedDay = ref(getYearMonthDay(currentProject.value['started_day']));
 	const createdAt = ref(currentProject.value['created_at']);
 	const updatedAt = ref(currentProject.value['updated_at']);
 	const budget = ref(currentProject.value['budget']);
@@ -128,6 +128,9 @@
 						v-model="projectProgress"
 						inputId="percent"
 						prefix="%"
+						mode="decimal"
+						:min="0"
+						:max="100"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">

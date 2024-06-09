@@ -30,9 +30,10 @@ export const useAuthStore = defineStore('auth', () => {
 
 	const logUserOut = () => {
 		const token = useCookie('token');
-		authenticated.value = false;
 		token.value = null;
+		user.value = null;
 		localStorage.removeItem('user');
+		authenticated.value = false;
 	};
 
 	return { authenticated, user, authenticateUser, logUserOut };

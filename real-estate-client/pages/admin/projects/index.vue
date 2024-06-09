@@ -7,6 +7,19 @@
 
 	await getProjects();
 
+	const user = ref({});
+
+	if (process.client) {
+		user.value = JSON.parse(localStorage.getItem('user'));
+	}
+
+	const userPermissionForActions =
+		user.value['type'] != 'admin' ||
+		user.value['type'] != 'super_admin' ||
+		user.value['type'] != 'sale_manager'
+			? true
+			: false;
+
 	const statuses = ref([{ name: 'Working', value: 'working' }]);
 	const types = ref([
 		{ name: 'High', value: 'high' },
@@ -16,7 +29,6 @@
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
-	const menu = ref();
 
 	const viewDetailsProjectDialogVisible = ref(false);
 	const createProjectDialogVisible = ref(false);
@@ -59,6 +71,7 @@
 					/>
 				</IconField>
 				<Button
+					v-if="userPermissionForActions"
 					size="small"
 					label="New"
 					@click="createProjectDialogVisible = !createProjectDialogVisible"
@@ -134,6 +147,7 @@
 							<Icon name="mdi:eye-outline" />
 						</Button>
 						<Button
+							v-if="userPermissionForActions"
 							text
 							severity="secondary"
 							@click="toggleEditProject(data)"
@@ -141,6 +155,7 @@
 							<Icon name="mdi:edit-outline" />
 						</Button>
 						<Button
+							v-if="userPermissionForActions"
 							text
 							severity="danger"
 							@click="toggleDeleteProject(data)"

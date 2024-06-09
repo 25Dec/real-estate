@@ -1,8 +1,6 @@
 <script setup>
 	definePageMeta({ layout: 'empty' });
 
-	import { storeToRefs } from 'pinia';
-	import { useAuthStore } from '~/stores/auth-store';
 	import { useToast } from 'primevue/usetoast';
 
 	const { authenticateUser } = useAuthStore();

@@ -1,5 +1,9 @@
 <script setup>
-	const { visible, roles } = defineProps(['visible', 'roles']);
+	const { visible, statuses, types } = defineProps([
+		'visible',
+		'statuses',
+		'types',
+	]);
 
 	const { addNewProject } = useProjectsStore();
 	const toast = useToast();
@@ -9,9 +13,14 @@
 	const address = ref('');
 	const phone = ref('');
 	const email = ref('');
-	const openAt = ref();
-	const startedDay = ref();
+	const openAt = ref('');
+	const activated = ref(false);
+	const projectProgress = ref(0);
+	const desc = ref('');
+	const startedDay = ref('');
 	const budget = ref(0);
+	const status = ref({});
+	const type = ref({});
 
 	const onSave = async () => {
 		const newProjectData = {
@@ -21,17 +30,18 @@
 			phone: phone.value,
 			email: email.value,
 			open_at: openAt.value,
-			activated: 'true',
-			project_progress: 0,
-			desc: null,
-			deleted: 'false',
+			activated: activated.value,
+			project_progress: parseInt(projectProgress.value),
+			desc: desc.value,
+			deleted: false,
 			started_day: startedDay.value,
-			created_by: 13,
-			updated_by: 13,
+			created_by: 46,
+			updated_by: 46,
 			created_at: new Date().toLocaleString(),
 			updated_at: null,
-			budget: budget.value,
-			status: 'working',
+			budget: parseInt(budget.value),
+			status: status.value,
+			type: type.value,
 		};
 
 		const response = await addNewProject(newProjectData);
@@ -49,7 +59,7 @@
 			toast.add({
 				severity: 'warning',
 				summary: 'Error',
-				detail: 'Failed to Create New Project!',
+				detail: 'Failed to Create New Project',
 				group: 'bl',
 				life: 3000,
 			});
@@ -61,6 +71,7 @@
 	<Dialog
 		v-model:visible="myVisible"
 		modal
+		maximizable
 		header="Header"
 		:style="{ width: '50rem' }"
 		:breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
@@ -78,21 +89,17 @@
 						id="projectName"
 						placeholder="Project Name"
 						v-model="projectName"
-						required
 					/>
 				</div>
 			</div>
 
-			<div class="flex">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="address">Address</label>
-					<InputText
-						id="address"
-						placeholder="Address"
-						v-model="address"
-						required
-					/>
-				</div>
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="address">Address</label>
+				<Textarea
+					id="address"
+					placeholder="Address"
+					v-model="address"
+				/>
 			</div>
 
 			<div class="flex flex-row gap-3">
@@ -102,7 +109,6 @@
 						id="phone"
 						placeholder="+84 9698 886 660"
 						v-model="phone"
-						required
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -111,7 +117,60 @@
 						id="email"
 						placeholder="example@gmail.com"
 						v-model="email"
-						required
+					/>
+				</div>
+			</div>
+
+			<div class="flex flex-row gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="progress">Progress</label>
+					<InputNumber
+						id="progress"
+						v-model="projectProgress"
+						inputId="percent"
+						prefix="%"
+						mode="decimal"
+						:min="0"
+						:max="100"
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="budget">Budget</label>
+					<InputNumber
+						id="budget"
+						v-model="budget"
+						inputId="currency-us"
+						mode="currency"
+						currency="USD"
+						locale="en-US"
+						:min="0"
+					/>
+				</div>
+			</div>
+
+			<div class="flex flex-row gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="status">Status</label>
+					<Dropdown
+						id="status"
+						class="flex-1"
+						v-model="status"
+						placeholder="Select Status"
+						:options="statuses"
+						optionLabel="name"
+						optionValue="value"
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="type">Type</label>
+					<Dropdown
+						id="type"
+						class="flex-1"
+						v-model="type"
+						placeholder="Select Type"
+						:options="types"
+						optionLabel="name"
+						optionValue="value"
 					/>
 				</div>
 			</div>
@@ -139,20 +198,15 @@
 				</div>
 			</div>
 
-			<div class="flex">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="budget">Budget</label>
-					<InputNumber
-						id="budget"
-						v-model="budget"
-						inputId="currency-us"
-						mode="currency"
-						currency="USD"
-						locale="en-US"
-					/>
-				</div>
+			<div class="flex flex-1 flex-col gap-2 items-end">
+				<label for="activated">Activated</label>
+				<InputSwitch
+					id="activated"
+					v-model="activated"
+				/>
 			</div>
 		</template>
+
 		<template #footer>
 			<Button
 				type="button"

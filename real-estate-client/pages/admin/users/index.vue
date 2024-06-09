@@ -7,10 +7,25 @@
 
 	await getAccounts();
 
+	const user = ref({});
+
+	if (process.client) {
+		user.value = JSON.parse(localStorage.getItem('user'));
+	}
+
+	const userPermissionForActions =
+		user.value['type'] == 'admin' ||
+		user.value['type'] == 'super_admin' ||
+		user.value['type'] == 'sale_manager'
+			? true
+			: false;
+
 	const roles = ref([
-		{ name: 'Super Admin', value: 'super_admin' },
+		{ name: 'Anonymous', value: 'anonymous' },
+		{ name: 'Sale', value: 'sale' },
+		{ name: 'Sale Manager', value: 'sale_manager' },
 		{ name: 'Admin', value: 'admin' },
-		{ name: 'Normal User', value: 'normal_user' },
+		{ name: 'Super Admin', value: 'super_admin' },
 	]);
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -58,6 +73,7 @@
 					/>
 				</IconField>
 				<Button
+					v-if="userPermissionForActions"
 					size="small"
 					label="New"
 					@click="createAccountDialogVisible = !createAccountDialogVisible"
@@ -133,13 +149,7 @@
 					:showFilterMatchModes="false"
 				>
 					<template #body="{ data }">
-						{{
-							data['type'] == 'super_admin'
-								? 'Super Admin'
-								: data['type'] == 'admin'
-								? 'Admin'
-								: 'Normal User'
-						}}
+						{{ capitalize(data['type']) }}
 					</template>
 				</Column>
 				<Column header="Actions">
@@ -152,6 +162,7 @@
 							<Icon name="mdi:eye-outline" />
 						</Button>
 						<Button
+							v-if="userPermissionForActions"
 							text
 							severity="secondary"
 							@click="editAccount(data)"
@@ -159,6 +170,7 @@
 							<Icon name="mdi:edit-outline" />
 						</Button>
 						<Button
+							v-if="userPermissionForActions"
 							text
 							severity="danger"
 							@click="deleteAccount(data)"
