@@ -9,14 +9,13 @@
 	await getProjects();
 
 	const TOP_OFFSET = 200;
-	const showBackground = ref(false);
 	const abouts = [
 		{ title: 'Real Estate Management', icon: 'ion:home-outline' },
 		{ title: '3D Performance', icon: 'fluent:space-3d-20-regular' },
 		{ title: 'Payment Management', icon: 'streamline:payment-10' },
 		{ title: 'CRM Service', icon: 'streamline:information-desk-customer' },
 	];
-
+	const showBackground = ref(false);
 	const services = [
 		{
 			image: '/images/dashboard.png',

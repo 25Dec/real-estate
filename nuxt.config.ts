@@ -9,10 +9,12 @@ export default defineNuxtConfig({
 		'nuxt-icon',
 		'@vueuse/motion/nuxt',
 		'@nuxt/image',
+		'nuxt-svgo',
+		'@formkit/auto-animate/nuxt',
 	],
 	app: {
 		head: {
-			title: 'Real Estate Client',
+			title: 'Real Estate',
 			link: [
 				{
 					rel: 'icon',

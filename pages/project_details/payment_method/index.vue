@@ -75,6 +75,7 @@
 				scrollable
 				scrollHeight="flex"
 				removableSort
+				v-auto-animate
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">

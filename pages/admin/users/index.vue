@@ -90,9 +90,8 @@
 				:rowsPerPageOptions="[5, 10, 20, 50]"
 				scrollable
 				scrollHeight="flex"
-				sortField="id"
-				:sortOrder="-1"
 				removableSort
+				v-auto-animate
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">

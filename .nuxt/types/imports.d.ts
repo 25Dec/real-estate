@@ -4,6 +4,7 @@ declare global {
   const abortNavigation: typeof import('../../node_modules/nuxt/dist/app/composables/router')['abortNavigation']
   const acceptHMRUpdate: typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['acceptHMRUpdate']
   const addRouteMiddleware: typeof import('../../node_modules/nuxt/dist/app/composables/router')['addRouteMiddleware']
+  const autoAnimate: typeof import('../../node_modules/@formkit/auto-animate')['autoAnimate']
   const callOnce: typeof import('../../node_modules/nuxt/dist/app/composables/once')['callOnce']
   const cancelIdleCallback: typeof import('../../node_modules/nuxt/dist/app/compat/idle-callback')['cancelIdleCallback']
   const capitalize: typeof import('../../utils/core_utils')['capitalize']
@@ -109,6 +110,7 @@ declare global {
   const useAsyncData: typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useAsyncData']
   const useAttrs: typeof import('../../node_modules/vue')['useAttrs']
   const useAuthStore: typeof import('../../stores/auth-store')['useAuthStore']
+  const useAutoAnimate: typeof import('../../node_modules/@formkit/auto-animate/vue')['useAutoAnimate']
   const useBlocksStore: typeof import('../../stores/blocks-store')['useBlocksStore']
   const useConfirm: typeof import('primevue/useconfirm')['useConfirm']
   const useCookie: typeof import('../../node_modules/nuxt/dist/app/composables/cookie')['useCookie']
@@ -194,6 +196,7 @@ declare module 'vue' {
     readonly abortNavigation: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['abortNavigation']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['acceptHMRUpdate']>
     readonly addRouteMiddleware: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['addRouteMiddleware']>
+    readonly autoAnimate: UnwrapRef<typeof import('../../node_modules/@formkit/auto-animate')['autoAnimate']>
     readonly callOnce: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/once')['callOnce']>
     readonly cancelIdleCallback: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/compat/idle-callback')['cancelIdleCallback']>
     readonly capitalize: UnwrapRef<typeof import('../../utils/core_utils')['capitalize']>
@@ -299,6 +302,7 @@ declare module 'vue' {
     readonly useAsyncData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useAsyncData']>
     readonly useAttrs: UnwrapRef<typeof import('../../node_modules/vue')['useAttrs']>
     readonly useAuthStore: UnwrapRef<typeof import('../../stores/auth-store')['useAuthStore']>
+    readonly useAutoAnimate: UnwrapRef<typeof import('../../node_modules/@formkit/auto-animate/vue')['useAutoAnimate']>
     readonly useBlocksStore: UnwrapRef<typeof import('../../stores/blocks-store')['useBlocksStore']>
     readonly useConfirm: UnwrapRef<typeof import('primevue/useconfirm')['useConfirm']>
     readonly useCookie: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/cookie')['useCookie']>
@@ -377,6 +381,7 @@ declare module '@vue/runtime-core' {
     readonly abortNavigation: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['abortNavigation']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['acceptHMRUpdate']>
     readonly addRouteMiddleware: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['addRouteMiddleware']>
+    readonly autoAnimate: UnwrapRef<typeof import('../../node_modules/@formkit/auto-animate')['autoAnimate']>
     readonly callOnce: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/once')['callOnce']>
     readonly cancelIdleCallback: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/compat/idle-callback')['cancelIdleCallback']>
     readonly capitalize: UnwrapRef<typeof import('../../utils/core_utils')['capitalize']>
@@ -482,6 +487,7 @@ declare module '@vue/runtime-core' {
     readonly useAsyncData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useAsyncData']>
     readonly useAttrs: UnwrapRef<typeof import('../../node_modules/vue')['useAttrs']>
     readonly useAuthStore: UnwrapRef<typeof import('../../stores/auth-store')['useAuthStore']>
+    readonly useAutoAnimate: UnwrapRef<typeof import('../../node_modules/@formkit/auto-animate/vue')['useAutoAnimate']>
     readonly useBlocksStore: UnwrapRef<typeof import('../../stores/blocks-store')['useBlocksStore']>
     readonly useConfirm: UnwrapRef<typeof import('primevue/useconfirm')['useConfirm']>
     readonly useCookie: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/cookie')['useCookie']>

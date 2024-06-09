@@ -49,4 +49,6 @@ export { useToast } from 'primevue/usetoast';
 export { useDialog } from 'primevue/usedialog';
 export { defineStore, acceptHMRUpdate, usePinia, storeToRefs } from '../node_modules/@pinia/nuxt/dist/runtime/composables';
 export { useImage } from '../node_modules/@nuxt/image/dist/runtime/composables';
+export { autoAnimate } from '@formkit/auto-animate';
+export { useAutoAnimate } from '@formkit/auto-animate/vue';
 export { definePageMeta } from '../node_modules/nuxt/dist/pages/runtime/composables';

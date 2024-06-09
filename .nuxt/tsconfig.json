@@ -87,7 +87,7 @@
         "../node_modules/pinia/dist/pinia"
       ],
       "#icon-collections": [
-        "./icon-collections"
+        "./icon-collections.mjs"
       ],
       "#image": [
         "../node_modules/@nuxt/image/dist/runtime"
@@ -102,7 +102,7 @@
         "./imports"
       ],
       "#app-manifest": [
-        "./manifest/meta/dev"
+        "./manifest/meta/dev.json"
       ],
       "#build": [
         "."
@@ -141,21 +141,24 @@
     "../node_modules/@nuxtjs/tailwindcss/runtime",
     "../node_modules/@pinia/nuxt/runtime",
     "../node_modules/nuxt-icon/runtime",
-    "../../../../Co/runtime",
+    "../../../Co/runtime",
     "../node_modules/@nuxt/image/runtime",
+    "../node_modules/nuxt-svgo/runtime",
+    "../node_modules/@formkit/auto-animate/nuxt/runtime",
     "../node_modules/@nuxt/telemetry/runtime",
     ".."
   ],
   "exclude": [
     "../node_modules",
-    "../../node_modules",
     "../node_modules/nuxt/node_modules",
     "../node_modules/nuxt-primevue/runtime/server",
     "../node_modules/@nuxtjs/tailwindcss/runtime/server",
     "../node_modules/@pinia/nuxt/runtime/server",
     "../node_modules/nuxt-icon/runtime/server",
-    "../../../../Co/runtime/server",
+    "../../../Co/runtime/server",
     "../node_modules/@nuxt/image/runtime/server",
+    "../node_modules/nuxt-svgo/runtime/server",
+    "../node_modules/@formkit/auto-animate/nuxt/runtime/server",
     "../node_modules/@nuxt/telemetry/runtime/server",
     "../dist",
     "../.output"

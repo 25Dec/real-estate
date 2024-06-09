@@ -38,10 +38,8 @@ export default defineNuxtRouteMiddleware((to) => {
 	// Đã login, muốn đến dashboard, nhưng ko phải admin (super_admin, sale_manager) --> quay về landing page
 	if (
 		token.value &&
-		to?.name.includes('project_details') &&
-		(user.value['type'] != 'admin' ||
-			user.value['type'] != 'super_admin' ||
-			user.value['type'] != 'sale_manager')
+		to?.name.includes('admin') &&
+		(user.value['type'] == 'sale' || user.value['type'] == 'anonymous')
 	) {
 		abortNavigation();
 		return navigateTo('/');

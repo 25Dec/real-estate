@@ -18,7 +18,6 @@
 		name: paymentMethods.value[0]?.['method_name'] ?? '',
 		value: `${paymentMethods.value[0]?.['id']}` ?? '',
 	});
-	// my payment method process base on "payment method id"
 	const myPaymentMethodsProcessBaseOnPMId = computed(() => {
 		return paymentMethodsProcess.value.filter((process) => {
 			return process['payment_method_id'] == currentPaymentMethod.value.value;
@@ -117,6 +116,7 @@
 				scrollable
 				scrollHeight="flex"
 				removableSort
+				v-auto-animate
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
