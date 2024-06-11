@@ -288,7 +288,7 @@
 
 <style scoped>
 	#home {
-		background: url('../public/images/test3.jpg');
+		background: url('../public/images/home_banner.jpg');
 		background-size: cover;
 		min-height: 100vh;
 		background-attachment: fixed;

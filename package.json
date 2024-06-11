@@ -12,11 +12,11 @@
 	"dependencies": {
 		"@emailjs/browser": "^4.3.3",
 		"@formkit/auto-animate": "^0.8.2",
-		"@nuxt/image": "^1.5.0",
+		"@nuxt/image": "^1.7.0",
+		"@nuxtjs/svg": "^0.4.1",
 		"@pinia/nuxt": "^0.5.1",
 		"@vueuse/motion": "^2.1.0",
 		"nuxt": "^3.11.2",
-		"nuxt-svgo": "^4.0.1",
 		"pinia": "^2.1.7",
 		"primevue": "^3.51.0",
 		"vue": "^3.4.21",

@@ -42,7 +42,7 @@
 	<div class="w-screen h-screen">
 		<img
 			class="w-full h-full"
-			src="/public/images/login-bg.jpg"
+			src="/public/images/login_bg.jpg"
 			alt="Login Background"
 		/>
 		<form

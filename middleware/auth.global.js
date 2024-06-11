@@ -26,14 +26,14 @@ export default defineNuxtRouteMiddleware((to) => {
 	}
 
 	// Đã login, muốn đến pj_details, nhưng ko phải sale --> quay về landing page
-	if (
-		token.value &&
-		to?.name.includes('project_details') &&
-		user.value['type'] != 'sale'
-	) {
-		abortNavigation();
-		return navigateTo('/');
-	}
+	// if (
+	// 	token.value &&
+	// 	to?.name.includes('project_details') &&
+	// 	user.value['type'] != 'sale'
+	// ) {
+	// 	abortNavigation();
+	// 	return navigateTo('/');
+	// }
 
 	// Đã login, muốn đến dashboard, nhưng ko phải admin (super_admin, sale_manager) --> quay về landing page
 	if (

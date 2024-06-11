@@ -5,7 +5,6 @@
 /// <reference types="nuxt-icon" />
 /// <reference types="@vueuse/motion" />
 /// <reference types="@nuxt/image" />
-/// <reference types="nuxt-svgo" />
 /// <reference types="@formkit/auto-animate" />
 /// <reference types="@nuxt/telemetry" />
 /// <reference types="nuxt" />
