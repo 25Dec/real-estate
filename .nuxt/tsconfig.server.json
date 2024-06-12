@@ -117,6 +117,7 @@
     "../../../Co/runtime/server",
     "../node_modules/@nuxt/image/runtime/server",
     "../node_modules/@formkit/auto-animate/nuxt/runtime/server",
+    "../node_modules/nuxt-svgo/runtime/server",
     "../node_modules/@nuxt/telemetry/runtime/server",
     "./types/nitro.d.ts",
     "../**/*",

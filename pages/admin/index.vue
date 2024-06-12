@@ -1,14 +1,8 @@
 <script setup>
 	const { statistics } = storeToRefs(useDashboardStore());
 	const { getDashboardStatistics } = useDashboardStore();
-	const { getProjects } = useProjectsStore();
-	const { getAccounts } = useAccountsStore();
-	const { getNotifications } = useNotificationsStore();
 
 	await getDashboardStatistics();
-	await getProjects();
-	await getAccounts();
-	await getNotifications();
 </script>
 
 <template>

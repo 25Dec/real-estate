@@ -2,25 +2,18 @@
 	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
 
-	const { accounts: customers, currentAccount: currentCustomer } = storeToRefs(
-		useAccountsStore()
-	);
-	const { getAccounts } = useAccountsStore();
+	const { customers, currentCustomer } = storeToRefs(useCustomersStore());
+	const { getCustomers } = useCustomersStore();
 
-	await getAccounts();
+	await getCustomers();
 
-	const roles = ref([
-		{ name: 'Super Admin', value: 'super_admin' },
-		{ name: 'Admin', value: 'admin' },
-		{ name: 'Normal User', value: 'normal_user' },
-	]);
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
 	const viewDetailsCustomerDialogVisible = ref(false);
-	const createCustomerDialogVisible = ref(false);
+	// const createCustomerDialogVisible = ref(false);
 	const editCustomerDialogVisible = ref(false);
-	const deleteCustomerDialogVisible = ref(false);
+	// const deleteCustomerDialogVisible = ref(false);
 
 	const viewDetailsCustomer = (data) => {
 		currentCustomer.value = data;
@@ -31,10 +24,10 @@
 		currentCustomer.value = data;
 		editCustomerDialogVisible.value = !editCustomerDialogVisible.value;
 	};
-	const deleteCustomer = async (data) => {
-		currentCustomer.value = data;
-		deleteCustomerDialogVisible.value = !deleteCustomerDialogVisible.value;
-	};
+	// const deleteCustomer = async (data) => {
+	// 	currentCustomer.value = data;
+	// 	deleteCustomerDialogVisible.value = !deleteCustomerDialogVisible.value;
+	// };
 </script>
 
 <template>
@@ -57,11 +50,11 @@
 						placeholder="Filter customer..."
 					/>
 				</IconField>
-				<Button
-					size="small"
-					label="New"
-					@click="createCustomerDialogVisible = !createCustomerDialogVisible"
-				/>
+				<!-- <Button -->
+				<!-- 	size="small" -->
+				<!-- 	label="New" -->
+				<!-- 	@click="createCustomerDialogVisible = !createCustomerDialogVisible" -->
+				<!-- /> -->
 			</div>
 		</div>
 
@@ -106,15 +99,6 @@
 				</Column>
 
 				<Column
-					field="login_name"
-					header="Login Name"
-				>
-					<template #body="{ data }">
-						{{ data['login_name'] }}
-					</template>
-				</Column>
-
-				<Column
 					field="phone"
 					header="Phone"
 				>
@@ -123,24 +107,6 @@
 					</template>
 				</Column>
 
-				<Column
-					field="type"
-					header="Role"
-					sortable
-					sortField="type"
-					filterField="type"
-					:showFilterMatchModes="false"
-				>
-					<template #body="{ data }">
-						{{
-							data['type'] == 'super_admin'
-								? 'Super Admin'
-								: data['type'] == 'admin'
-								? 'Admin'
-								: 'Normal User'
-						}}
-					</template>
-				</Column>
 				<Column header="Actions">
 					<template #body="{ data }">
 						<Button
@@ -157,13 +123,9 @@
 						>
 							<Icon name="mdi:edit-outline" />
 						</Button>
-						<Button
-							text
-							severity="danger"
-							@click="deleteCustomer(data)"
-						>
-							<Icon name="mdi:delete-outline" />
-						</Button>
+						<!-- <Button text severity="danger" @click="deleteCustomer(data)"> -->
+						<!--   <Icon name="mdi:delete-outline" /> -->
+						<!-- </Button> -->
 					</template>
 				</Column>
 			</DataTable>
@@ -172,20 +134,17 @@
 	<ViewDetailsCustomerDialog
 		v-if="viewDetailsCustomerDialogVisible"
 		:visible="viewDetailsCustomerDialogVisible"
-		:roles="roles"
 	/>
-	<CreateCustomerDialog
-		v-if="createCustomerDialogVisible"
-		:visible="createCustomerDialogVisible"
-		:roles="roles"
-	/>
+	<!-- <CreateCustomerDialog -->
+	<!--   v-if="createCustomerDialogVisible" -->
+	<!--   :visible="createCustomerDialogVisible" -->
+	<!-- /> -->
 	<EditCustomerDialog
 		v-if="editCustomerDialogVisible"
 		:visible="editCustomerDialogVisible"
-		:roles="roles"
 	/>
-	<DeleteCustomerDialog
-		v-if="deleteCustomerDialogVisible"
-		:visible="deleteCustomerDialogVisible"
-	/>
+	<!-- <DeleteCustomerDialog -->
+	<!--   v-if="deleteCustomerDialogVisible" -->
+	<!--   :visible="deleteCustomerDialogVisible" -->
+	<!-- /> -->
 </template>

@@ -15,9 +15,7 @@ export const useNotificationsStore = defineStore('notifications', () => {
 			},
 		});
 
-		notifications.value = data.value.data.data.filter(
-			(noti) => noti['project_id'] == currentProjectID.value
-		);
+		notifications.value = data.value.data.data;
 	};
 
 	const addNewNotification = async (data) => {

@@ -5,6 +5,9 @@
 
 	const { projects } = storeToRefs(useProjectsStore());
 	const { getProjects } = useProjectsStore();
+	const { authenticated } = storeToRefs(useAuthStore());
+	const { logUserOut } = useAuthStore();
+	const router = useRouter();
 
 	await getProjects();
 
@@ -16,6 +19,19 @@
 		{ title: 'CRM Service', icon: 'streamline:information-desk-customer' },
 	];
 	const showBackground = ref(false);
+	const menu = ref();
+	const menuItems = ref([
+		{
+			label: 'Logout',
+			command: () => logUserOut(),
+		},
+	]);
+	const user = ref({});
+
+	if (process.client) {
+		user.value = JSON.parse(localStorage.getItem('user')) ?? {};
+	}
+
 	const services = [
 		{
 			image: '/images/dashboard.png',
@@ -53,6 +69,9 @@
 		{ title: "Kid's Playland", icon: 'ion:football-outline' },
 	];
 
+	const toggleMenu = (event, data) => {
+		menu.value.toggle(event);
+	};
 	const handleScroll = () => {
 		if (window.scrollY >= TOP_OFFSET) {
 			showBackground.value = true;
@@ -68,79 +87,101 @@
 
 <template>
 	<header
-		:class="`fixed w-full px-12 py-6 flex justify-between items-center z-50 transition duration-1000 ease-in-out ${
-			showBackground ? 'backdrop-blur-3xl' : ''
+		:class="`fixed w-full px-6 py-6 flex justify-between items-center z-50 transition duration-1000 ease-in-out ${
+			showBackground ? 'backdrop-blur-xl' : ''
 		}`"
 	>
-		<NuxtLink
-			to="/"
-			class="flex justify-center items-center gap-1"
-		>
-			<Icon
-				name="line-md:home-simple"
-				class="text-2xl text-[#10b981]"
-			/>
-			<span class="font-bold text-xl text-[#10b981]"> Propertier </span>
-		</NuxtLink>
+		<div class="flex gap-12">
+			<NuxtLink
+				to="/"
+				class="flex justify-center items-center gap-1"
+			>
+				<Icon
+					name="line-md:home-simple"
+					class="text-2xl text-[#10b981]"
+				/>
+				<span class="font-bold text-xl text-[#10b981]"> Propertier </span>
+			</NuxtLink>
 
-		<ul
-			:class="`flex gap-12 font-semibold ${
-				showBackground ? '[&>li]:text-black' : '[&>li]:text-white'
-			}`"
-		>
-			<li
-				class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
+			<ul
+				:class="`flex gap-12 font-semibold flex items-center ${
+					showBackground ? '[&>li]:text-black' : '[&>li]:text-white'
+				}`"
 			>
-				<NuxtLink to="/"> Home </NuxtLink>
-			</li>
-			<li
-				class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
-			>
-				<NuxtLink
-					:to="{ hash: '#about' }"
-					:external="true"
+				<li
+					class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
 				>
-					About
-				</NuxtLink>
-			</li>
-			<li
-				class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
-			>
-				<NuxtLink
-					:to="{ hash: '#services' }"
-					:external="true"
+					<NuxtLink to="/"> Home </NuxtLink>
+				</li>
+				<li
+					class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
 				>
-					Services
-				</NuxtLink>
-			</li>
-			<li
-				class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
-			>
-				<NuxtLink
-					:to="{ hash: '#projects' }"
-					:external="true"
+					<NuxtLink
+						:to="{ hash: '#about' }"
+						:external="true"
+					>
+						About
+					</NuxtLink>
+				</li>
+				<li
+					class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
 				>
-					Projects
-				</NuxtLink>
-			</li>
-			<!-- <li -->
-			<!--   class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out" -->
-			<!-- > -->
-			<!--   <NuxtLink :to="{ hash: '#features' }" :external="true"> -->
-			<!--     Features -->
-			<!--   </NuxtLink> -->
-			<!-- </li> -->
-			<li
-				class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
-			>
-				<NuxtLink
-					:to="{ hash: '#contact' }"
-					:external="true"
+					<NuxtLink
+						:to="{ hash: '#services' }"
+						:external="true"
+					>
+						Services
+					</NuxtLink>
+				</li>
+				<li
+					class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
 				>
-					Contact
-				</NuxtLink>
-			</li>
-		</ul>
+					<NuxtLink
+						:to="{ hash: '#projects' }"
+						:external="true"
+					>
+						Projects
+					</NuxtLink>
+				</li>
+				<li
+					class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
+				>
+					<NuxtLink
+						:to="{ hash: '#contact' }"
+						:external="true"
+					>
+						Contact
+					</NuxtLink>
+				</li>
+			</ul>
+		</div>
+		<div>
+			<ul class="flex gap-12 font-semibold flex items-center">
+				<li>
+					<Avatar
+						v-if="authenticated"
+						shape="square"
+						:label="user['display_name'].substring(0, 3)"
+						@click="(event) => toggleMenu(event, data)"
+					/>
+					<Button
+						v-if="!authenticated"
+						outlined
+						severity="secondary"
+						:class="`font-semibold ${
+							showBackground ? 'text-black' : 'text-white'
+						}`"
+					>
+						<NuxtLink to="/login"> Login </NuxtLink>
+					</Button>
+					<Menu
+						ref="menu"
+						:model="menuItems"
+						:popup="true"
+					/>
+				</li>
+			</ul>
+		</div>
 	</header>
 
 	<section
@@ -216,22 +257,6 @@
 			/>
 		</div>
 	</section>
-
-	<!-- <section
-		id="features"
-		class="relative pt-[100px] px-4 h-fit flex flex-col items-center gap-12"
-	>
-		<span class="text-4xl font-bold p-2 border-b">Our Features</span>
-		<div
-			class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-		>
-			<FeatureCard
-				v-for="feature in features"
-				:key="features.name"
-				:data="feature"
-			/>
-		</div>
-	</section> -->
 
 	<section
 		id="contact"

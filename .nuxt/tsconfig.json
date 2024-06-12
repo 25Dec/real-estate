@@ -144,6 +144,7 @@
     "../../../Co/runtime",
     "../node_modules/@nuxt/image/runtime",
     "../node_modules/@formkit/auto-animate/nuxt/runtime",
+    "../node_modules/nuxt-svgo/runtime",
     "../node_modules/@nuxt/telemetry/runtime",
     ".."
   ],
@@ -157,6 +158,7 @@
     "../../../Co/runtime/server",
     "../node_modules/@nuxt/image/runtime/server",
     "../node_modules/@formkit/auto-animate/nuxt/runtime/server",
+    "../node_modules/nuxt-svgo/runtime/server",
     "../node_modules/@nuxt/telemetry/runtime/server",
     "../dist",
     "../.output"

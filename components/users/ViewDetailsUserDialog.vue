@@ -1,22 +1,29 @@
 <script setup>
 	const { visible, roles } = defineProps(['visible', 'roles']);
 
-	const { currentAccount } = storeToRefs(useAccountsStore());
+	const { currentUser } = storeToRefs(useUsersStore());
 
 	const myVisible = ref(visible);
-	const socialID = ref(currentAccount.value['social_id']);
-	const phone = ref(currentAccount.value['phone']);
-	const loginName = ref(currentAccount.value['login_name']);
-	const password = ref(currentAccount.value['password']);
-	const firstName = ref(currentAccount.value['first_name']);
-	const lastName = ref(currentAccount.value['last_name']);
-	const email = ref(currentAccount.value['email']);
-	const type = ref(currentAccount.value['type']);
-	const phoneVerified = ref(currentAccount.value['phone_verified']);
-	const emailVerified = ref(currentAccount.value['email_verified']);
-	const socialVerified = ref(currentAccount.value['social_verified']);
-	const createdAt = ref(currentAccount.value['created_at']);
-	const updatedAt = ref(currentAccount.value['updated_at']);
+	const socialID = ref(currentUser.value['social_id']);
+	const phone = ref(currentUser.value['phone']);
+	const loginName = ref(currentUser.value['login_name']);
+	const password = ref(currentUser.value['password']);
+	const firstName = ref(currentUser.value['first_name']);
+	const lastName = ref(currentUser.value['last_name']);
+	const email = ref(currentUser.value['email']);
+	const type = ref({
+		name: roles.filter(
+			(role) => role['value'] == currentUser.value['type']
+		)?.[0]?.['name'],
+		value: roles.filter(
+			(role) => role['value'] == currentUser.value['type']
+		)?.[0]?.['value'],
+	});
+	const phoneVerified = ref(currentUser.value['phone_verified']);
+	const emailVerified = ref(currentUser.value['email_verified']);
+	const socialVerified = ref(currentUser.value['social_verified']);
+	const createdAt = ref(currentUser.value['created_at']);
+	const updatedAt = ref(currentUser.value['updated_at']);
 </script>
 
 <template>
@@ -107,7 +114,7 @@
 					id="type"
 					class="flex-1"
 					placeholder="Select User Role"
-					v-model="roles[roles.findIndex((role) => role.value == type)].value"
+					v-model="type.value"
 					:options="roles"
 					optionLabel="name"
 					optionValue="value"

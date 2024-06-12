@@ -1,14 +1,14 @@
 <script setup>
 	const { visible } = defineProps(['visible']);
 
+	const { currentUser } = storeToRefs(useUsersStore());
+	const { deleteUser } = useUsersStore();
 	const toast = useToast();
-	const { currentAccount } = storeToRefs(useAccountsStore());
-	const { deleteAccount } = useAccountsStore();
 
 	const myVisible = ref(visible);
 
 	const onDelete = async () => {
-		const response = await deleteAccount(currentAccount.value);
+		const response = await deleteUser(currentUser.value);
 		myVisible.value = false;
 
 		if (response != null && response['result'] == 'ok') {
@@ -48,7 +48,7 @@
 		<div>
 			<span>
 				This will delete user
-				<b>{{ `${data['first_name']} ${data['last_name']}` }}</b>
+				<b>{{ `${currentUser['first_name']} ${currentUser['last_name']}` }}</b>
 				permanently!
 			</span>
 			<span>You cannot undo this action!</span>

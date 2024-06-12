@@ -1,7 +1,7 @@
 <script setup>
 	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const { accountsDropdown: submitters } = storeToRefs(useAccountsStore());
+	const { customersDropdown: submitters } = storeToRefs(useCustomersStore());
 	const { currentHighAreaIDFromLocalStore } = storeToRefs(useHighAreasStore());
 	const { addNewHighPaymentProcess } = useHighPaymentProcessStore();
 	const toast = useToast();

@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+	import TheManhattanGloryVinhomesGrandPark from '~/public/images/the_manhattan_glory_vinhomes_grand_park.svg';
+</script>
 
 <template>
 	<div class="w-full h-full flex flex-col">
@@ -12,10 +14,7 @@
 		<div
 			class="absolute top-[8%] w-full h-[92%] overflow-hidden flex flex-col justify-center items-center"
 		>
-			<NuxtImg
-				src="/images/the_manhattan_glory_vinhomes_grand_park.png"
-				class="object-cover"
-			/>
+			<TheManhattanGloryVinhomesGrandPark></TheManhattanGloryVinhomesGrandPark>
 		</div>
 	</div>
 </template>

@@ -97,7 +97,7 @@
 				<InputText
 					id="desc"
 					placeholder="Name"
-					v-model="desc"
+					v-model.trim="desc"
 				/>
 			</div>
 

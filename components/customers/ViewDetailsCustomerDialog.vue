@@ -1,27 +1,34 @@
 <script setup>
-	const { visible, roles } = defineProps(['visible', 'roles']);
+	const { visible } = defineProps(['visible']);
 
-	const { currentAccount: currentCustomer } = storeToRefs(useAccountsStore());
+	const { currentCustomer } = storeToRefs(useCustomersStore());
+	const { projectsDropdown } = storeToRefs(useProjectsStore());
+	const { getProjects } = useProjectsStore();
+
+	await getProjects();
 
 	const myVisible = ref(visible);
 	const socialID = ref(currentCustomer.value['social_id']);
 	const phone = ref(currentCustomer.value['phone']);
-	const loginName = ref(currentCustomer.value['login_name']);
-	const password = ref(currentCustomer.value['password']);
 	const firstName = ref(currentCustomer.value['first_name']);
 	const lastName = ref(currentCustomer.value['last_name']);
 	const email = ref(currentCustomer.value['email']);
-	const type = ref({
-		name: roles.filter(
-			(role) => role['value'] == currentCustomer.value['type']
+	const contacted = ref({
+		name: capitalize(currentCustomer.value['contacted']),
+		value: currentCustomer.value['contacted'],
+	});
+	const potential = ref({
+		name: capitalize(currentCustomer.value['potential']),
+		value: currentCustomer.value['potential'],
+	});
+	const projectID = ref({
+		name: projectsDropdown.value.filter(
+			(pj) => pj['value'] == currentCustomer.value['project_id']
 		)?.[0]?.['name'],
-		value: roles.filter(
-			(role) => role['value'] == currentCustomer.value['type']
+		value: projectsDropdown.value.filter(
+			(pj) => pj['value'] == currentCustomer.value['project_id']
 		)?.[0]?.['value'],
 	});
-	const phoneVerified = ref(currentCustomer.value['phone_verified']);
-	const emailVerified = ref(currentCustomer.value['email_verified']);
-	const socialVerified = ref(currentCustomer.value['social_verified']);
 	const createdAt = ref(currentCustomer.value['created_at']);
 	const updatedAt = ref(currentCustomer.value['updated_at']);
 </script>
@@ -64,29 +71,6 @@
 
 			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="loginName">Login Name</label>
-					<InputText
-						id="loginName"
-						placeholder="Login Name"
-						v-model.trim="loginName"
-						disabled
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="password">Password</label>
-					<Password
-						id="password"
-						placeholder="Password"
-						v-model="password"
-						:feedback="false"
-						toggleMask
-						disabled
-					/>
-				</div>
-			</div>
-
-			<div class="flex flex-row gap-3">
-				<div class="flex flex-1 flex-col gap-2">
 					<label for="phone">Phone Number</label>
 					<InputText
 						id="phone"
@@ -97,68 +81,57 @@
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="phoneVerified">Phone Verified</label>
+					<label for="email">Email</label>
 					<InputText
-						id="phoneVerified"
-						placeholder="+84 9698 886 660"
-						v-model.trim="phoneVerified"
-						integeronly
+						id="email"
+						placeholder="example@gmail.com"
+						v-model.trim="email"
 						disabled
 					/>
 				</div>
 			</div>
 
 			<div class="flex flex-1 flex-col gap-2">
-				<label for="type">User Role</label>
+				<label for="projectID">Project</label>
 				<Dropdown
-					id="type"
-					class="flex-1"
-					placeholder="Select User Role"
-					v-model="type.value"
-					:options="roles"
+					id="projectID"
+					placeholder="Select Project"
+					v-model="projectID.value"
+					:options="projectsDropdown"
 					optionLabel="name"
 					optionValue="value"
 					disabled
 				/>
 			</div>
 
-			<div class="flex flex-col gap-3">
+			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="email">Email</label>
-					<InputText
-						id="email"
-						placeholder="example@gmail.com"
-						v-model="email"
+					<label for="contacted">Contacted</label>
+					<Dropdown
+						id="contacted"
+						placeholder="True or False"
+						v-model="contacted.value"
+						:options="[
+							{ name: 'True', value: 'true' },
+							{ name: 'False', value: 'false' },
+						]"
+						optionLabel="name"
+						optionValue="value"
 						disabled
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="emailVerified">Email Verified</label>
-					<InputText
-						id="emailVerified"
-						placeholder="example@gmail.com"
-						v-model="emailVerified"
-						disabled
-					/>
-				</div>
-			</div>
-
-			<div class="flex flex-col gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="socialID">Social ID</label>
-					<InputText
-						id="socialID"
-						placeholder="https://www.facebook.com"
-						v-model="socialID"
-						disabled
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="socialVerified">Social Verified</label>
-					<InputText
-						id="socialVerified"
-						placeholder="https://www.facebook.com"
-						v-model="socialVerified"
+					<label for="Potential">Potential</label>
+					<Dropdown
+						id="Potential"
+						placeholder="True or False"
+						v-model="potential.value"
+						:options="[
+							{ name: 'True', value: 'true' },
+							{ name: 'False', value: 'false' },
+						]"
+						optionLabel="name"
+						optionValue="value"
 						disabled
 					/>
 				</div>

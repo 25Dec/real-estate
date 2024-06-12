@@ -1,29 +1,39 @@
 <script setup>
-	const { visible, roles } = defineProps(['visible', 'roles']);
+	const { visible } = defineProps(['visible']);
 
-	const { currentAccount: currentCustomer } = storeToRefs(useAccountsStore());
-	const { editAccount } = useAccountsStore();
+	const router = useRouter();
+	const currentRoute = router['currentRoute'].value;
+
+	const { currentCustomer } = storeToRefs(useCustomersStore());
+	const { editCustomer } = useCustomersStore();
+	const { projectsDropdown } = storeToRefs(useProjectsStore());
+	const { getProjects } = useProjectsStore();
 	const toast = useToast();
+
+	await getProjects();
 
 	const myVisible = ref(visible);
 	const socialID = ref(currentCustomer.value['social_id']);
 	const phone = ref(currentCustomer.value['phone']);
-	const loginName = ref(currentCustomer.value['login_name']);
-	const password = ref(currentCustomer.value['password']);
 	const firstName = ref(currentCustomer.value['first_name']);
 	const lastName = ref(currentCustomer.value['last_name']);
 	const email = ref(currentCustomer.value['email']);
-	const type = ref({
-		name: roles.filter(
-			(role) => role['value'] == currentCustomer.value['type']
+	const contacted = ref({
+		name: capitalize(currentCustomer.value['contacted']),
+		value: currentCustomer.value['contacted'],
+	});
+	const potential = ref({
+		name: capitalize(currentCustomer.value['potential']),
+		value: currentCustomer.value['potential'],
+	});
+	const projectID = ref({
+		name: projectsDropdown.value.filter(
+			(pj) => pj['value'] == currentCustomer.value['project_id']
 		)?.[0]?.['name'],
-		value: roles.filter(
-			(role) => role['value'] == currentCustomer.value['type']
+		value: projectsDropdown.value.filter(
+			(pj) => pj['value'] == currentCustomer.value['project_id']
 		)?.[0]?.['value'],
 	});
-	const phoneVerified = ref(currentCustomer.value['phone_verified']);
-	const emailVerified = ref(currentCustomer.value['email_verified']);
-	const socialVerified = ref(currentCustomer.value['social_verified']);
 	const createdAt = ref(currentCustomer.value['created_at']);
 	const updatedAt = ref(currentCustomer.value['updated_at']);
 
@@ -36,10 +46,7 @@
 			last_name: lastName.value,
 			display_name: `${firstName.value} ${lastName.value}`,
 			email: email.value,
-			type: type.value['value'],
-			phone_verified: phoneVerified.value,
-			email_verified: emailVerified.value,
-			social_verified: socialVerified.value,
+			project_id: projectID.value.value,
 			updated_at: new Date().toLocaleString(),
 		};
 
@@ -88,6 +95,9 @@
 						id="firstName"
 						placeholder="First Name"
 						v-model.trim="firstName"
+						:disabled="
+							currentRoute['path'].includes('project_details') ? true : false
+						"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -96,27 +106,9 @@
 						id="lastName"
 						placeholder="Last Name"
 						v-model.trim="lastName"
-					/>
-				</div>
-			</div>
-
-			<div class="flex flex-row gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="loginName">Login Name</label>
-					<InputText
-						id="loginName"
-						placeholder="Login Name"
-						v-model.trim="loginName"
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="password">Password</label>
-					<Password
-						id="password"
-						placeholder="Password"
-						v-model="password"
-						:feedback="false"
-						toggleMask
+						:disabled="
+							currentRoute['path'].includes('project_details') ? true : false
+						"
 					/>
 				</div>
 			</div>
@@ -129,66 +121,68 @@
 						placeholder="+84 9698 886 660"
 						v-model.trim="phone"
 						integeronly
+						:disabled="
+							currentRoute['path'].includes('project_details') ? true : false
+						"
 					/>
 				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="phoneVerified">Phone Verified</label>
-					<InputText
-						id="phoneVerified"
-						placeholder="+84 9698 886 660"
-						v-model.trim="phoneVerified"
-						integeronly
-					/>
-				</div>
-			</div>
-
-			<div class="flex flex-1 flex-col gap-2">
-				<label for="type">User Role</label>
-				<Dropdown
-					id="type"
-					class="flex-1"
-					placeholder="Select User Role"
-					v-model="type.value"
-					:options="roles"
-					optionLabel="name"
-					optionValue="value"
-				/>
-			</div>
-
-			<div class="flex flex-col gap-3">
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="email">Email</label>
 					<InputText
 						id="email"
 						placeholder="example@gmail.com"
-						v-model="email"
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="emailVerified">Email Verified</label>
-					<InputText
-						id="emailVerified"
-						placeholder="example@gmail.com"
-						v-model="emailVerified"
+						v-model.trim="email"
+						:disabled="
+							currentRoute['path'].includes('project_details') ? true : false
+						"
 					/>
 				</div>
 			</div>
 
-			<div class="flex flex-col gap-3">
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="projectID">Project</label>
+				<Dropdown
+					id="projectID"
+					placeholder="Select Project"
+					v-model="projectID.value"
+					:options="projectsDropdown"
+					optionLabel="name"
+					optionValue="value"
+					:disabled="
+						currentRoute['path'].includes('project_details') ? true : false
+					"
+				/>
+			</div>
+
+			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="socialID">Social ID</label>
-					<InputText
-						id="socialID"
-						placeholder="https://www.facebook.com"
-						v-model="socialID"
+					<label for="contacted">Contacted</label>
+					<Dropdown
+						id="contacted"
+						placeholder="True or False"
+						v-model="contacted.value"
+						:options="[
+							{ name: 'True', value: 'true' },
+							{ name: 'False', value: 'false' },
+						]"
+						optionLabel="name"
+						optionValue="value"
+						:disabled="currentRoute['path'].includes('admin') ? true : false"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="socialVerified">Social Verified</label>
-					<InputText
-						id="socialVerified"
-						placeholder="https://www.facebook.com"
-						v-model="socialVerified"
+					<label for="Potential">Potential</label>
+					<Dropdown
+						id="Potential"
+						placeholder="True or False"
+						v-model="potential.value"
+						:options="[
+							{ name: 'True', value: 'true' },
+							{ name: 'False', value: 'false' },
+						]"
+						optionLabel="name"
+						optionValue="value"
+						:disabled="currentRoute['path'].includes('admin') ? true : false"
 					/>
 				</div>
 			</div>

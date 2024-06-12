@@ -14,7 +14,7 @@
 	const user = ref({});
 
 	if (process.client) {
-		user.value = JSON.parse(localStorage.getItem('user'));
+		user.value = JSON.parse(localStorage.getItem('user')) ?? {};
 	}
 
 	const userPermissionForActions =
@@ -114,7 +114,7 @@
 					header="Status"
 				>
 					<template #body="{ data }">
-						{{ data['status'] }}
+						{{ capitalize(data['status']) }}
 					</template>
 				</Column>
 

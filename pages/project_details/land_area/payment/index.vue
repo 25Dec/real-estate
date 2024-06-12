@@ -28,10 +28,10 @@
 		useLandPaymentProcessStore()
 	);
 	const { getLandPaymentProcesses } = useLandPaymentProcessStore();
-	const { getAccounts } = useAccountsStore();
+	const { getCustomers } = useCustomersStore();
 
 	await getLandPaymentProcesses();
-	await getAccounts();
+	await getCustomers();
 
 	const myPaymentBaseOnLandID = computed(() => {
 		return landPaymentProcesses.value.filter((payment) => {

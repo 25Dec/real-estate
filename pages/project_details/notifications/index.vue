@@ -6,34 +6,39 @@
 		useNotificationsStore()
 	);
 	const { getNotifications } = useNotificationsStore();
+	const { currentProjectIDFromLocalStore } = useProjectsStore();
 	const { getProjects } = useProjectsStore();
 
 	await getNotifications();
 	await getProjects();
+
+	notifications.value = notifications.value.filter(
+		(noti) => noti['project_id'] == currentProjectIDFromLocalStore
+	);
 
 	const statuses = ref([{ name: 'Info', value: 'info' }]);
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
 	const viewDetailsNotificationDialogVisible = ref(false);
-	const createNotificationDialogVisible = ref(false);
-	const editNotificationDialogVisible = ref(false);
-	const deleteNotificationDialogVisible = ref(false);
+	// const createNotificationDialogVisible = ref(false);
+	// const editNotificationDialogVisible = ref(false);
+	// const deleteNotificationDialogVisible = ref(false);
 
 	const toggleViewDetailsNotification = async (data) => {
 		currentNotification.value = data;
 		viewDetailsNotificationDialogVisible.value =
 			!viewDetailsNotificationDialogVisible.value;
 	};
-	const toggleEditNotification = async (data) => {
-		currentNotification.value = data;
-		editNotificationDialogVisible.value = !editNotificationDialogVisible.value;
-	};
-	const toggleDeleteNotification = async (data) => {
-		currentNotification.value = data;
-		deleteNotificationDialogVisible.value =
-			!deleteNotificationDialogVisible.value;
-	};
+	// const toggleEditNotification = async (data) => {
+	// 	currentNotification.value = data;
+	// 	editNotificationDialogVisible.value = !editNotificationDialogVisible.value;
+	// };
+	// const toggleDeleteNotification = async (data) => {
+	// 	currentNotification.value = data;
+	// 	deleteNotificationDialogVisible.value =
+	// 		!deleteNotificationDialogVisible.value;
+	// };
 </script>
 
 <template>
@@ -56,13 +61,13 @@
 						placeholder="Filter notifications..."
 					/>
 				</IconField>
-				<Button
+				<!-- <Button
 					size="small"
 					label="New"
 					@click="
 						createNotificationDialogVisible = !createNotificationDialogVisible
 					"
-				/>
+				/> -->
 			</div>
 		</div>
 
@@ -80,7 +85,7 @@
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
-						<span>No notifications found.</span>
+						<span>No Notifications Found.</span>
 					</div>
 				</template>
 
@@ -100,7 +105,7 @@
 					header="Status"
 				>
 					<template #body="{ data }">
-						{{ data['status'] }}
+						{{ capitalize(data['status']) }}
 					</template>
 				</Column>
 
@@ -113,20 +118,20 @@
 						>
 							<Icon name="mdi:eye-outline" />
 						</Button>
-						<Button
+						<!-- <Button
 							text
 							severity="secondary"
 							@click="toggleEditNotification(data)"
 						>
 							<Icon name="mdi:edit-outline" />
-						</Button>
-						<Button
+						</Button> -->
+						<!-- <Button
 							text
 							severity="danger"
 							@click="toggleDeleteNotification(data)"
 						>
 							<Icon name="mdi:delete-outline" />
-						</Button>
+						</Button> -->
 					</template>
 				</Column>
 			</DataTable>

@@ -1,8 +1,8 @@
 <script setup>
 	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const { accounts, accountsDropdown: submitters } = storeToRefs(
-		useAccountsStore()
+	const { customers, customersDropdown: submitters } = storeToRefs(
+		useCustomersStore()
 	);
 	const { currentLandPaymentProcess } = storeToRefs(
 		useLandPaymentProcessStore()
@@ -15,11 +15,11 @@
 	const amountOfMoney = ref(currentLandPaymentProcess.value['amount_of_money']);
 	const amountOfDebt = ref(currentLandPaymentProcess.value['amount_of_debt']);
 	const submitter = ref({
-		name: accounts.value.filter(
+		name: customers.value.filter(
 			(acc) => acc['id'] == currentLandPaymentProcess.value['submitter']
 		)[0]['display_name'],
 		value: `${
-			accounts.value.filter(
+			customers.value.filter(
 				(acc) => acc['id'] == currentLandPaymentProcess.value['submitter']
 			)[0]['id']
 		}`,

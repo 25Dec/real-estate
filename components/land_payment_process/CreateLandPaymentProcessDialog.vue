@@ -1,7 +1,7 @@
 <script setup>
 	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const { accountsDropdown: submitters } = storeToRefs(useAccountsStore());
+	const { customersDropdown: submitters } = storeToRefs(useCustomersStore());
 	const { currentLandAreaIDFromLocalStore } = storeToRefs(useLandAreasStore());
 	const { addNewLandPaymentProcess } = useLandPaymentProcessStore();
 	const toast = useToast();

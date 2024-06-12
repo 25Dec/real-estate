@@ -4,6 +4,7 @@ export const useProjectsStore = defineStore('projects', () => {
 	const projects = ref([]);
 	const currentProject = ref({});
 	const currentProjectID = ref(0);
+	const projectsDropdown = ref([]);
 
 	const setCurrentProject = (data) => {
 		currentProject.value = data;
@@ -54,6 +55,15 @@ export const useProjectsStore = defineStore('projects', () => {
 		projects.value = data.value.data.data.filter(
 			(project) => project['deleted'] == 'false'
 		);
+
+		if (projects.value.length)
+			projectsDropdown.value = projects.value.map((project) => {
+				return {
+					name: `${project['name']}`,
+					value: `${project['id']}`,
+				};
+			});
+		else projectsDropdown.value = [];
 	};
 
 	const addNewProject = async (data) => {
@@ -105,6 +115,7 @@ export const useProjectsStore = defineStore('projects', () => {
 		projects,
 		currentProject,
 		currentProjectID,
+		projectsDropdown,
 		currentProjectFromLocalStore,
 		currentProjectIDFromLocalStore,
 		getProjects,

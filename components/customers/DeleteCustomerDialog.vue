@@ -1,9 +1,9 @@
 <script setup>
 	const { visible } = defineProps(['visible']);
 
+	const { currentCustomer } = storeToRefs(useCustomersStore());
+	const { deleteCustomer } = useCustomersStore();
 	const toast = useToast();
-	const { currentUser: currentCustomer } = storeToRefs(useAccountsStore());
-	const { deleteUser: deleteCustomer } = useAccountsStore();
 
 	const myVisible = ref(visible);
 
@@ -48,7 +48,9 @@
 		<div>
 			<span>
 				This will delete customer
-				<b>{{ `${data['first_name']} ${data['last_name']}` }}</b>
+				<b>{{
+					`${currentCustomer['first_name']} ${currentCustomer['last_name']}`
+				}}</b>
 				permanently!
 			</span>
 			<span>You cannot undo this action!</span>

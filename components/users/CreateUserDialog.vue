@@ -1,7 +1,7 @@
 <script setup>
 	const { visible, roles } = defineProps(['visible', 'roles']);
 
-	const { addNewAccount } = useAccountsStore();
+	const { addNewUser } = useUsersStore();
 	const toast = useToast();
 
 	const myVisible = ref(visible);
@@ -12,13 +12,13 @@
 	const firstName = ref('');
 	const lastName = ref('');
 	const email = ref('');
-	const type = ref('');
+	const type = ref({});
 	const phoneVerified = ref('');
 	const emailVerified = ref('');
 	const socialVerified = ref('');
 
 	const onSave = async () => {
-		const newAccountData = {
+		const newUserData = {
 			id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1,
 			social_id: socialID.value,
 			phone: phone.value,
@@ -29,7 +29,7 @@
 			display_name: `${firstName.value} ${lastName.value}`,
 			email: email.value,
 			language: 'vi',
-			type: type.value['value'],
+			type: type.value.value,
 			phone_verified: phoneVerified.value,
 			email_verified: emailVerified.value,
 			social_verified: socialVerified.value,
@@ -41,7 +41,7 @@
 			updated_at: null,
 		};
 
-		const response = await addNewAccount(newAccountData);
+		const response = await addNewUser(newUserData);
 		myVisible.value = false;
 
 		if (response != null && response['result'] == 'ok') {
@@ -145,7 +145,7 @@
 					id="type"
 					class="flex-1"
 					placeholder="Select User Role"
-					v-model="type"
+					v-model="type.value"
 					:options="roles"
 					optionLabel="name"
 				/>

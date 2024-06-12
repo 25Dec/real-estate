@@ -2,15 +2,15 @@
 	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
 
-	const { accounts, currentAccount } = storeToRefs(useAccountsStore());
-	const { getAccounts } = useAccountsStore();
+	const { users, currentUser } = storeToRefs(useUsersStore());
+	const { getUsers } = useUsersStore();
 
-	await getAccounts();
+	await getUsers();
 
 	const user = ref({});
 
 	if (process.client) {
-		user.value = JSON.parse(localStorage.getItem('user'));
+		user.value = JSON.parse(localStorage.getItem('user')) ?? {};
 	}
 
 	const userPermissionForActions =
@@ -30,25 +30,24 @@
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
-	const viewDetailsAccountDialogVisible = ref(false);
-	const createAccountDialogVisible = ref(false);
-	const editAccountDialogVisible = ref(false);
-	const deleteAccountDialogVisible = ref(false);
+	const viewDetailsUserDialogVisible = ref(false);
+	const createUserDialogVisible = ref(false);
+	const editUserDialogVisible = ref(false);
+	const deleteUserDialogVisible = ref(false);
 
-	const viewDetailsAccount = (data) => {
-		currentAccount.value = data;
-		viewDetailsAccountDialogVisible.value =
-			!viewDetailsAccountDialogVisible.value;
+	const viewDetailsUser = (data) => {
+		currentUser.value = data;
+		viewDetailsUserDialogVisible.value = !viewDetailsUserDialogVisible.value;
 	};
 
-	const editAccount = (data) => {
-		currentAccount.value = data;
-		editAccountDialogVisible.value = !editAccountDialogVisible.value;
+	const editUser = (data) => {
+		currentUser.value = data;
+		editUserDialogVisible.value = !editUserDialogVisible.value;
 	};
 
-	const deleteAccount = async (data) => {
-		currentAccount.value = data;
-		deleteAccountDialogVisible.value = !deleteAccountDialogVisible.value;
+	const deleteUser = async (data) => {
+		currentUser.value = data;
+		deleteUserDialogVisible.value = !deleteUserDialogVisible.value;
 	};
 </script>
 
@@ -59,7 +58,7 @@
 		>
 			<div class="flex items-center gap-2">
 				<span class="font-semibold text-lg">Users</span>
-				<Tag :value="accounts.length" />
+				<Tag :value="users.length" />
 			</div>
 
 			<div class="flex items-center gap-2">
@@ -76,14 +75,14 @@
 					v-if="userPermissionForActions"
 					size="small"
 					label="New"
-					@click="createAccountDialogVisible = !createAccountDialogVisible"
+					@click="createUserDialogVisible = !createUserDialogVisible"
 				/>
 			</div>
 		</div>
 
 		<div class="absolute top-[8%] w-full h-[92%]">
 			<DataTable
-				:value="accounts"
+				:value="users"
 				v-model:filters="filters"
 				:paginator="true"
 				:rows="50"
@@ -156,7 +155,7 @@
 						<Button
 							text
 							severity="secondary"
-							@click="viewDetailsAccount(data)"
+							@click="viewDetailsUser(data)"
 						>
 							<Icon name="mdi:eye-outline" />
 						</Button>
@@ -164,7 +163,7 @@
 							v-if="userPermissionForActions"
 							text
 							severity="secondary"
-							@click="editAccount(data)"
+							@click="editUser(data)"
 						>
 							<Icon name="mdi:edit-outline" />
 						</Button>
@@ -172,7 +171,7 @@
 							v-if="userPermissionForActions"
 							text
 							severity="danger"
-							@click="deleteAccount(data)"
+							@click="deleteUser(data)"
 						>
 							<Icon name="mdi:delete-outline" />
 						</Button>
@@ -181,23 +180,23 @@
 			</DataTable>
 		</div>
 	</div>
-	<ViewDetailsAccountDialog
-		v-if="viewDetailsAccountDialogVisible"
-		:visible="viewDetailsAccountDialogVisible"
+	<ViewDetailsUserDialog
+		v-if="viewDetailsUserDialogVisible"
+		:visible="viewDetailsUserDialogVisible"
 		:roles="roles"
 	/>
-	<CreateAccountDialog
-		v-if="createAccountDialogVisible"
-		:visible="createAccountDialogVisible"
+	<CreateUserDialog
+		v-if="createUserDialogVisible"
+		:visible="createUserDialogVisible"
 		:roles="roles"
 	/>
-	<EditAccountDialog
-		v-if="editAccountDialogVisible"
-		:visible="editAccountDialogVisible"
+	<EditUserDialog
+		v-if="editUserDialogVisible"
+		:visible="editUserDialogVisible"
 		:roles="roles"
 	/>
-	<DeleteAccountDialog
-		v-if="deleteAccountDialogVisible"
-		:visible="deleteAccountDialogVisible"
+	<DeleteUserDialog
+		v-if="deleteUserDialogVisible"
+		:visible="deleteUserDialogVisible"
 	/>
 </template>

@@ -1,14 +1,15 @@
 <script setup>
 	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const toast = useToast();
-	const { currentProjectID } = storeToRefs(useProjectsStore());
+	const { projectsDropdown } = storeToRefs(useProjectsStore());
 	const { addNewNotification } = useNotificationsStore();
+	const toast = useToast();
 
 	const myVisible = ref(visible);
 	const title = ref('');
 	const content = ref('');
-	const status = ref('');
+	const status = ref({});
+	const projectID = ref({});
 
 	const onSave = async () => {
 		const newNotiData = {
@@ -17,7 +18,7 @@
 			content: content.value,
 			status: status.value.value,
 			deleted: 'false',
-			project_id: currentProjectID.value,
+			project_id: projectID.value.value,
 			created_by: 13,
 			updated_by: 13,
 			created_at: new Date().toLocaleString(),
@@ -61,31 +62,40 @@
 				<span class="font-bold text-xl">Create New Notification</span>
 			</div>
 		</template>
+
 		<template class="flex flex-col gap-3">
-			<div class="flex">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="title">Title</label>
-					<InputText
-						id="title"
-						placeholder="Title"
-						v-model="title"
-					/>
-				</div>
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="projectID">Project</label>
+				<Dropdown
+					id="projectID"
+					placeholder="Select Project"
+					v-model="projectID.value"
+					:options="projectsDropdown"
+					optionLabel="name"
+					optionValue="value"
+				/>
 			</div>
 
-			<div class="flex flex-row gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="status">Status</label>
-					<Dropdown
-						id="status"
-						class="flex-1"
-						placeholder="Select Status"
-						v-model="status"
-						:options="statuses"
-						optionLabel="name"
-						optionValue="value"
-					/>
-				</div>
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="title">Title</label>
+				<InputText
+					id="title"
+					placeholder="Title"
+					v-model="title"
+				/>
+			</div>
+
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="status">Status</label>
+				<Dropdown
+					id="status"
+					class="flex-1"
+					placeholder="Select Status"
+					v-model="status.value"
+					:options="statuses"
+					optionLabel="name"
+					optionValue="value"
+				/>
 			</div>
 
 			<div class="flex flex-1 flex-col gap-2">

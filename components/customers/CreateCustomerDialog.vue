@@ -1,38 +1,31 @@
 <script setup>
-	const { visible, roles } = defineProps(['visible', 'roles']);
+	const { visible } = defineProps(['visible']);
 
+	const { addNewCustomer } = useCustomersStore();
+	const { projectsDropdown } = storeToRefs(useProjectsStore());
+	const { getProjects } = useProjectsStore();
 	const toast = useToast();
-	const { addNewAccount: addNewCustomer } = useAccountsStore();
+
+	await getProjects();
 
 	const myVisible = ref(visible);
 	const socialID = ref('');
 	const phone = ref('');
-	const loginName = ref('');
-	const password = ref('');
 	const firstName = ref('');
 	const lastName = ref('');
 	const email = ref('');
-	const type = ref('');
-	const phoneVerified = ref('');
-	const emailVerified = ref('');
-	const socialVerified = ref('');
+	const projectID = ref({});
 
 	const onSave = async () => {
 		const newCustomerData = {
 			id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1,
 			social_id: socialID.value,
 			phone: phone.value,
-			login_name: loginName.value,
-			password: password.value,
 			first_name: firstName.value,
 			last_name: lastName.value,
 			display_name: `${firstName.value} ${lastName.value}`,
 			email: email.value,
-			language: 'vi',
-			type: type.value['value'],
-			phone_verified: phoneVerified.value,
-			email_verified: emailVerified.value,
-			social_verified: socialVerified.value,
+			project_id: parseInt(projectID.value.value),
 			activated: 'true',
 			deleted: 'false',
 			created_by: 1,
@@ -85,7 +78,7 @@
 					<InputText
 						id="firstName"
 						placeholder="First Name"
-						v-model="firstName"
+						v-model.trim="firstName"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -93,102 +86,44 @@
 					<InputText
 						id="lastName"
 						placeholder="Last Name"
-						v-model="lastName"
+						v-model.trim="lastName"
 					/>
 				</div>
 			</div>
 
 			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="loginName">Login Name</label>
-					<InputText
-						id="loginName"
-						placeholder="Login Name"
-						v-model="loginName"
-					/>
-				</div>
-
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="password">Password</label>
-					<Password
-						id="password"
-						placeholder="Password"
-						v-model="password"
-						:feedback="false"
-						toggleMask
-					/>
-				</div>
-			</div>
-
-			<div class="flex flex-row gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="phone">Phone number</label>
+					<label for="phone">Phone Number</label>
 					<InputText
 						id="phone"
 						placeholder="+84 9698 886 660"
-						v-model="phone"
+						v-model.trim="phone"
+						integeronly
 					/>
 				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="phoneVerified">Phone Verified</label>
-					<InputText
-						id="phoneVerified"
-						placeholder="+84 9698 886 660"
-						v-model="phoneVerified"
-					/>
-				</div>
-			</div>
-
-			<div class="flex flex-1 flex-col gap-2">
-				<label for="type">User Role</label>
-				<Dropdown
-					id="type"
-					class="flex-1"
-					placeholder="Select User Role"
-					v-model="type"
-					:options="roles"
-					optionLabel="name"
-				/>
-			</div>
-
-			<div class="flex flex-col gap-3">
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="email">Email</label>
 					<InputText
 						id="email"
 						placeholder="example@gmail.com"
-						v-model="email"
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="emailVerified">Email Verified</label>
-					<InputText
-						id="emailVerified"
-						placeholder="example@gmail.com"
-						v-model="emailVerified"
+						v-model.trim="email"
 					/>
 				</div>
 			</div>
 
-			<div class="flex flex-col gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="socialID">Social ID</label>
-					<InputText
-						id="socialID"
-						placeholder="https://www.facebook.com"
-						v-model="socialID"
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="socialVerified">Social Verified</label>
-					<InputText
-						id="socialVerified"
-						placeholder="https://www.facebook.com"
-						v-model="socialVerified"
-					/>
-				</div>
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="projectID">Project</label>
+				<Dropdown
+					id="projectID"
+					placeholder="Select Project"
+					v-model="projectID.value"
+					:options="projectsDropdown"
+					optionLabel="name"
+					optionValue="value"
+				/>
 			</div>
 		</template>
+
 		<template #footer>
 			<Button
 				type="button"

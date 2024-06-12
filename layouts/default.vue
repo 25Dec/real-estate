@@ -1,7 +1,6 @@
 <script setup>
 	const router = useRouter();
-	const authStore = useAuthStore();
-	const { authenticated } = storeToRefs(authStore);
+	const { authenticated } = storeToRefs(useAuthStore());
 
 	if (!authenticated) {
 		router.push('/login');

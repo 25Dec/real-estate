@@ -26,10 +26,10 @@
 		useHighPaymentProcessStore()
 	);
 	const { getHighPaymentProcesses } = useHighPaymentProcessStore();
-	const { getAccounts } = useAccountsStore();
+	const { getCustomers } = useCustomersStore();
 
 	await getHighPaymentProcesses();
-	await getAccounts();
+	await getCustomers();
 
 	const myPaymentBaseOnHighID = computed(() => {
 		return highPaymentProcesses.value.filter((payment) => {

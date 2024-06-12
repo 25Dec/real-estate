@@ -9,7 +9,7 @@
 	const user = ref({});
 
 	if (process.client) {
-		user.value = JSON.parse(localStorage.getItem('user'));
+		user.value = JSON.parse(localStorage.getItem('user')) ?? {};
 	}
 
 	const projectDetailsBaseLink = '/project_details';
@@ -96,6 +96,11 @@
 				{
 					name: 'Users',
 					link: adminDashBoardBaseLink + '/users',
+					icon: 'mdi:account-supervisor-outline',
+				},
+				{
+					name: 'Customers',
+					link: adminDashBoardBaseLink + '/customers',
 					icon: 'mdi:account-supervisor-outline',
 				},
 				{
