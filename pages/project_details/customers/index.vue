@@ -107,6 +107,30 @@
 					</template>
 				</Column>
 
+				<Column
+					field="contacted"
+					header="Contacted"
+				>
+					<template #body="{ data }">
+						<Tag
+							:severity="data['contacted'] == 'true' ? 'danger' : 'success'"
+							:value="data['contacted'].toUpperCase()"
+						/>
+					</template>
+				</Column>
+
+				<Column
+					field="potential"
+					header="Potential"
+				>
+					<template #body="{ data }">
+						<Tag
+							:severity="data['potential'] == 'true' ? 'danger' : 'success'"
+							:value="data['potential'].toUpperCase()"
+						/>
+					</template>
+				</Column>
+
 				<Column header="Actions">
 					<template #body="{ data }">
 						<Button

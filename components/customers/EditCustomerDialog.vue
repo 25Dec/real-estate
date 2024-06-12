@@ -46,6 +46,8 @@
 			last_name: lastName.value,
 			display_name: `${firstName.value} ${lastName.value}`,
 			email: email.value,
+			contacted: contacted.value.value,
+			potential: potential.value.value,
 			project_id: projectID.value.value,
 			updated_at: new Date().toLocaleString(),
 		};
