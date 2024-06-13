@@ -78,7 +78,7 @@
 					</InputIcon>
 					<InputText
 						v-model="filters['global'].value"
-						placeholder="Filter block..."
+						placeholder="Filter Block..."
 					/>
 				</IconField>
 				<Button
@@ -100,7 +100,7 @@
 				</label>
 				<Dropdown
 					id="currentZone"
-					placeholder="Select zone"
+					placeholder="Select Zone"
 					v-model="currentZone.value"
 					:options="zones"
 					optionLabel="name"

@@ -80,13 +80,14 @@
 				<span class="font-bold text-xl">Project Details</span>
 			</div>
 		</template>
+
 		<template class="flex flex-col gap-3">
 			<div class="flex">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="projectName">Project Name</label>
+					<label for="projectName">Name</label>
 					<InputText
 						id="projectName"
-						placeholder="Project name"
+						placeholder="Project Name"
 						v-model="projectName"
 					/>
 				</div>

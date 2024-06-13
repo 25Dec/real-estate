@@ -1,6 +1,6 @@
 import { baseUrl } from '~/constants';
 
-export const useHighAreasStore = defineStore('highAreas', () => {
+export const useHighAreasStore = defineStore('HighAreas', () => {
 	const highAreas = ref([]);
 	const currentHighArea = ref({});
 	const currentHighAreaID = ref(0);

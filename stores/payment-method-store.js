@@ -1,6 +1,6 @@
 import { baseUrl } from '~/constants';
 
-export const usePaymentMethodsStore = defineStore('paymentMethods', () => {
+export const usePaymentMethodsStore = defineStore('PaymentMethods', () => {
 	const paymentMethods = ref([]);
 	const paymentMethodsDropdown = ref([]);
 	const currentPaymentMethod = ref({});

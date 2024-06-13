@@ -39,6 +39,7 @@ export { useLandPaymentProcessStore } from '../stores/land-payment-process-store
 export { useNotificationsStore } from '../stores/notifications-store';
 export { usePaymentMethodsProcessStore } from '../stores/payment-method-process-store';
 export { usePaymentMethodsStore } from '../stores/payment-method-store';
+export { useProjectSellerStore } from '../stores/project-seller-store';
 export { useProjectsStore } from '../stores/projects-store';
 export { useUsersStore } from '../stores/users-store';
 export { useZonesStore } from '../stores/zones-store';

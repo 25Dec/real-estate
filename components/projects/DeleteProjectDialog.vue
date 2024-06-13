@@ -45,6 +45,7 @@
 				<span class="font-bold text-xl">Delete Project?</span>
 			</div>
 		</template>
+
 		<div>
 			<span>
 				This will delete project

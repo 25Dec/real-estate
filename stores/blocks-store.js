@@ -1,6 +1,6 @@
 import { baseUrl } from '~/constants';
 
-export const useBlocksStore = defineStore('blocks', () => {
+export const useBlocksStore = defineStore('Blocks', () => {
 	const blocks = ref([]);
 	const currentBlock = ref({});
 

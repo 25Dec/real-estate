@@ -1,6 +1,6 @@
 import { baseUrl } from '~/constants';
 
-export const useProjectsStore = defineStore('projects', () => {
+export const useProjectsStore = defineStore('Projects', () => {
 	const projects = ref([]);
 	const currentProject = ref({});
 	const currentProjectID = ref(0);

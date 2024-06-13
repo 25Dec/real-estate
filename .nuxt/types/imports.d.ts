@@ -151,6 +151,7 @@ declare global {
   const usePinia: typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['usePinia']
   const usePreviewMode: typeof import('../../node_modules/nuxt/dist/app/composables/preview')['usePreviewMode']
   const usePrimeVue: typeof import('primevue/config')['usePrimeVue']
+  const useProjectSellerStore: typeof import('../../stores/project-seller-store')['useProjectSellerStore']
   const useProjectsStore: typeof import('../../stores/projects-store')['useProjectsStore']
   const useReducedMotion: typeof import('../../node_modules/@vueuse/motion/dist/runtime/composables/index')['useReducedMotion']
   const useRequestEvent: typeof import('../../node_modules/nuxt/dist/app/composables/ssr')['useRequestEvent']
@@ -344,6 +345,7 @@ declare module 'vue' {
     readonly usePinia: UnwrapRef<typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['usePinia']>
     readonly usePreviewMode: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/preview')['usePreviewMode']>
     readonly usePrimeVue: UnwrapRef<typeof import('primevue/config')['usePrimeVue']>
+    readonly useProjectSellerStore: UnwrapRef<typeof import('../../stores/project-seller-store')['useProjectSellerStore']>
     readonly useProjectsStore: UnwrapRef<typeof import('../../stores/projects-store')['useProjectsStore']>
     readonly useReducedMotion: UnwrapRef<typeof import('../../node_modules/@vueuse/motion/dist/runtime/composables/index')['useReducedMotion']>
     readonly useRequestEvent: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/ssr')['useRequestEvent']>
@@ -530,6 +532,7 @@ declare module '@vue/runtime-core' {
     readonly usePinia: UnwrapRef<typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['usePinia']>
     readonly usePreviewMode: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/preview')['usePreviewMode']>
     readonly usePrimeVue: UnwrapRef<typeof import('primevue/config')['usePrimeVue']>
+    readonly useProjectSellerStore: UnwrapRef<typeof import('../../stores/project-seller-store')['useProjectSellerStore']>
     readonly useProjectsStore: UnwrapRef<typeof import('../../stores/projects-store')['useProjectsStore']>
     readonly useReducedMotion: UnwrapRef<typeof import('../../node_modules/@vueuse/motion/dist/runtime/composables/index')['useReducedMotion']>
     readonly useRequestEvent: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/ssr')['useRequestEvent']>

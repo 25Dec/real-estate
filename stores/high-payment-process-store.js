@@ -1,7 +1,7 @@
 import { baseUrl } from '~/constants';
 
 export const useHighPaymentProcessStore = defineStore(
-	'highPaymentProcess',
+	'HighPaymentProcess',
 	() => {
 		const highPaymentProcesses = ref([]);
 		const currentHighPaymentProcess = ref({});

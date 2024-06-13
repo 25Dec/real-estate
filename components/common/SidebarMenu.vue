@@ -96,12 +96,17 @@
 				{
 					name: 'Users',
 					link: adminDashBoardBaseLink + '/users',
-					icon: 'mdi:account-supervisor-outline',
+					icon: 'heroicons:user-group',
 				},
 				{
 					name: 'Customers',
 					link: adminDashBoardBaseLink + '/customers',
 					icon: 'mdi:account-supervisor-outline',
+				},
+				{
+					name: 'Sellers',
+					link: adminDashBoardBaseLink + '/project_seller',
+					icon: 'streamline:office-worker',
 				},
 				{
 					name: 'Notifications',
@@ -171,7 +176,7 @@
 				class="flex items-center gap-2"
 			>
 				<Avatar
-					:label="user['display_name'].substring(0, 3)"
+					:label="user['display_name']?.substring(0, 3)"
 					shape="square"
 				/>
 				<span class="font-semibold">{{ user['display_name'] }}</span>

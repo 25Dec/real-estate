@@ -47,6 +47,7 @@
 				<span class="font-bold text-xl">Customer Details</span>
 			</div>
 		</template>
+
 		<template class="flex flex-col gap-3">
 			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">

@@ -1,6 +1,6 @@
 import { baseUrl } from '~/constants';
 
-export const useDashboardStore = defineStore('dashboard', () => {
+export const useDashboardStore = defineStore('Dashboard', () => {
 	const statistics = ref({});
 
 	const getDashboardStatistics = async () => {

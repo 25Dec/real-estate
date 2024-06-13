@@ -1,6 +1,6 @@
 import { baseUrl } from '~/constants';
 
-export const useFloorsStore = defineStore('floors', () => {
+export const useFloorsStore = defineStore('Floors', () => {
 	const floors = ref([]);
 	const floorsDropdown = ref([]);
 	const currentFloor = ref({});

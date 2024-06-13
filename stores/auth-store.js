@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { baseUrl } from '~/constants';
 
-export const useAuthStore = defineStore('auth', () => {
+export const useAuthStore = defineStore('Auth', () => {
 	const authenticated = ref(false);
 	const user = ref({});
 

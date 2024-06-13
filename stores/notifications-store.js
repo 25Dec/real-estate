@@ -1,6 +1,6 @@
 import { baseUrl } from '~/constants';
 
-export const useNotificationsStore = defineStore('notifications', () => {
+export const useNotificationsStore = defineStore('Notifications', () => {
 	const notifications = ref([]);
 	const currentNotification = ref({});
 

@@ -1,6 +1,6 @@
 import { baseUrl } from '~/constants';
 
-export const useLandAreasStore = defineStore('landAreas', () => {
+export const useLandAreasStore = defineStore('LandAreas', () => {
 	const landAreas = ref([]);
 	const currentLandArea = ref({});
 	const currentLandAreaID = ref(0);

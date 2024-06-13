@@ -105,7 +105,7 @@
 					<template #body="{ data }">
 						<div class="flex items-center gap-3">
 							<Avatar
-								:label="data['first_name'].substring(0, 3)"
+								:label="data['first_name']?.substring(0, 3)"
 								shape="square"
 							/>
 							<div class="flex flex-col">

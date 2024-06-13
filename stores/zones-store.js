@@ -1,6 +1,6 @@
 import { baseUrl } from '~/constants';
 
-export const useZonesStore = defineStore('zones', () => {
+export const useZonesStore = defineStore('Zones', () => {
 	const zones = ref([]);
 	const zonesDropdown = ref([]);
 	const currentZone = ref({});

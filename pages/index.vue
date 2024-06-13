@@ -69,7 +69,7 @@
 		{ title: "Kid's Playland", icon: 'ion:football-outline' },
 	];
 
-	const toggleMenu = (event, data) => {
+	const toggleMenu = (event) => {
 		menu.value.toggle(event);
 	};
 	const handleScroll = () => {
@@ -161,8 +161,8 @@
 					<Avatar
 						v-if="authenticated"
 						shape="square"
-						:label="user['display_name'].substring(0, 3)"
-						@click="(event) => toggleMenu(event, data)"
+						:label="user['display_name']?.substring(0, 3)"
+						@click="(event) => toggleMenu(event)"
 					/>
 					<Button
 						v-if="!authenticated"
@@ -268,28 +268,28 @@
 			class="flex flex-col w-1/2 gap-4"
 		>
 			<div class="flex flex-1 flex-col gap-2">
-				<label for="fullName">Full Name:</label>
+				<label for="fullName">Full Name</label>
 				<InputText
 					id="fullName"
 					size="large"
 				/>
 			</div>
 			<div class="flex flex-1 flex-col gap-2">
-				<label for="email">Email:</label>
+				<label for="email">Email</label>
 				<InputText
 					id="email"
 					size="large"
 				/>
 			</div>
 			<div class="flex flex-1 flex-col gap-2">
-				<label for="email">Phone Number:</label>
+				<label for="email">Phone Number</label>
 				<InputText
 					id="phoneNumber"
 					size="large"
 				/>
 			</div>
 			<div class="flex flex-1 flex-col gap-2">
-				<label for="message">Message:</label>
+				<label for="message">Message</label>
 				<Textarea
 					rows="5"
 					cols="30"

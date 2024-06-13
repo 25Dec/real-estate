@@ -1,7 +1,7 @@
 import { baseUrl } from '~/constants';
 
 export const useLandPaymentProcessStore = defineStore(
-	'landPaymentProcess',
+	'LandPaymentProcess',
 	() => {
 		const landPaymentProcesses = ref([]);
 		const currentLandPaymentProcess = ref({});
