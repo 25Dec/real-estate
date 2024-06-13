@@ -6,6 +6,7 @@
 		useNotificationsStore()
 	);
 	const { getNotifications } = useNotificationsStore();
+	const { projects, projectsDropdown } = storeToRefs(useProjectsStore());
 	const { getProjects } = useProjectsStore();
 
 	await getNotifications();
@@ -24,6 +25,15 @@
 			? true
 			: false;
 
+	const currentProject = ref({
+		name: projectsDropdown.value[0]?.name ?? '',
+		value: projectsDropdown.value[0]?.value ?? '',
+	});
+	const myNotificationsBaseOnProjectID = computed(() => {
+		return notifications.value.filter((noti) => {
+			return noti['project_id'] == currentProject.value.value;
+		});
+	});
 	const statuses = ref([{ name: 'Info', value: 'info' }]);
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -33,6 +43,13 @@
 	const editNotificationDialogVisible = ref(false);
 	const deleteNotificationDialogVisible = ref(false);
 
+	const handleDropdown = (event) => {
+		myNotificationsBaseOnProjectID.value = notifications.value.filter(
+			(noti) => {
+				return noti['project_id'] == event.value;
+			}
+		);
+	};
 	const toggleViewDetailsNotification = async (data) => {
 		currentNotification.value = data;
 		viewDetailsNotificationDialogVisible.value =
@@ -56,7 +73,7 @@
 		>
 			<div class="flex items-center gap-2">
 				<span class="font-semibold text-lg">Notifications</span>
-				<Tag :value="notifications.length"></Tag>
+				<Tag :value="myNotificationsBaseOnProjectID.length"></Tag>
 			</div>
 
 			<div class="flex items-center gap-2">
@@ -66,7 +83,7 @@
 					</InputIcon>
 					<InputText
 						v-model="filters['global'].value"
-						placeholder="Filter notifications..."
+						placeholder="Filter Notification..."
 					/>
 				</IconField>
 				<Button
@@ -80,9 +97,30 @@
 			</div>
 		</div>
 
-		<div class="absolute top-[8%] w-full h-[92%]">
+		<div
+			class="fixed right-0 top-[8%] z-50 backdrop-blur-xl w-5/6 h-[8%] px-4 border-b flex justify-between items-center"
+		>
+			<div class="flex items-center gap-2">
+				<label
+					for="currentProject"
+					class="font-semibold text-lg"
+					>Current Project:
+				</label>
+				<Dropdown
+					id="currentProject"
+					placeholder="Select Project"
+					v-model="currentProject.value"
+					:options="projectsDropdown"
+					optionLabel="name"
+					optionValue="value"
+					@change="(event) => handleDropdown(event)"
+				/>
+			</div>
+		</div>
+
+		<div class="absolute top-[16%] w-full h-[92%]">
 			<DataTable
-				:value="notifications"
+				:value="myNotificationsBaseOnProjectID"
 				v-model:filters="filters"
 				:paginator="true"
 				:rows="50"
@@ -104,7 +142,7 @@
 				>
 					<template #body="{ data }">
 						<div class="flex items-center gap-3">
-							<span class="font-semibold">{{ data['title'] }}</span>
+							{{ data['title'] }}
 						</div>
 					</template>
 				</Column>

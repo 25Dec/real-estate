@@ -16,7 +16,7 @@ export const useProjectSellerStore = defineStore('ProjectSeller', () => {
 		projectSeller.value = data.value.data.data;
 	};
 
-	const addNewProjectSeller = async (data) => {
+	const coordinateProjectSeller = async (data) => {
 		const accessToken = useCookie('token');
 		const response = await $fetch(baseUrl + '/auth/projectAccount', {
 			method: 'post',
@@ -70,7 +70,7 @@ export const useProjectSellerStore = defineStore('ProjectSeller', () => {
 		projectSeller,
 		currentProjectSeller,
 		getProjectSeller,
-		addNewProjectSeller,
+		coordinateProjectSeller,
 		editProjectSeller,
 		deleteProjectSeller,
 	};

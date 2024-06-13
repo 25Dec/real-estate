@@ -1,13 +1,14 @@
 <script setup>
-	const { visible, data } = defineProps(['visible', 'data']);
+	const { visible } = defineProps(['visible']);
 
-	const toast = useToast();
+	const { currentNotification } = storeToRefs(useNotificationsStore());
 	const { deleteNotification } = useNotificationsStore();
+	const toast = useToast();
 
 	const myVisible = ref(visible);
 
 	const onDelete = async () => {
-		const response = await deleteNotification(data);
+		const response = await deleteNotification(currentNotification.value);
 		myVisible.value = false;
 
 		if (response != null && response['result'] == 'ok') {
@@ -47,7 +48,7 @@
 		<div>
 			<span>
 				This will delete notification
-				<b>{{ data['title'] }}</b>
+				<b>{{ currentNotification['title'] }}</b>
 				permanently!
 			</span>
 			<span>You cannot undo this action!</span>

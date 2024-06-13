@@ -5,8 +5,7 @@
 	const { getUsers } = useUsersStore();
 	const { projectsDropdown } = storeToRefs(useProjectsStore());
 	const { getProjects } = useProjectsStore();
-	const { currentProjectSeller } = storeToRefs(useProjectSellerStore());
-	const { editProjectSeller } = useProjectSellerStore();
+	const { coordinateProjectSeller } = useProjectSellerStore();
 	const toast = useToast();
 
 	await getUsers();
@@ -24,34 +23,21 @@
 		});
 
 	const myVisible = ref(visible);
-	const projectID = ref({
-		name: projectsDropdown.value.filter(
-			(pj) => pj['value'] == currentProjectSeller.value['project_id']
-		)?.[0]?.['name'],
-		value: projectsDropdown.value.filter(
-			(pj) => pj['value'] == currentProjectSeller.value['project_id']
-		)?.[0]?.['value'],
-	});
-	const accountID = ref({
-		name: sellers.value.filter(
-			(seller) => seller['value'] == currentProjectSeller.value['account_id']
-		)?.[0]?.['name'],
-		value: sellers.value.filter(
-			(seller) => seller['value'] == currentProjectSeller.value['account_id']
-		)?.[0]?.['value'],
-	});
-	const createdAt = ref(currentProjectSeller.value['created_at']);
-	const updatedAt = ref(currentProjectSeller.value['updated_at']);
+	const projectID = ref({});
+	const accountID = ref({});
 
 	const onSave = async () => {
 		const newProjectSeller = {
-			...currentProjectSeller,
-			project_id: parseInt(projectID.value.value),
-			account_id: parseInt(accountID.value.value),
-			updated_at: new Date().toLocaleString(),
+			project_id: parseInt(projectID.value),
+			account_id: parseInt(accountID.value),
+			deleted: 'false',
+			created_by: 46,
+			updated_by: 46,
+			created_at: new Date().toLocaleString(),
+			updated_at: null,
 		};
 
-		const response = await editProjectSeller(newProjectSeller);
+		const response = await coordinateProjectSeller(newProjectSeller);
 		myVisible.value = false;
 
 		if (response != null && response['result'] == 'ok') {
@@ -74,6 +60,9 @@
 	};
 
 	const handleDropdown = (event, type) => {
+		if (type == 'seller') {
+		}
+
 		if (type == 'project') {
 		}
 	};
@@ -90,7 +79,7 @@
 	>
 		<template #header>
 			<div class="inline-flex items-center justify-center gap-2">
-				<span class="font-bold text-xl">Project-Seller Details</span>
+				<span class="font-bold text-xl">Coordinate Seller Into Project</span>
 			</div>
 		</template>
 
@@ -100,19 +89,19 @@
 					<label for="accountID">Seller</label>
 					<Dropdown
 						id="accountID"
-						v-model="accountID.value"
+						v-model="accountID"
 						placeholder="Select Seller"
 						:options="sellers"
 						optionLabel="name"
 						optionValue="value"
-						disabled
+						@change="(event) => handleDropdown(event, 'seller')"
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="projectID">Project</label>
 					<Dropdown
 						id="type"
-						v-model="projectID.value"
+						v-model="projectID"
 						placeholder="Select Project"
 						:options="projectsDropdown"
 						optionLabel="name"
@@ -120,15 +109,6 @@
 						@change="(event) => handleDropdown(event, 'project')"
 					/>
 				</div>
-			</div>
-
-			<div class="flex flex-row gap-3 justify-between">
-				<span class="text-xs text-gray-400">
-					Created at: {{ convertDateTime(createdAt) }}
-				</span>
-				<span class="text-xs text-gray-400">
-					Updated at: {{ convertDateTime(updatedAt) }}
-				</span>
 			</div>
 		</template>
 

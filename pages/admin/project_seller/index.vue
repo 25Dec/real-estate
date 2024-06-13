@@ -11,9 +11,9 @@
 	const { projects, projectsDropdown } = storeToRefs(useProjectsStore());
 	const { getProjects } = useProjectsStore();
 
-	await getProjectSeller();
 	await getUsers();
 	await getProjects();
+	await getProjectSeller();
 
 	const currentProject = ref({
 		name: projectsDropdown.value[0]?.name ?? '',
@@ -79,7 +79,7 @@
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
 	const viewDetailsProjectSellerDialogVisible = ref(false);
-	const createProjectSellerDialogVisible = ref(false);
+	const coordinateProjectSellerDialogVisible = ref(false);
 	const editProjectSellerDialogVisible = ref(false);
 	const deleteProjectSellerDialogVisible = ref(false);
 
@@ -129,9 +129,10 @@
 				</IconField>
 				<Button
 					size="small"
-					label="New"
+					label="Coordinate"
 					@click="
-						createProjectSellerDialogVisible = !createProjectSellerDialogVisible
+						coordinateProjectSellerDialogVisible =
+							!coordinateProjectSellerDialogVisible
 					"
 				/>
 			</div>
@@ -242,9 +243,9 @@
 		:statuses="statuses"
 		:types="types"
 	/>
-	<CreateProjectSellerDialog
-		v-if="createProjectSellerDialogVisible"
-		:visible="createProjectSellerDialogVisible"
+	<CoordinateProjectSellerDialog
+		v-if="coordinateProjectSellerDialogVisible"
+		:visible="coordinateProjectSellerDialogVisible"
 	/>
 	<EditProjectSellerDialog
 		v-if="editProjectSellerDialogVisible"

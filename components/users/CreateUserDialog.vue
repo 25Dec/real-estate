@@ -189,6 +189,7 @@
 				</div>
 			</div>
 		</template>
+
 		<template #footer>
 			<Button
 				type="button"

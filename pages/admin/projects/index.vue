@@ -67,7 +67,7 @@
 					</InputIcon>
 					<InputText
 						v-model="filters['global'].value"
-						placeholder="Filter project..."
+						placeholder="Filter Project..."
 					/>
 				</IconField>
 				<Button

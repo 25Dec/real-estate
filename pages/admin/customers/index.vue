@@ -4,9 +4,21 @@
 
 	const { customers, currentCustomer } = storeToRefs(useCustomersStore());
 	const { getCustomers } = useCustomersStore();
+	const { projects, projectsDropdown } = storeToRefs(useProjectsStore());
+	const { getProjects } = useProjectsStore();
 
 	await getCustomers();
+	await getProjects();
 
+	const currentProject = ref({
+		name: projectsDropdown.value[0]?.name ?? '',
+		value: projectsDropdown.value[0]?.value ?? '',
+	});
+	const myCustomersBaseOnProjectID = computed(() => {
+		return customers.value.filter((customer) => {
+			return customer['project_id'] == currentProject.value.value;
+		});
+	});
 	const roles = ref([
 		{ name: 'Anonymous', value: 'anonymous' },
 		{ name: 'Sale', value: 'sale' },
@@ -22,6 +34,11 @@
 	const editCustomerDialogVisible = ref(false);
 	const deleteCustomerDialogVisible = ref(false);
 
+	const handleDropdown = (event) => {
+		myCustomersBaseOnProjectID.value = customers.value.filter((customer) => {
+			return customer['project_id'] == event.value;
+		});
+	};
 	const viewDetailsCustomer = (data) => {
 		currentCustomer.value = data;
 		viewDetailsCustomerDialogVisible.value =
@@ -44,7 +61,7 @@
 		>
 			<div class="flex items-center gap-2">
 				<span class="font-semibold text-lg">Customers</span>
-				<Tag :value="customers.length" />
+				<Tag :value="myCustomersBaseOnProjectID.length" />
 			</div>
 
 			<div class="flex items-center gap-2">
@@ -54,7 +71,7 @@
 					</InputIcon>
 					<InputText
 						v-model="filters['global'].value"
-						placeholder="Filter customer..."
+						placeholder="Filter Customer..."
 					/>
 				</IconField>
 				<Button
@@ -65,9 +82,30 @@
 			</div>
 		</div>
 
-		<div class="absolute top-[8%] w-full h-[92%]">
+		<div
+			class="fixed right-0 top-[8%] z-50 backdrop-blur-xl w-5/6 h-[8%] px-4 border-b flex justify-between items-center"
+		>
+			<div class="flex items-center gap-2">
+				<label
+					for="currentProject"
+					class="font-semibold text-lg"
+					>Current Project:
+				</label>
+				<Dropdown
+					id="currentProject"
+					placeholder="Select Project"
+					v-model="currentProject.value"
+					:options="projectsDropdown"
+					optionLabel="name"
+					optionValue="value"
+					@change="(event) => handleDropdown(event)"
+				/>
+			</div>
+		</div>
+
+		<div class="absolute top-[16%] w-full h-[92%]">
 			<DataTable
-				:value="customers"
+				:value="myCustomersBaseOnProjectID"
 				v-model:filters="filters"
 				:paginator="true"
 				:rows="50"
