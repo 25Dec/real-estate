@@ -75,6 +75,7 @@
 		</div>
 	</div>
 	<ViewDetailsLandAreaDialog
+		v-if="viewDetailsLandAreaDialogVisible"
 		:visible="viewDetailsLandAreaDialogVisible"
 		:statuses="statuses"
 	/>

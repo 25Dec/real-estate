@@ -87,7 +87,7 @@
 					</InputIcon>
 					<InputText
 						v-model="filters['global'].value"
-						placeholder="Filter land area..."
+						placeholder="Filter Land Area..."
 					/>
 				</IconField>
 				<Button

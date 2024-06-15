@@ -1,7 +1,7 @@
 <script setup>
 	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const { zones, zonesDropdown } = storeToRefs(useZonesStore());
+	const { zonesDropdown } = storeToRefs(useZonesStore());
 	const { currentLandArea } = storeToRefs(useLandAreasStore());
 	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
 	const { getPaymentMethods } = usePaymentMethodsStore();
@@ -9,12 +9,14 @@
 	await getPaymentMethods();
 
 	const myVisible = ref(visible);
-
-	const zone = ref(
-		zonesDropdown.value.filter(
+	const zone = ref({
+		name: zonesDropdown.value.filter(
 			(zone) => zone['value'] == currentLandArea.value['zone_id']
-		)?.[0]?.['value']
-	);
+		)?.[0]?.['name'],
+		value: zonesDropdown.value.filter(
+			(zone) => zone['value'] == currentLandArea.value['zone_id']
+		)?.[0]?.['value'],
+	});
 	const landAreaDirection = ref(currentLandArea.value['land_direction']);
 	const isFront = ref(currentLandArea.value['is_front']);
 	const lat = ref(currentLandArea.value['lat']);
@@ -65,13 +67,13 @@
 			</div>
 		</template>
 
-		<!-- <template class="flex flex-col gap-3">
+		<template class="flex flex-col gap-3">
 			<div class="flex flex-1 flex-col gap-2">
 				<label for="zone">Zone</label>
 				<Dropdown
 					id="zone"
 					placeholder="Select Zone"
-					v-model="zone"
+					v-model="zone.value"
 					:options="zonesDropdown"
 					optionLabel="name"
 					optionValue="value"
@@ -247,7 +249,7 @@
 					Updated at: {{ convertDateTime(updatedAt) }}
 				</span>
 			</div>
-		</template> -->
+		</template>
 
 		<template #footer>
 			<Button
