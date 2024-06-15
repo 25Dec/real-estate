@@ -1,6 +1,6 @@
 <script setup>
-	const router = useRouter();
 	const { authenticated } = storeToRefs(useAuthStore());
+	const router = useRouter();
 
 	if (!authenticated) {
 		router.push('/login');
@@ -20,4 +20,5 @@
 
 <style>
 	@import url('~/assets/css/main.css');
+	@import 'primeicons/primeicons.css';
 </style>

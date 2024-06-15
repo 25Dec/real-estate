@@ -61,7 +61,7 @@
 			});
 		} else {
 			toast.add({
-				severity: 'warning',
+				severity: 'danger',
 				summary: 'Error',
 				detail: 'Failed to Edit New Block',
 				group: 'bl',

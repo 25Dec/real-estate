@@ -29,7 +29,7 @@
 			/>
 		</template>
 		<template #title>
-			<span class="capitalize">
+			<span class="capitalize font-semibold">
 				{{ data['name'] }}
 			</span>
 		</template>

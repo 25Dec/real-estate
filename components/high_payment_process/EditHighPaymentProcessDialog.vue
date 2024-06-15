@@ -1,7 +1,7 @@
 <script setup>
 	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const {customers,customersDropdown: submitters } = storeToRefs(
+	const { customers, customersDropdown: submitters } = storeToRefs(
 		useCustomersStore()
 	);
 	const { currentHighPaymentProcess } = storeToRefs(
@@ -50,7 +50,7 @@
 			});
 		} else {
 			toast.add({
-				severity: 'warning',
+				severity: 'danger',
 				summary: 'Error',
 				detail: 'Failed to Edit Payment',
 				group: 'bl',

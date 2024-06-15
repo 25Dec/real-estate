@@ -64,7 +64,7 @@
 			});
 		} else {
 			toast.add({
-				severity: 'warning',
+				severity: 'danger',
 				summary: 'Error',
 				detail: 'Failed to Coordinate Seller into Project',
 				group: 'bl',

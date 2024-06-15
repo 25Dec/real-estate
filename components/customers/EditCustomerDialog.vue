@@ -1,13 +1,12 @@
 <script setup>
 	const { visible } = defineProps(['visible']);
 
-	const router = useRouter();
-	const currentRoute = router['currentRoute'].value;
-
 	const { currentCustomer } = storeToRefs(useCustomersStore());
 	const { editCustomer } = useCustomersStore();
 	const { projectsDropdown } = storeToRefs(useProjectsStore());
 	const { getProjects } = useProjectsStore();
+	const router = useRouter();
+	const currentRoute = router['currentRoute'].value;
 	const toast = useToast();
 
 	await getProjects();
@@ -65,7 +64,7 @@
 			});
 		} else {
 			toast.add({
-				severity: 'warning',
+				severity: 'danger',
 				summary: 'Error',
 				detail: 'Failed to Edit Customer',
 				group: 'bl',

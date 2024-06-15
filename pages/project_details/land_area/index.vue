@@ -1,12 +1,11 @@
 <script setup>
-	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
 
-	const router = useRouter();
 	const { zones } = storeToRefs(useZonesStore());
 	const { getZones } = useZonesStore();
 	const { landAreas } = storeToRefs(useLandAreasStore());
 	const { getLandAreas, setCurrentLandArea } = useLandAreasStore();
+	const router = useRouter();
 
 	await getZones();
 	await getLandAreas();

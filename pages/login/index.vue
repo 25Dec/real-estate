@@ -1,12 +1,11 @@
 <script setup>
 	definePageMeta({ layout: 'empty' });
 
-	import { useToast } from 'primevue/usetoast';
-
 	const { authenticateUser } = useAuthStore();
 	const { authenticated } = storeToRefs(useAuthStore());
 	const router = useRouter();
 	const toast = useToast();
+
 	const loginName = ref('');
 	const password = ref('');
 	const isLoading = ref(false);

@@ -21,7 +21,7 @@
 			});
 		} else {
 			toast.add({
-				severity: 'warning',
+				severity: 'danger',
 				summary: 'Error',
 				detail: 'Failed to Delete High Area',
 				group: 'bl',

@@ -1,10 +1,9 @@
 <script setup>
-	const router = useRouter();
-	const currentRoute = router['currentRoute'].value;
-
 	const { logUserOut } = useAuthStore();
 	const { currentProjectFromLocalStore, currentProjectIDFromLocalStore } =
 		storeToRefs(useProjectsStore());
+	const router = useRouter();
+	const currentRoute = router['currentRoute'].value;
 
 	const user = ref({});
 

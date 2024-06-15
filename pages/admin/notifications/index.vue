@@ -1,5 +1,4 @@
 <script setup>
-	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
 
 	const { notifications, currentNotification } = storeToRefs(

@@ -19,7 +19,7 @@
 			});
 		} else {
 			toast.add({
-				severity: 'warning',
+				severity: 'danger',
 				summary: 'Error',
 				detail: 'Failed to Delete Payment Method',
 				group: 'bl',
