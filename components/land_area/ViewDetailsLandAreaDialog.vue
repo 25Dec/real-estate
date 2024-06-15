@@ -3,14 +3,13 @@
 
 	const { zones, zonesDropdown } = storeToRefs(useZonesStore());
 	const { currentLandArea } = storeToRefs(useLandAreasStore());
-	const { editLandArea } = useLandAreasStore();
 	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
 	const { getPaymentMethods } = usePaymentMethodsStore();
-	const toast = useToast();
 
 	await getPaymentMethods();
 
 	const myVisible = ref(visible);
+
 	const zone = ref(
 		zonesDropdown.value.filter(
 			(zone) => zone['value'] == currentLandArea.value['zone_id']
@@ -66,7 +65,7 @@
 			</div>
 		</template>
 
-		<template class="flex flex-col gap-3">
+		<!-- <template class="flex flex-col gap-3">
 			<div class="flex flex-1 flex-col gap-2">
 				<label for="zone">Zone</label>
 				<Dropdown
@@ -248,7 +247,7 @@
 					Updated at: {{ convertDateTime(updatedAt) }}
 				</span>
 			</div>
-		</template>
+		</template> -->
 
 		<template #footer>
 			<Button

@@ -1,8 +1,8 @@
 <script setup>
 	const { data } = defineProps(['data']);
 
-	const router = useRouter();
 	const { setCurrentProject, setCurrentProjectID } = useProjectsStore();
+	const router = useRouter();
 
 	const viewMore = () => {
 		setCurrentProject({ ...data });
@@ -14,12 +14,18 @@
 <template>
 	<Card
 		v-motion-slide-visible-left
-		class="w-[250px]"
+		class="w-[250px] overflow-hidden"
 	>
 		<template #header>
-			<Skeleton
-				width="100%"
-				height="150px"
+			<NuxtImg
+				v-if="data['type'] == 'land'"
+				class="w-full h-[150px]"
+				src="/images/the_manhattan_glory.jpg"
+			/>
+			<NuxtImg
+				v-else
+				class="w-full h-[150px]"
+				src="/images/glory_heights.jpg"
 			/>
 		</template>
 		<template #title>

@@ -16,7 +16,6 @@
 		"@pinia/nuxt": "^0.5.1",
 		"@vueuse/motion": "^2.1.0",
 		"nuxt": "^3.11.2",
-		"nuxt-svgo": "^4.0.1",
 		"pinia": "^2.1.7",
 		"primevue": "^3.51.0",
 		"vue": "^3.4.21",

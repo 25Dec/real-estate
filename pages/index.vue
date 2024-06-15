@@ -14,7 +14,10 @@
 	const TOP_OFFSET = 200;
 	const abouts = [
 		{ title: 'Real Estate Management', icon: 'ion:home-outline' },
-		{ title: '3D Performance', icon: 'fluent:space-3d-20-regular' },
+		{
+			title: 'Interactive Viewer',
+			icon: 'material-symbols:interactive-space-outline',
+		},
 		{ title: 'Payment Management', icon: 'streamline:payment-10' },
 		{ title: 'CRM Service', icon: 'streamline:information-desk-customer' },
 	];
@@ -199,7 +202,7 @@
 		>
 			<NuxtImg
 				src="/images/about_banner.png"
-				class="shadow-2xl rounded-lg"
+				class="shadow-md rounded-lg"
 			/>
 		</div>
 		<div

@@ -3,18 +3,14 @@
 export default defineNuxtConfig({
 	devtools: { enabled: false },
 	modules: [
-        'nuxt-primevue',
-        '@nuxtjs/tailwindcss',
-        '@pinia/nuxt',
-        'nuxt-icon',
-        '@vueuse/motion/nuxt',
-        '@nuxt/image',
-        '@formkit/auto-animate/nuxt',
-        "nuxt-svgo"
-    ],
-	svgo: {
-    	autoImportPath: './public/images/',
-  },
+		'nuxt-primevue',
+		'@nuxtjs/tailwindcss',
+		'@pinia/nuxt',
+		'nuxt-icon',
+		'@vueuse/motion/nuxt',
+		'@nuxt/image',
+		'@formkit/auto-animate/nuxt',
+	],
 	app: {
 		head: {
 			title: 'Real Estate',

@@ -1,32 +1,48 @@
 <script setup>
 	import TheManhattanGloryVinhomesGrandPark from '~/public/images/the_manhattan_glory_vinhomes_grand_park_original_3.svg?raw';
 
+	const { landAreas } = storeToRefs(useLandAreasStore());
+	const { getLandAreas, setCurrentLandArea } = useLandAreasStore();
+
+	await getLandAreas();
+
+	const viewDetailsLandAreaDialogVisible = ref(false);
+	const statuses = ref([
+		{ name: 'Booked', value: 'booked' },
+		{ name: 'Not Booked', value: 'not booked' },
+	]);
+
+	const toggleViewDetailsLandArea = async (landAreaName) => {
+		const data = landAreas.value.filter((land) => land['desc'] == landAreaName);
+		await setCurrentLandArea(data?.[0]);
+		viewDetailsLandAreaDialogVisible.value =
+			!viewDetailsLandAreaDialogVisible.value;
+	};
+
 	if (process.client) {
 		document.querySelectorAll('.allPaths').forEach((e) => {
-			e.setAttribute('class', `allPaths ${e.id}`);
+			e.setAttribute('class', `allPaths ${e['id']}`);
+
 			e.addEventListener('mouseover', () => {
 				window.onmousemove = (j) => {
-					y = j.clientY;
-					x = j.clientX;
-					document.getElementById('name').style.top = y - 60 + 'px';
-					document.getElementById('name').style.left = x + 10 + 'px';
+					let x = j['clientX'];
+					let y = j['clientY'];
+
+					document.getElementById('land-area-name')['style']['top'] =
+						y - 120 + 'px';
+					document.getElementById('land-area-name')['style']['left'] =
+						x - 300 + 'px';
 				};
-				const classes = e.className.baseVal.replace(/ /g, '.');
-				document.querySelectorAll(`.${classes}`).forEach((country) => {
-					country.style.fill = 'pink';
-				});
-				document.getElementById('namep').innerText = e.id;
+				document.getElementById('land-area-name')['style']['opacity'] = 1;
+				document.getElementById('land-area-name-p')['innerText'] = e['id'];
 			});
 
 			e.addEventListener('mouseleave', () => {
-				const classes = e.className.baseVal.replace(/ /g, '.');
-				document.querySelectorAll(`.${classes}`).forEach((country) => {
-					country.style.fill = '#ececec';
-				});
+				document.getElementById('land-area-name')['style']['opacity'] = 0;
 			});
 
 			e.addEventListener('click', () => {
-				console.log(e.id);
+				toggleViewDetailsLandArea(e['id']);
 			});
 		});
 	}
@@ -41,11 +57,15 @@
 				<span class="font-semibold text-lg">Interactive Viewer</span>
 			</div>
 		</div>
+
 		<div
-			class="absolute top-[8%] w-full h-[92%] flex flex-col justify-center items-center"
+			class="absolute top-[8%] w-full h-[92%] overflow-hidden flex flex-col justify-center items-center"
 		>
-			<div id="name">
-				<p id="namep">Name</p>
+			<div
+				id="land-area-name"
+				class="absolute w-fit px-2 py-2 rounded-lg text-xl z-50 backdrop-blur-xl shadow-md"
+			>
+				<p id="land-area-name-p">Land Area Name</p>
 			</div>
 
 			<div
@@ -54,21 +74,14 @@
 			/>
 		</div>
 	</div>
+	<ViewDetailsLandAreaDialog
+		:visible="viewDetailsLandAreaDialogVisible"
+		:statuses="statuses"
+	/>
 </template>
 
 <style scoped>
 	#interactive-map :deep svg path {
 		cursor: pointer;
-	}
-
-	#name {
-		position: absolute;
-		background-color: rgb(255, 255, 255);
-		width: fit-content;
-		opacity: 0;
-		border-radius: 5px;
-		border: 3px solid rgb(245, 128, 128);
-		padding: 0px 5px;
-		font-size: 1.5rem;
 	}
 </style>

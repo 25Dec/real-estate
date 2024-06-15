@@ -6,7 +6,6 @@
 /// <reference types="@vueuse/motion" />
 /// <reference types="@nuxt/image" />
 /// <reference types="@formkit/auto-animate" />
-/// <reference types="nuxt-svgo" />
 /// <reference types="@nuxt/telemetry" />
 /// <reference types="nuxt" />
 /// <reference path="types/plugins.d.ts" />
