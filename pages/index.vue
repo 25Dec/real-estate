@@ -7,7 +7,6 @@
 	const { getProjects } = useProjectsStore();
 	const { authenticated } = storeToRefs(useAuthStore());
 	const { logUserOut } = useAuthStore();
-	const router = useRouter();
 
 	await getProjects();
 
@@ -60,16 +59,6 @@
 				},
 			},
 		},
-	];
-	const features = [
-		{ title: 'Parking Space', icon: 'ion:car-sport-outline' },
-		{ title: 'Swimming Pool', icon: 'ion:water-outline' },
-		{ title: 'Private Security', icon: 'ion:shield-checkmark-outline' },
-		{ title: 'Medical Center', icon: 'ion:fitness-outline' },
-		{ title: 'Library Area', icon: 'ion:library-outline' },
-		{ title: 'King Size Beds', icon: 'ion:bed-outline' },
-		{ title: 'Smart Homes', icon: 'ion:home-outline' },
-		{ title: "Kid's Playland", icon: 'ion:football-outline' },
 	];
 
 	const toggleMenu = (event) => {

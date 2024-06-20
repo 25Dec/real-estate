@@ -2,6 +2,7 @@
 
 export default defineNuxtConfig({
 	devtools: { enabled: false },
+	css: ['~/assets/css/main.css', '/node_modules/primeicons/primeicons.css'],
 	modules: [
 		'nuxt-primevue',
 		'@nuxtjs/tailwindcss',

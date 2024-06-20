@@ -17,6 +17,12 @@
 			(zone) => zone['value'] == currentLandArea.value['zone_id']
 		)?.[0]?.['value'],
 	});
+	console.log(
+		zonesDropdown.value,
+		zonesDropdown.value.filter(
+			(zone) => zone['value'] == currentLandArea.value['zone_id']
+		)
+	);
 	const landAreaDirection = ref(currentLandArea.value['land_direction']);
 	const isFront = ref(currentLandArea.value['is_front']);
 	const lat = ref(currentLandArea.value['lat']);

@@ -54,11 +54,11 @@
 							: null,
 					],
 				},
-				{
-					name: 'Interactive Viewer',
-					link: projectDetailsBaseLink + '/interactive_viewer',
-					icon: 'material-symbols:interactive-space-outline',
-				},
+				// {
+				// 	name: 'Interactive Viewer',
+				// 	link: projectDetailsBaseLink + '/interactive_viewer',
+				// 	icon: 'material-symbols:interactive-space-outline',
+				// },
 				{
 					name: 'Customers',
 					link: projectDetailsBaseLink + '/customers',
