@@ -29,7 +29,7 @@
 			number_of_floor: parseInt(numberOfFloor.value),
 			lat: parseInt(lat.value),
 			long: parseInt(long.value),
-			is_service: isService.value == 1 ? true : false,
+			is_service: isService.value == 1 ? 'true' : 'false',
 			desc: desc.value,
 			type: type.value.value,
 			progress: parseInt(progress.value),

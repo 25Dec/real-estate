@@ -96,7 +96,7 @@
 			</NuxtLink>
 
 			<ul
-				:class="`flex gap-12 font-semibold flex items-center ${
+				:class="`flex gap-12 font-semibold items-center ${
 					showBackground ? '[&>li]:text-black' : '[&>li]:text-white'
 				}`"
 			>
@@ -109,7 +109,7 @@
 					class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
 				>
 					<NuxtLink
-						:to="{ hash: '#about' }"
+						:to="{ hash: 'about' }"
 						:external="true"
 					>
 						About
@@ -119,7 +119,7 @@
 					class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
 				>
 					<NuxtLink
-						:to="{ hash: '#services' }"
+						:to="{ hash: 'services' }"
 						:external="true"
 					>
 						Services
@@ -129,7 +129,7 @@
 					class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
 				>
 					<NuxtLink
-						:to="{ hash: '#projects' }"
+						:to="{ hash: 'projects' }"
 						:external="true"
 					>
 						Projects
@@ -139,7 +139,7 @@
 					class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
 				>
 					<NuxtLink
-						:to="{ hash: '#contact' }"
+						:to="{ hash: 'contact' }"
 						:external="true"
 					>
 						Contact
@@ -148,7 +148,7 @@
 			</ul>
 		</div>
 		<div>
-			<ul class="flex gap-12 font-semibold flex items-center">
+			<ul class="flex gap-12 font-semibold items-center">
 				<li>
 					<Avatar
 						v-if="authenticated"
@@ -210,7 +210,7 @@
 				/>
 			</div>
 			<NuxtLink
-				:to="{ hash: '#services' }"
+				:to="{ hash: 'services' }"
 				:external="true"
 			>
 				<Button size="large">

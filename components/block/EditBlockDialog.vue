@@ -18,7 +18,9 @@
 	const numberOfFloor = ref(currentBlock.value['number_of_floor']);
 	const lat = ref(currentBlock.value['lat']);
 	const long = ref(currentBlock.value['long']);
-	const isService = ref(currentBlock.value['is_service']);
+	const isService = ref(
+		currentBlock.value['is_service'] == 'true' ? true : false
+	);
 	const desc = ref(currentBlock.value['desc']);
 	const type = ref({
 		name: types.filter(

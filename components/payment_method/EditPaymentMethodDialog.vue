@@ -2,7 +2,7 @@
 	const { visible } = defineProps(['visible']);
 
 	const { currentPaymentMethod } = storeToRefs(usePaymentMethodsStore());
-	const { addNewPaymentMethod } = usePaymentMethodsStore();
+	const { editPaymentMethod } = usePaymentMethodsStore();
 	const toast = useToast();
 
 	const myVisible = ref(visible);
@@ -39,7 +39,7 @@
 			toast.add({
 				severity: 'success',
 				summary: 'Success',
-				detail: 'Edit New Payment Method Successfully!',
+				detail: 'Edit Payment Method Successfully!',
 				group: 'bl',
 				life: 3000,
 			});
@@ -47,7 +47,7 @@
 			toast.add({
 				severity: 'danger',
 				summary: 'Error',
-				detail: 'Failed to Edit New Payment Method',
+				detail: 'Failed to Edit Payment Method',
 				group: 'bl',
 				life: 3000,
 			});
@@ -73,7 +73,7 @@
 		<template class="flex flex-col gap-3">
 			<div class="flex flex-col gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="methodName">Method name</label>
+					<label for="methodName">Method Name</label>
 					<InputText
 						id="methodName"
 						placeholder="Method name"
@@ -84,7 +84,7 @@
 
 			<div class="flex flex-row gap-3">
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="totalOfPaymentTime">Total of payment time</label>
+					<label for="totalOfPaymentTime">Total Of Payment Time</label>
 					<InputNumber
 						id="totalOfPaymentTime"
 						v-model="totalOfPaymentTime"
@@ -150,6 +150,7 @@
 				</span>
 			</div>
 		</template>
+
 		<template #footer>
 			<Button
 				type="button"

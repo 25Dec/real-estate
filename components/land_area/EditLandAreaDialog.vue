@@ -123,13 +123,23 @@
 				/>
 			</div>
 
-			<div class="flex flex-1 flex-col gap-2">
-				<label for="desc">Name</label>
-				<InputText
-					id="desc"
-					v-model="desc"
-					placeholder="Name"
-				/>
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="desc">Name</label>
+					<InputText
+						id="desc"
+						v-model="desc"
+						placeholder="Name"
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="isFront">Front</label>
+					<InputText
+						id="isFront"
+						v-model="isFront"
+						placeholder="0m"
+					/>
+				</div>
 			</div>
 
 			<div class="flex gap-3">
@@ -260,14 +270,6 @@
 						optionValue="value"
 					/>
 				</div>
-			</div>
-
-			<div class="flex flex-1 flex-col gap-2 items-end">
-				<label for="isFront">Is Front</label>
-				<InputSwitch
-					id="isFront"
-					v-model="isFront"
-				/>
 			</div>
 
 			<div class="flex flex-row gap-3 justify-between">

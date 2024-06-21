@@ -59,7 +59,7 @@
 			class="fixed right-0 top-0 z-50 backdrop-blur-xl w-5/6 h-[8%] px-4 border-b flex justify-between items-center"
 		>
 			<div class="flex items-center gap-2">
-				<span class="font-semibold text-lg">Payment Method Process</span>
+				<span class="font-semibold text-lg">Payment Process</span>
 				<Tag :value="myPaymentMethodsProcessBaseOnPMId.length"></Tag>
 			</div>
 
@@ -70,7 +70,7 @@
 					</InputIcon>
 					<InputText
 						v-model="filters['global'].value"
-						placeholder="Filter payment method process..."
+						placeholder="Filter Payment Method Process..."
 					/>
 				</IconField>
 				<Button
@@ -119,7 +119,7 @@
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
-						<span>No payment method process found.</span>
+						<span>No Payment Process Found.</span>
 					</div>
 				</template>
 

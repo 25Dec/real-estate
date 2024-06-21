@@ -15,7 +15,9 @@
 	const phone = ref(currentProject.value['phone']);
 	const email = ref(currentProject.value['email']);
 	const openAt = ref(getYearMonthDay(currentProject.value['open_at']));
-	const activated = ref(currentProject.value['activated']);
+	const activated = ref(
+		currentProject.value['activated'] == 'true' ? true : false
+	);
 	const projectProgress = ref(currentProject.value['project_progress']);
 	const desc = ref(currentProject.value['desc']);
 	const startedDay = ref(getYearMonthDay(currentProject.value['started_day']));

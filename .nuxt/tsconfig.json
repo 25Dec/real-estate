@@ -20,6 +20,9 @@
       "@unhead/vue": [
         "../node_modules/@unhead/vue"
       ],
+      "@nuxt/devtools": [
+        "../node_modules/@nuxt/devtools"
+      ],
       "@vue/runtime-core": [
         "../node_modules/@vue/runtime-core"
       ],
@@ -114,23 +117,31 @@
         "./components"
       ]
     },
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "ESNext",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": false,
     "forceConsistentCasingInFileNames": true,
+    "noImplicitOverride": true,
+    "module": "ESNext",
+    "noEmit": true,
+    "lib": [
+      "ESNext",
+      "dom",
+      "dom.iterable"
+    ],
     "jsx": "preserve",
     "jsxImportSource": "vue",
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "useDefineForClassFields": true,
-    "strict": true,
-    "noImplicitThis": true,
-    "esModuleInterop": true,
     "types": [],
-    "verbatimModuleSyntax": true,
-    "allowJs": true,
-    "noEmit": true,
-    "resolveJsonModule": true,
+    "moduleResolution": "Bundler",
+    "useDefineForClassFields": true,
+    "noImplicitThis": true,
     "allowSyntheticDefaultImports": true
   },
   "include": [
@@ -141,24 +152,24 @@
     "../node_modules/@nuxtjs/tailwindcss/runtime",
     "../node_modules/@pinia/nuxt/runtime",
     "../node_modules/nuxt-icon/runtime",
-    "../../../Co/runtime",
+    "../../real-est/runtime",
     "../node_modules/@nuxt/image/runtime",
     "../node_modules/@formkit/auto-animate/nuxt/runtime",
     "../node_modules/@nuxt/telemetry/runtime",
     ".."
   ],
   "exclude": [
+    "../dist",
     "../node_modules",
     "../node_modules/nuxt/node_modules",
     "../node_modules/nuxt-primevue/runtime/server",
     "../node_modules/@nuxtjs/tailwindcss/runtime/server",
     "../node_modules/@pinia/nuxt/runtime/server",
     "../node_modules/nuxt-icon/runtime/server",
-    "../../../Co/runtime/server",
+    "../../real-est/runtime/server",
     "../node_modules/@nuxt/image/runtime/server",
     "../node_modules/@formkit/auto-animate/nuxt/runtime/server",
     "../node_modules/@nuxt/telemetry/runtime/server",
-    "../dist",
     "../.output"
   ]
 }

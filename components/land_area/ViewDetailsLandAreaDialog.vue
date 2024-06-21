@@ -17,12 +17,6 @@
 			(zone) => zone['value'] == currentLandArea.value['zone_id']
 		)?.[0]?.['value'],
 	});
-	console.log(
-		zonesDropdown.value,
-		zonesDropdown.value.filter(
-			(zone) => zone['value'] == currentLandArea.value['zone_id']
-		)
-	);
 	const landAreaDirection = ref(currentLandArea.value['land_direction']);
 	const isFront = ref(currentLandArea.value['is_front']);
 	const lat = ref(currentLandArea.value['lat']);
@@ -87,14 +81,25 @@
 				/>
 			</div>
 
-			<div class="flex flex-1 flex-col gap-2">
-				<label for="desc">Name</label>
-				<InputText
-					id="desc"
-					v-model="desc"
-					placeholder="Name"
-					disabled
-				/>
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="desc">Name</label>
+					<InputText
+						id="desc"
+						v-model="desc"
+						placeholder="Name"
+						disabled
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="isFront">Front</label>
+					<InputText
+						id="isFront"
+						v-model="isFront"
+						placeholder="0m"
+						disabled
+					/>
+				</div>
 			</div>
 
 			<div class="flex gap-3">
@@ -236,15 +241,6 @@
 						disabled
 					/>
 				</div>
-			</div>
-
-			<div class="flex flex-1 flex-col gap-2 items-end">
-				<label for="isFront">Is Front</label>
-				<InputSwitch
-					id="isFront"
-					v-model="isFront"
-					disabled
-				/>
 			</div>
 
 			<div class="flex flex-row gap-3 justify-between">
