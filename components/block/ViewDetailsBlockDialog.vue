@@ -4,14 +4,22 @@
 	const { zones } = storeToRefs(useZonesStore());
 	const { blocks, currentBlock } = storeToRefs(useBlocksStore());
 
+	zones.value = zones.value.map((zone) => {
+		return { id: zone.id, name: `${zone.name}`, value: `${zone.id}` };
+	});
+
 	const myVisible = ref(visible);
 	const currentZone = ref({
 		name: zones.value.filter(
 			(zone) => zone['id'] == currentBlock.value['zone_id']
 		)?.[0]?.['name'],
-		value: zones.value.filter(
-			(zone) => zone['id'] == currentBlock.value['zone_id']
-		)?.[0]?.['value'],
+		value:
+			zones.value.filter(
+				(zone) => zone['id'] == currentBlock.value['zone_id']
+			)?.[0]?.['value'] ??
+			zones.value.filter(
+				(zone) => zone['id'] == currentBlock.value['zone_id']
+			)?.[0]?.['id'],
 	});
 	const numberOfFloor = ref(currentBlock.value['number_of_floor']);
 	const lat = ref(currentBlock.value['lat']);

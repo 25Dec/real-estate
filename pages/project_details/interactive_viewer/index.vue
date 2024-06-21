@@ -5,13 +5,13 @@
 	const { currentProjectFromLocalStore } = storeToRefs(useProjectsStore());
 	const { zones } = storeToRefs(useZonesStore());
 	const { getZones } = useZonesStore();
-	const { blocks } = storeToRefs(useBlocksStore());
+	const { blocks, currentBlock } = storeToRefs(useBlocksStore());
 	const { getBlocks } = useBlocksStore();
 	const { floors } = storeToRefs(useFloorsStore());
 	const { getFloors } = useFloorsStore();
 	const { landAreas, currentLandArea } = storeToRefs(useLandAreasStore());
 	const { getLandAreas, setCurrentLandArea } = useLandAreasStore();
-	const { highAreas, currentHighArea } = storeToRefs(useHighAreasStore());
+	const { highAreas } = storeToRefs(useHighAreasStore());
 	const { getHighAreas, setCurrentHighArea } = useHighAreasStore();
 	const router = useRouter();
 	const toast = useToast();
@@ -24,9 +24,19 @@
 		await getLandAreas();
 	}
 
+	if (projectType.value == 'high' || projectType.value == 'hybrid') {
+		await getBlocks();
+		await getFloors();
+		await getHighAreas();
+	}
+
 	const statuses = ref([
 		{ name: 'Booked', value: 'booked' },
 		{ name: 'Not Booked', value: 'not booked' },
+	]);
+	const types = ref([
+		{ name: 'Normal', value: 'normal' },
+		{ name: 'Luxury', value: 'luxury' },
 	]);
 	const menu = ref();
 	const menuItems = ref(
@@ -149,6 +159,11 @@
 							(land) => land['desc'] == e['id']
 						);
 						setCurrentLandArea(data?.[0]);
+					} else if (projectType.value == 'high') {
+						const data = blocks.value.filter(
+							(block) => block['desc'] == e['id'].substring(0, 3).toLowerCase()
+						);
+						currentBlock.value = data?.[0];
 					}
 				});
 			});
@@ -202,7 +217,6 @@
 			/>
 		</div>
 	</div>
-
 	<ViewDetailsBlockDialog
 		v-if="viewDetailsBlockDialogVisible"
 		:visible="viewDetailsBlockDialogVisible"
