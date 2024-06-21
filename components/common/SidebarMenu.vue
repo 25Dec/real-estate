@@ -54,11 +54,11 @@
 							: null,
 					],
 				},
-				// {
-				// 	name: 'Interactive Viewer',
-				// 	link: projectDetailsBaseLink + '/interactive_viewer',
-				// 	icon: 'material-symbols:interactive-space-outline',
-				// },
+				{
+					name: 'Interactive Viewer',
+					link: projectDetailsBaseLink + '/interactive_viewer',
+					icon: 'material-symbols:interactive-space-outline',
+				},
 				{
 					name: 'Customers',
 					link: projectDetailsBaseLink + '/customers',
@@ -150,7 +150,7 @@
 					v-else
 					class="font-bold text-xl text-[#10b981]"
 				>
-					Overrall Dashboard
+					Overall Dashboard
 				</span>
 			</NuxtLink>
 		</div>

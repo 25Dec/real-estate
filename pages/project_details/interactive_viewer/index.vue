@@ -1,6 +1,6 @@
 <script setup>
-	import TheManhattanGloryVinhomesGrandPark from '~/public/images/the_manhattan_glory_vinhomes_grand_park_original_3.svg?raw';
-	import GloryHeights from '~/public/images/glory_heights.svg?raw';
+	import TheManhattanGloryVinhomesGrandPark from '~/public/svgs/the_manhattan_glory_vinhomes_grand_park_original_3.svg?raw';
+	import GloryHeights from '~/public/svgs/glory_heights.svg?raw';
 
 	const { currentProjectFromLocalStore } = storeToRefs(useProjectsStore());
 	const { zones } = storeToRefs(useZonesStore());
