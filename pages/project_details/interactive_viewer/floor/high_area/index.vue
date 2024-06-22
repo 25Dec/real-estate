@@ -113,6 +113,14 @@
 						(highArea) => highArea['desc'] == e['id']
 					);
 					setCurrentHighArea(data?.[0]);
+
+					toast.add({
+						severity: 'success',
+						summary: 'Success',
+						detail: 'Successfully Selected the Area',
+						group: 'bl',
+						life: 3000,
+					});
 				});
 			});
 		}

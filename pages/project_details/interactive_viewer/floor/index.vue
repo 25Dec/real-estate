@@ -96,6 +96,14 @@
 						(floor) => floor['desc'].toLowerCase() == e['id'].toLowerCase()
 					);
 					currentFloor.value = data?.[0];
+
+					toast.add({
+						severity: 'success',
+						summary: 'Success',
+						detail: 'Successfully Selected the Area',
+						group: 'bl',
+						life: 3000,
+					});
 				});
 			});
 		}
