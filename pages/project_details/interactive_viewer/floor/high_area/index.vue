@@ -265,7 +265,7 @@
 	}
 
 	.imp-scale {
-		transform: scale(1, 1) translate(0, 0);
+		transform: scale(0.95, 0.95) translate(0, 0);
 		transform-origin: 0% 0%;
 		width: 100%;
 		height: 100%;

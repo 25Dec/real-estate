@@ -93,7 +93,7 @@
 				e.addEventListener('click', () => {
 					document.getElementById('area-name-1')['innerText'] = e['id'];
 					const data = floors.value.filter(
-						(floor) => floor['desc'] == e['id'].toLowerCase()
+						(floor) => floor['desc'].toLowerCase() == e['id'].toLowerCase()
 					);
 					currentFloor.value = data?.[0];
 				});
@@ -190,6 +190,14 @@
 			</div>
 		</div>
 	</div>
+	<ViewDetailsFloorDialog
+		v-if="viewDetailsFloorDialogVisible"
+		:visible="viewDetailsFloorDialogVisible"
+	/>
+	<EditFloorDialog
+		v-if="editFloorDialogVisible"
+		:visible="editFloorDialogVisible"
+	/>
 </template>
 
 <style scoped>
