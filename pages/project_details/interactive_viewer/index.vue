@@ -7,12 +7,8 @@
 	const { getZones } = useZonesStore();
 	const { blocks, currentBlock } = storeToRefs(useBlocksStore());
 	const { getBlocks } = useBlocksStore();
-	const { floors } = storeToRefs(useFloorsStore());
-	const { getFloors } = useFloorsStore();
 	const { landAreas, currentLandArea } = storeToRefs(useLandAreasStore());
 	const { getLandAreas, setCurrentLandArea } = useLandAreasStore();
-	const { highAreas } = storeToRefs(useHighAreasStore());
-	const { getHighAreas, setCurrentHighArea } = useHighAreasStore();
 	const router = useRouter();
 	const toast = useToast();
 
@@ -26,8 +22,6 @@
 
 	if (projectType.value == 'high' || projectType.value == 'hybrid') {
 		await getBlocks();
-		await getFloors();
-		await getHighAreas();
 	}
 
 	const statuses = ref([
@@ -51,13 +45,9 @@
 						command: () => toggleEditLandArea(),
 					},
 					{
-						label: 'Delete',
-						command: () => toggleDeleteLandArea(),
-					},
-					{
 						label: 'Payment',
 						command: () => {
-							router.push('interactive_viewer/payment');
+							router.push('interactive_viewer/land_area_payment');
 						},
 					},
 			  ]
@@ -80,7 +70,6 @@
 	const editBlockDialogVisible = ref(false);
 	const viewDetailsLandAreaDialogVisible = ref(false);
 	const editLandAreaDialogVisible = ref(false);
-	const deleteLandAreaDialogVisible = ref(false);
 
 	const toggleMenu = (event) => {
 		const hadSelectedArea =
@@ -112,9 +101,6 @@
 	};
 	const toggleEditLandArea = () => {
 		editLandAreaDialogVisible.value = !editLandAreaDialogVisible.value;
-	};
-	const toggleDeleteLandArea = async () => {
-		deleteLandAreaDialogVisible.value = !deleteLandAreaDialogVisible.value;
 	};
 
 	onMounted(() => {
@@ -236,10 +222,6 @@
 		v-if="editLandAreaDialogVisible"
 		:visible="editLandAreaDialogVisible"
 		:statuses="statuses"
-	/>
-	<DeleteLandAreaDialog
-		v-if="deleteLandAreaDialogVisible"
-		:visible="deleteLandAreaDialogVisible"
 	/>
 </template>
 

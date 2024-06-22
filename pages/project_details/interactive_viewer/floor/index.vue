@@ -9,8 +9,12 @@
 	import EighthFloor from '~/public/svgs/eighth_floor.svg?raw';
 	import NinthFloor from '~/public/svgs/ninth_floor.svg?raw';
 
+	const { floors, currentFloor } = storeToRefs(useFloorsStore());
+	const { getFloors } = useFloorsStore();
 	const router = useRouter();
 	const toast = useToast();
+
+	await getFloors();
 
 	const menu = ref();
 	const menuItems = ref([
@@ -23,24 +27,15 @@
 			command: () => toggleEditFloor(),
 		},
 		{
-			label: 'Delete',
-			command: () => toggleDeleteFloor(),
-		},
-		{
-			label: 'Move to Floor',
-			command: () => router.push('interactive_viewer/floor'),
+			label: 'Move to High Area',
+			command: () => router.push('floor/high_area'),
 		},
 	]);
 	const viewDetailsFloorDialogVisible = ref(false);
-	const createFloorDialogVisible = ref(false);
 	const editFloorDialogVisible = ref(false);
-	const deleteFloorDialogVisible = ref(false);
 
 	const toggleMenu = (event) => {
-		const hadSelectedArea =
-			projectType.value == 'land'
-				? Object.keys(currentLandArea.value).length
-				: true;
+		const hadSelectedArea = Object.keys(currentFloor.value).length;
 
 		if (hadSelectedArea) {
 			menu.value.toggle(event);
@@ -59,9 +54,6 @@
 	};
 	const toggleEditFloor = () => {
 		editFloorDialogVisible.value = !editFloorDialogVisible.value;
-	};
-	const toggleDeleteFloor = () => {
-		deleteFloorDialogVisible.value = !deleteFloorDialogVisible.value;
 	};
 
 	onMounted(() => {
@@ -100,6 +92,10 @@
 
 				e.addEventListener('click', () => {
 					document.getElementById('area-name-1')['innerText'] = e['id'];
+					const data = floors.value.filter(
+						(floor) => floor['desc'] == e['id'].toLowerCase()
+					);
+					currentFloor.value = data?.[0];
 				});
 			});
 		}
@@ -133,6 +129,14 @@
 		<div
 			class="absolute top-[8%] w-full h-[92%] overflow-hidden flex flex-col justify-center items-center"
 		>
+			<div
+				class="absolute left-0 top-[2%] z-50 px-4"
+				@click="() => router.go(-1)"
+			>
+				<span class="text-[#10b98e] cursor-pointer text-sm hover:underline"
+					>Back to Block</span
+				>
+			</div>
 			<div
 				id="area-name"
 				class="absolute w-fit px-2 py-2 rounded-lg text-xl z-50 backdrop-blur-xl shadow-md"

@@ -273,15 +273,6 @@
 					</template>
 				</Column>
 
-				<!-- <Column
-					field="floor"
-					header="Floor"
-				>
-					<template #body="{ data }">
-						{{ floors.find((floor) => floor.id == data['floor_id'])?.['name'] }}
-					</template>
-				</Column> -->
-
 				<Column
 					field="buy_status"
 					header="Buy Status"
