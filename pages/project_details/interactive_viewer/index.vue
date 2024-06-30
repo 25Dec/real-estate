@@ -37,12 +37,20 @@
 		projectType.value == 'land'
 			? [
 					{
+						label: 'Create',
+						command: () => toggleCreateLandArea(),
+					},
+					{
 						label: 'View',
 						command: () => toggleViewDetailsLandArea(),
 					},
 					{
 						label: 'Edit',
 						command: () => toggleEditLandArea(),
+					},
+					{
+						label: 'Delete',
+						command: () => toggleDeleteLandArea(),
 					},
 					{
 						label: 'Payment',
@@ -53,6 +61,10 @@
 			  ]
 			: [
 					{
+						label: 'Create',
+						command: () => toggleCreateBlock(),
+					},
+					{
 						label: 'View',
 						command: () => toggleViewDetailsBlock(),
 					},
@@ -61,15 +73,23 @@
 						command: () => toggleEditBlock(),
 					},
 					{
+						label: 'Delete',
+						command: () => toggleDeleteBlock(),
+					},
+					{
 						label: 'Move to Floor',
 						command: () => router.push('interactive_viewer/floor'),
 					},
 			  ]
 	);
 	const viewDetailsBlockDialogVisible = ref(false);
+	const createBlockDialogVisible = ref(false);
 	const editBlockDialogVisible = ref(false);
+	const deleteBlockDialogVisible = ref(false);
 	const viewDetailsLandAreaDialogVisible = ref(false);
+	const createLandAreaDialogVisible = ref(false);
 	const editLandAreaDialogVisible = ref(false);
+	const deleteLandAreaDialogVisible = ref(false);
 
 	const toggleMenu = (event) => {
 		const hadSelectedArea =
@@ -89,11 +109,20 @@
 			});
 		}
 	};
+	const toggleCreateBlock = () => {
+		createBlockDialogVisible.value = !createBlockDialogVisible.value;
+	};
 	const toggleViewDetailsBlock = () => {
 		viewDetailsBlockDialogVisible.value = !viewDetailsBlockDialogVisible.value;
 	};
 	const toggleEditBlock = () => {
 		editBlockDialogVisible.value = !editBlockDialogVisible.value;
+	};
+	const toggleDeleteBlock = () => {
+		deleteBlockDialogVisible.value = !deleteBlockDialogVisible.value;
+	};
+	const toggleCreateLandArea = () => {
+		createLandAreaDialogVisible.value = !createLandAreaDialogVisible.value;
 	};
 	const toggleViewDetailsLandArea = () => {
 		viewDetailsLandAreaDialogVisible.value =
@@ -101,6 +130,9 @@
 	};
 	const toggleEditLandArea = () => {
 		editLandAreaDialogVisible.value = !editLandAreaDialogVisible.value;
+	};
+	const toggleDeleteLandArea = () => {
+		deleteLandAreaDialogVisible.value = !deleteLandAreaDialogVisible.value;
 	};
 
 	onMounted(() => {
@@ -216,20 +248,38 @@
 		:visible="viewDetailsBlockDialogVisible"
 		:types="types"
 	/>
+	<CreateBlockDialog
+		v-if="createBlockDialogVisible"
+		:visible="createBlockDialogVisible"
+		:types="types"
+	/>
 	<EditBlockDialog
 		v-if="editBlockDialogVisible"
 		:visible="editBlockDialogVisible"
 		:types="types"
+	/>
+	<DeleteBlockDialog
+		v-if="deleteBlockDialogVisible"
+		:visible="deleteBlockDialogVisible"
 	/>
 	<ViewDetailsLandAreaDialog
 		v-if="viewDetailsLandAreaDialogVisible"
 		:visible="viewDetailsLandAreaDialogVisible"
 		:statuses="statuses"
 	/>
+	<CreateLandAreaDialog
+		v-if="createLandAreaDialogVisible"
+		:visible="createLandAreaDialogVisible"
+		:statuses="statuses"
+	/>
 	<EditLandAreaDialog
 		v-if="editLandAreaDialogVisible"
 		:visible="editLandAreaDialogVisible"
 		:statuses="statuses"
+	/>
+	<DeleteLandAreaDialog
+		v-if="deleteLandAreaDialogVisible"
+		:visible="deleteLandAreaDialogVisible"
 	/>
 </template>
 

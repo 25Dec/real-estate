@@ -1,4 +1,10 @@
 <script setup>
+	import { disablePageScroll, enablePageScroll } from 'scroll-lock';
+	import {
+		landingPageAboutUsContents,
+		landingPageServicesContent,
+	} from '~/constants';
+
 	definePageMeta({
 		layout: 'empty',
 	});
@@ -10,19 +16,25 @@
 
 	await getProjects();
 
-	const TOP_OFFSET = 200;
-	const abouts = [
-		{ title: 'Real Estate Management', icon: 'ion:home-outline' },
-		{
-			title: 'Interactive Viewer',
-			icon: 'material-symbols:interactive-space-outline',
-		},
-		{ title: 'Payment Management', icon: 'streamline:payment-10' },
-		{ title: 'CRM Service', icon: 'streamline:information-desk-customer' },
-	];
+	const TOP_OFFSET = 700;
 	const showBackground = ref(false);
-	const menu = ref();
-	const menuItems = ref([
+	const openNavigation = ref(false);
+	const navigations = ref([
+		{ title: 'Home', to: '/', external: false },
+		{ title: 'About', to: 'about', external: true },
+		{ title: 'Services', to: 'services', external: true },
+		{ title: 'Projects', to: 'projects', external: true },
+		{ title: 'Contact', to: 'contact', external: true },
+		{
+			title: 'Login',
+			to: '/login',
+			external: false,
+			onlyMobile: true,
+		},
+	]);
+	console.log(navigations.value);
+	const option = ref();
+	const options = ref([
 		{
 			label: 'Logout',
 			command: () => logUserOut(),
@@ -34,35 +46,23 @@
 		user.value = JSON.parse(localStorage.getItem('user')) ?? {};
 	}
 
-	const services = [
-		{
-			image: '/images/dashboard.png',
-			title: 'Dashboard System',
-			content:
-				'Provide methods for project, user, and notification management. Manage all projects, users, and notifications in each project within the system.',
-			action: {
-				goto: {
-					path: 'admin',
-					external: false,
-				},
-			},
-		},
-		{
-			image: '/images/detail_project_support.png',
-			title: 'Detailed Project Support For Sales',
-			content:
-				'Provide project, CRM, and sales processes in a project. Support the sales department to enhance performance.',
-			action: {
-				goto: {
-					path: '#projects',
-					external: true,
-				},
-			},
-		},
-	];
+	const toggleNavigation = () => {
+		if (openNavigation.value) {
+			openNavigation.value = false;
+			enablePageScroll();
+		} else {
+			openNavigation.value = true;
+			disablePageScroll();
+		}
+	};
+	const handleClick = () => {
+		if (!openNavigation.value) return;
 
-	const toggleMenu = (event) => {
-		menu.value.toggle(event);
+		enablePageScroll();
+		openNavigation.value = false;
+	};
+	const toggleOption = (event) => {
+		option.value.toggle(event);
 	};
 	const handleScroll = () => {
 		if (window.scrollY >= TOP_OFFSET) {
@@ -78,12 +78,14 @@
 </script>
 
 <template>
-	<header
-		:class="`fixed w-full px-6 py-6 flex justify-between items-center z-50 transition duration-1000 ease-in-out ${
-			showBackground ? 'backdrop-blur-xl' : ''
-		}`"
+	<div
+		:class="`fixed top-0 left-0 w-full z-50 ${
+			showBackground ? 'backdrop-blur-xl border-b' : ''
+		} ${openNavigation ? 'backdrop-blur-xl' : ''}`"
 	>
-		<div class="flex gap-12">
+		<div
+			class="flex justify-center items-center px-4 lg:px-7 xl:px-10 max-lg:py-4"
+		>
 			<NuxtLink
 				to="/"
 				class="flex justify-center items-center gap-1"
@@ -95,90 +97,71 @@
 				<span class="font-bold text-xl text-[#10b981]"> Propertier </span>
 			</NuxtLink>
 
-			<ul
-				:class="`flex gap-12 font-semibold items-center ${
-					showBackground ? '[&>li]:text-black' : '[&>li]:text-white'
+			<div
+				:class="`${
+					openNavigation ? 'flex' : 'hidden'
+				} fixed w-full top-[4rem] left-0 right-0 bottom-0 lg:static lg:flex lg:mx-auto`"
+			>
+				<div
+					:class="`relative w-full z-50 flex flex-col items-center justify-center m-auto lg:flex-row text-white ${
+						openNavigation ? 'backdrop-blur-xl' : ''
+					}`"
+				>
+					<NuxtLink
+						v-for="item in navigations"
+						:key="item['title']"
+						:to="item['external'] ? { hash: item['to'] } : item['to']"
+						:external="item['external']"
+						@click="handleClick"
+						:class="`font-semibold hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out block relative uppercase px-6 py-6 md:py-8 lg:-mr-0.25 lg:leading-5 xl:px-12 ${
+							item['onlyMobile'] ? 'lg:hidden' : ''
+						}  ${showBackground ? 'text-black' : 'text-white'}`"
+					>
+						{{ item['title'] }}
+					</NuxtLink>
+				</div>
+			</div>
+
+			<Button
+				v-if="!authenticated"
+				outlined
+				severity="secondary"
+				:class="`hidden lg:flex font-semibold ${
+					showBackground ? 'text-black' : 'text-white'
 				}`"
 			>
-				<li
-					class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
-				>
-					<NuxtLink to="/"> Home </NuxtLink>
-				</li>
-				<li
-					class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
-				>
-					<NuxtLink
-						:to="{ hash: 'about' }"
-						:external="true"
-					>
-						About
-					</NuxtLink>
-				</li>
-				<li
-					class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
-				>
-					<NuxtLink
-						:to="{ hash: 'services' }"
-						:external="true"
-					>
-						Services
-					</NuxtLink>
-				</li>
-				<li
-					class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
-				>
-					<NuxtLink
-						:to="{ hash: 'projects' }"
-						:external="true"
-					>
-						Projects
-					</NuxtLink>
-				</li>
-				<li
-					class="hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out"
-				>
-					<NuxtLink
-						:to="{ hash: 'contact' }"
-						:external="true"
-					>
-						Contact
-					</NuxtLink>
-				</li>
-			</ul>
-		</div>
-		<div>
-			<ul class="flex gap-12 font-semibold items-center">
-				<li>
-					<Avatar
-						v-if="authenticated"
-						shape="square"
-						:label="user['display_name']?.substring(0, 3)"
-						@click="(event) => toggleMenu(event)"
+				<NuxtLink to="/login"> Login </NuxtLink>
+			</Button>
+
+			<div class="ml-auto flex gap-6">
+				<Avatar
+					v-if="authenticated"
+					shape="square"
+					:label="user['display_name']?.substring(0, 3)"
+					@click="(event) => toggleOption(event)"
+				/>
+
+				<Menu
+					ref="option"
+					:model="options"
+					:popup="true"
+					class="hidden lg:block"
+				/>
+
+				<div class="lg:hidden">
+					<Icon
+						name="line-md:menu"
+						:class="`text-2xl ${showBackground ? 'text-black' : 'text-white'}`"
+						@click="toggleNavigation"
 					/>
-					<Button
-						v-if="!authenticated"
-						outlined
-						severity="secondary"
-						:class="`font-semibold ${
-							showBackground ? 'text-black' : 'text-white'
-						}`"
-					>
-						<NuxtLink to="/login"> Login </NuxtLink>
-					</Button>
-					<Menu
-						ref="menu"
-						:model="menuItems"
-						:popup="true"
-					/>
-				</li>
-			</ul>
+				</div>
+			</div>
 		</div>
-	</header>
+	</div>
 
 	<section
 		id="home"
-		class="relative pt-[100px] w-full px-4 h-fit flex flex-col items-center gap-12 brightness-50"
+		class="relative lg:pt-[100px] w-full px-4 h-fit flex flex-col items-center gap-12 brightness-50"
 	></section>
 
 	<section
@@ -196,15 +179,15 @@
 		</div>
 		<div
 			v-motion-slide-visible-right
-			class="flex flex-col gap-6 w-4/5"
+			class="flex flex-col justify-center lg:justify-start items-center lg:items-start gap-6 w-full lg:w-4/5"
 		>
-			<span class="text-4xl w-fit font-bold p-2 border-b">About Us</span>
+			<span class="text-4xl font-bold p-2 border-b">About Us</span>
 			<span class="text-2xl font-semibold"
-				>Provide service to manage real estate.</span
+				>Provide service to manage real estate</span
 			>
-			<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+			<div class="grid grid-cols-2 gap-6">
 				<AboutCard
-					v-for="about in abouts"
+					v-for="about in landingPageAboutUsContents"
 					:key="about.title"
 					:data="about"
 				/>
@@ -225,10 +208,10 @@
 		class="relative pt-[100px] px-4 h-fit flex flex-col items-center gap-12"
 	>
 		<span class="text-4xl font-bold p-2 border-b">Our Services</span>
-		<div class="flex items-center gap-6">
+		<div class="flex justify-center items-center gap-6 flex-wrap">
 			<ServiceCard
-				v-for="service in services"
-				:key="services.title"
+				v-for="service in landingPageServicesContent"
+				:key="service.title"
 				:data="service"
 			/>
 		</div>
@@ -244,7 +227,7 @@
 		>
 			<ProjectCard
 				v-for="project in projects"
-				:key="projects.id"
+				:key="project.id"
 				:data="project"
 			/>
 		</div>
@@ -252,12 +235,12 @@
 
 	<section
 		id="contact"
-		class="relative pt-[100px] px-4 h-screen flex flex-col items-center gap-12"
+		class="relative py-[100px] px-4 h-screen flex flex-col items-center gap-12"
 	>
 		<span class="text-4xl font-bold p-2 border-b">Send Us Message</span>
 		<div
 			v-motion-pop-visible
-			class="flex flex-col w-1/2 gap-4"
+			class="flex flex-col w-full lg:w-1/2 gap-4"
 		>
 			<div class="flex flex-1 flex-col gap-2">
 				<label for="fullName">Full Name</label>

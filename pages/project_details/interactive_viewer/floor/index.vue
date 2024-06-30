@@ -19,6 +19,10 @@
 	const menu = ref();
 	const menuItems = ref([
 		{
+			label: 'Create',
+			command: () => toggleCreateFloor(),
+		},
+		{
 			label: 'View',
 			command: () => toggleViewDetailsFloor(),
 		},
@@ -27,12 +31,18 @@
 			command: () => toggleEditFloor(),
 		},
 		{
+			label: 'Delete',
+			command: () => toggleDeleteFloor(),
+		},
+		{
 			label: 'Move to High Area',
 			command: () => router.push('floor/high_area'),
 		},
 	]);
 	const viewDetailsFloorDialogVisible = ref(false);
+	const createFloorDialogVisible = ref(false);
 	const editFloorDialogVisible = ref(false);
+	const deleteFloorDialogVisible = ref(false);
 
 	const toggleMenu = (event) => {
 		const hadSelectedArea = Object.keys(currentFloor.value).length;
@@ -52,8 +62,14 @@
 	const toggleViewDetailsFloor = () => {
 		viewDetailsFloorDialogVisible.value = !viewDetailsFloorDialogVisible.value;
 	};
+	const toggleCreateFloor = () => {
+		createFloorDialogVisible.value = !createFloorDialogVisible.value;
+	};
 	const toggleEditFloor = () => {
 		editFloorDialogVisible.value = !editFloorDialogVisible.value;
+	};
+	const toggleDeleteFloor = () => {
+		deleteFloorDialogVisible.value = !deleteFloorDialogVisible.value;
 	};
 
 	onMounted(() => {
@@ -202,9 +218,17 @@
 		v-if="viewDetailsFloorDialogVisible"
 		:visible="viewDetailsFloorDialogVisible"
 	/>
+	<CreateFloorDialog
+		v-if="createFloorDialogVisible"
+		:visible="createFloorDialogVisible"
+	/>
 	<EditFloorDialog
 		v-if="editFloorDialogVisible"
 		:visible="editFloorDialogVisible"
+	/>
+	<DeleteFloorDialog
+		v-if="deleteFloorDialogVisible"
+		:visible="deleteFloorDialogVisible"
 	/>
 </template>
 

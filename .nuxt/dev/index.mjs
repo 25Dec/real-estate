@@ -3544,7 +3544,7 @@ const unheadPlugins = true ? [CapoPlugin({ track: true })] : [];
 
 const renderSSRHeadOptions = {};
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/public/images/favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"Real Estate"};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1.0"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/public/images/favicon.ico"}],"style":[],"script":[],"noscript":[],"charset":"utf-8","viewport":"width=device-width, initial-scale=1.0","title":"Real Estate"};
 
 const appRootTag = "div";
 

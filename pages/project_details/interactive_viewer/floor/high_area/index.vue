@@ -33,12 +33,20 @@
 	const menu = ref();
 	const menuItems = ref([
 		{
+			label: 'Create',
+			command: () => toggleCreateDetailsHighArea(),
+		},
+		{
 			label: 'View',
 			command: () => toggleViewDetailsHighArea(),
 		},
 		{
 			label: 'Edit',
 			command: () => toggleEditHighArea(),
+		},
+		{
+			label: 'Delete',
+			command: () => toggleDeleteHighArea(),
 		},
 		{
 			label: 'Payment',
@@ -48,7 +56,9 @@
 		},
 	]);
 	const viewDetailsHighAreaDialogVisible = ref(false);
+	const createHighAreaDialogVisible = ref(false);
 	const editHighAreaDialogVisible = ref(false);
+	const deleteHighAreaDialogVisible = ref(false);
 
 	const toggleMenu = (event) => {
 		const hadSelectedArea = Object.keys(currentHighArea.value).length;
@@ -65,12 +75,18 @@
 			});
 		}
 	};
+	const toggleCreateHighArea = () => {
+		createHighAreaDialogVisible.value = !createHighAreaDialogVisible.value;
+	};
 	const toggleViewDetailsHighArea = () => {
 		viewDetailsHighAreaDialogVisible.value =
 			!viewDetailsHighAreaDialogVisible.value;
 	};
 	const toggleEditHighArea = () => {
 		editHighAreaDialogVisible.value = !editHighAreaDialogVisible.value;
+	};
+	const toggleDeleteHighArea = () => {
+		deleteHighAreaDialogVisible.value = !deleteHighAreaDialogVisible.value;
 	};
 
 	onMounted(() => {
@@ -260,10 +276,19 @@
 		:visible="viewDetailsHighAreaDialogVisible"
 		:statuses="statuses"
 	/>
+	<CreateHighAreaDialog
+		v-if="createHighAreaDialogVisible"
+		:visible="createHighAreaDialogVisible"
+		:statuses="statuses"
+	/>
 	<EditHighAreaDialog
 		v-if="editHighAreaDialogVisible"
 		:visible="editHighAreaDialogVisible"
 		:statuses="statuses"
+	/>
+	<DeleteHighAreaDialog
+		v-if="deleteHighAreaDialogVisible"
+		:visible="deleteHighAreaDialogVisible"
 	/>
 </template>
 

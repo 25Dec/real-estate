@@ -14,11 +14,11 @@
 <template>
 	<Card
 		v-motion-slide-visible-left
-		class="w-[250px] overflow-hidden"
+		class="w-[350px] lg:w-[250px] overflow-hidden"
 	>
 		<template #header>
 			<NuxtImg
-				v-if="data['type'] == 'land'"
+				v-if="data?.['type'] == 'land'"
 				class="w-full h-[150px]"
 				src="/images/the_manhattan_glory.jpg"
 			/>
@@ -30,24 +30,24 @@
 		</template>
 		<template #title>
 			<span class="capitalize font-semibold">
-				{{ data['name'] }}
+				{{ data?.['name'] }}
 			</span>
 		</template>
 		<template #subtitle>
 			<Tag
-				:severity="data['activated'] == 'true' ? 'success' : 'danger'"
-				:value="data['activated'] == 'true' ? 'Activated' : 'Not Activated'"
+				:severity="data?.['activated'] == 'true' ? 'success' : 'danger'"
+				:value="data?.['activated'] == 'true' ? 'Activated' : 'Not Activated'"
 			/>
 		</template>
 		<template #content>
 			<div class="flex flex-col gap-1">
 				<div class="flex justify-between items-center">
 					<span>Type:</span>
-					<span>{{ capitalize(data['type']) }}</span>
+					<span>{{ capitalize(data?.['type']) }}</span>
 				</div>
 				<div class="flex justify-between items-center">
 					<span>Progress:</span>
-					<span>{{ data['project_progress'] }}%</span>
+					<span>{{ data?.['project_progress'] }}%</span>
 				</div>
 			</div>
 		</template>
