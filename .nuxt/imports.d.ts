@@ -55,4 +55,5 @@ export { defineStore, acceptHMRUpdate, usePinia, storeToRefs } from '../node_mod
 export { useImage } from '../node_modules/@nuxt/image/dist/runtime/composables';
 export { autoAnimate } from '@formkit/auto-animate';
 export { useAutoAnimate } from '@formkit/auto-animate/vue';
+export { useTransparentPwaIcon, useMaskablePwaIcon, useFaviconPwaIcon, useApplePwaIcon, useAppleSplashScreenPwaIcon } from '../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index';
 export { definePageMeta } from '../node_modules/nuxt/dist/pages/runtime/composables';

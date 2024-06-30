@@ -1,5 +1,6 @@
 <script setup></script>
 <template>
+	<VitePwaManifest />
 	<NuxtPage />
 	<Toast
 		position="bottom-left"

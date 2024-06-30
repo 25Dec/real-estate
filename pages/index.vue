@@ -32,7 +32,6 @@
 			onlyMobile: true,
 		},
 	]);
-	console.log(navigations.value);
 	const option = ref();
 	const options = ref([
 		{

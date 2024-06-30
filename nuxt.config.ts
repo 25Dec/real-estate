@@ -11,6 +11,7 @@ export default defineNuxtConfig({
 		'@vueuse/motion/nuxt',
 		'@nuxt/image',
 		'@formkit/auto-animate/nuxt',
+		'@vite-pwa/nuxt',
 	],
 	app: {
 		head: {
@@ -37,6 +38,45 @@ export default defineNuxtConfig({
 		options: {
 			ripple: true,
 			unstyled: true,
+		},
+	},
+	pwa: {
+		manifest: {
+			name: 'Propertier',
+			short_name: 'Propertier',
+			description: 'Real Estate Management',
+			icons: [
+				{
+					src: 'images/icon_64x64.png',
+					sizes: '64x64',
+					type: 'image/png',
+				},
+				{
+					src: 'images/icon_144x144.png',
+					sizes: '144x144',
+					type: 'image/png',
+				},
+				{
+					src: 'images/icon_192x192.png',
+					sizes: '192x192',
+					type: 'image/png',
+				},
+				{
+					src: 'images/icon_512x512.png',
+					sizes: '512x512',
+					type: 'image/png',
+				},
+			],
+			theme_color: '#ffffff',
+			background_color: '#ffffff',
+			display: 'standalone',
+		},
+		workbox: {
+			navigateFallback: '/',
+		},
+		devOptions: {
+			enabled: true,
+			type: 'module',
 		},
 	},
 	tailwindcss: {

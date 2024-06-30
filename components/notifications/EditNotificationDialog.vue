@@ -17,7 +17,6 @@
 			(stt) => stt['value'] == currentNotification.value['status']
 		)?.[0]?.['value'],
 	});
-	console.log(status.value);
 	const projectID = ref({
 		name: projectsDropdown.value.filter(
 			(project) => project['value'] == currentNotification.value['project_id']
