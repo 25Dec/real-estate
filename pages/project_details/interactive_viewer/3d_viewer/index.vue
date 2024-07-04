@@ -18,6 +18,9 @@
 				>
 					Back to Land Area
 				</p>
+				<div class="flex items-center gap-2">
+					<span class="font-semibold text-lg">3D Viewer</span>
+				</div>
 			</div>
 		</div>
 

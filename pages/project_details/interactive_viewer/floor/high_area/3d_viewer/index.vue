@@ -16,8 +16,11 @@
 					class="text-[#10b98e] cursor-pointer text-sm hover:underline"
 					@click="() => router.go(-1)"
 				>
-					Back to Land Area
+					Back to High Area
 				</p>
+				<div class="flex items-center gap-2">
+					<span class="font-semibold text-lg">3D Viewer</span>
+				</div>
 			</div>
 		</div>
 
