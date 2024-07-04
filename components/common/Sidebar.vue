@@ -5,6 +5,7 @@
 	const router = useRouter();
 	const currentRoute = router['currentRoute'].value;
 
+	const expanded = ref(true);
 	const user = ref({});
 
 	if (process.client) {

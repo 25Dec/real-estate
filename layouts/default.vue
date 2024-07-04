@@ -9,7 +9,7 @@
 
 <template>
 	<VitePwaManifest />
-	<SidebarMenu />
+	<Sidebar />
 	<div class="absolute top-0 right-0 w-5/6 h-full">
 		<slot />
 	</div>

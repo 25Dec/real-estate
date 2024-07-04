@@ -58,6 +58,12 @@
 							router.push('interactive_viewer/land_area_payment');
 						},
 					},
+					{
+						label: '3D Viewer',
+						command: () => {
+							router.push('interactive_viewer/3d_viewer');
+						},
+					},
 			  ]
 			: [
 					{
@@ -231,16 +237,22 @@
 				<p id="area-name-2">Name</p>
 			</div>
 
-			<div
-				id="interactive-map"
-				v-if="projectType == 'land'"
-				v-html="TheManhattanGloryVinhomesGrandPark"
-			/>
-			<div
-				id="interactive-map"
-				v-else
-				v-html="GloryHeights"
-			/>
+			<div class="imp-scale">
+				<div class="imp-objects flex justify-center items-center">
+					<div
+						v-if="projectType == 'land'"
+						v-html="TheManhattanGloryVinhomesGrandPark"
+						id="interactive-map"
+						class="imp-object"
+					/>
+					<div
+						v-else
+						v-html="GloryHeights"
+						id="interactive-map"
+						class="imp-object"
+					/>
+				</div>
+			</div>
 		</div>
 	</div>
 	<ViewDetailsBlockDialog
@@ -286,5 +298,46 @@
 <style scoped>
 	#interactive-map :deep svg path {
 		cursor: pointer;
+	}
+
+	.imp-scale {
+		transform: scale(0.95, 0.95) translate(0, 0);
+		transform-origin: 0% 0%;
+		width: 100%;
+		height: 100%;
+	}
+
+	.imp-image {
+		z-index: 0;
+		position: relative !important;
+		width: 100% !important;
+		height: 100% !important;
+		margin: 0 !important;
+		max-width: none !important;
+		max-height: none !important;
+		display: block !important;
+		user-select: none;
+	}
+
+	.imp-objects {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 2;
+	}
+
+	.imp-object {
+		position: absolute;
+		cursor: pointer;
+		pointer-events: all;
+		transition: all 0.15s cubic-bezier(0.55, 0, 0.1, 1);
+		fill: rgba(28, 100, 242, 0);
+		opacity: 1;
+		stroke: rgba(255, 255, 255, 0.75);
+		stroke-width: 0px;
+		stroke-dasharray: 0;
+		stroke-linecap: round;
 	}
 </style>

@@ -101,39 +101,29 @@
 		/>
 		<form
 			@submit.prevent="onLogin"
-			class="fixed w-[90%] lg:w-1/2 lg:h-[95%] flex flex-col items-center justify-center gap-10 m-4 p-8 md:p-14 space-y-8 shadow-2xl rounded-3xl md:space-y-0 bg-[rgba(255,255,255,0.1)] backdrop-blur-md"
+			class="fixed w-[90%] lg:w-1/2 lg:h-[95%] flex flex-col items-center justify-center gap-10 m-4 p-8 md:p-14 space-y-8 shadow-2xl rounded-3xl md:space-y-0 bg-[rgba(255,255,255,0.8)] backdrop-blur-sm"
 		>
 			<div class="flex flex-col justify-center items-center gap-4">
-				<span class="font-bold text-3xl text-white">Login</span>
-				<span class="font-semibold text-xl text-white"
-					>Hi, Welcome to Propertier👋🏻</span
-				>
+				<span class="font-bold text-3xl">Login</span>
+				<span class="font-semibold text-xl">Hi, Welcome to Propertier👋🏻</span>
 			</div>
 			<div class="flex flex-col gap-2 w-full lg:w-1/2">
 				<div class="flex flex-col gap-2">
-					<label
-						for="loginName"
-						class="text-white"
-						>Login Name</label
-					>
+					<label for="loginName">Login Name</label>
 					<InputText
-						required
 						id="loginName"
 						v-model="loginName"
+						required
 					/>
 				</div>
 				<div class="flex flex-col gap-2">
-					<label
-						for="password"
-						class="text-white"
-						>Password</label
-					>
+					<label for="password">Password</label>
 					<Password
-						required
 						id="password"
 						v-model="password"
 						toggleMask
 						:feedback="false"
+						required
 					/>
 				</div>
 			</div>

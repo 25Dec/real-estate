@@ -150,7 +150,9 @@
 				<div class="lg:hidden">
 					<Icon
 						name="line-md:menu"
-						:class="`text-2xl ${showBackground ? 'text-black' : 'text-white'}`"
+						:class="`cursor-pointer text-2xl ${
+							showBackground ? 'text-black' : 'text-white'
+						}`"
 						@click="toggleNavigation"
 					/>
 				</div>

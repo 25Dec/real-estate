@@ -54,6 +54,12 @@
 				router.push('high_area/high_area_payment');
 			},
 		},
+		{
+			label: '3D Viewer',
+			command: () => {
+				router.push('high_area/3d_viewer');
+			},
+		},
 	]);
 	const viewDetailsHighAreaDialogVisible = ref(false);
 	const createHighAreaDialogVisible = ref(false);
@@ -190,7 +196,7 @@
 					src="images/high_area_second_floor.png"
 					class="imp-image"
 				/>
-				<div class="imp-objects">
+				<div class="imp-objects flex justify-center items-center">
 					<div
 						v-html="CH01"
 						class="imp-object left-[37.5%] top-[15.5%]"
