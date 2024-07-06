@@ -131,7 +131,7 @@
 		<div
 			class="fixed right-0 top-0 z-50 backdrop-blur-xl w-5/6 h-[8%] px-4 border-b flex justify-between items-center"
 		>
-			<span class="font-semibold text-lg">Interactive Viewer</span>
+			<span class="font-semibold text-lg">SVG Animation Viewer</span>
 
 			<div class="flex items-center">
 				<Chip id="area-name-1"> Name </Chip>

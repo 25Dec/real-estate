@@ -11,7 +11,7 @@ export const ROLES = Object.freeze({
 export const landingPageAboutUsContents = [
 	{ title: 'Real Estate Management', icon: 'ion:home-outline' },
 	{
-		title: 'Interactive Viewer',
+		title: 'SVG Animation Viewer',
 		icon: 'material-symbols:interactive-space-outline',
 	},
 	{ title: 'Payment Management', icon: 'streamline:payment-10' },

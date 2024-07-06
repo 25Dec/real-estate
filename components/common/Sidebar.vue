@@ -56,8 +56,8 @@
 					],
 				},
 				{
-					name: 'Interactive Viewer',
-					link: projectDetailsBaseLink + '/interactive_viewer',
+					name: 'SVG Animation Viewer',
+					link: projectDetailsBaseLink + '/svg_animation_viewer',
 					icon: 'material-symbols:interactive-space-outline',
 				},
 				{

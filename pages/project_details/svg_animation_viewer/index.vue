@@ -55,13 +55,13 @@
 					{
 						label: 'Payment',
 						command: () => {
-							router.push('interactive_viewer/land_area_payment');
+							router.push('svg_animation_viewer/land_area_payment');
 						},
 					},
 					{
-						label: '3D Viewer',
+						label: '3D Model Viewer',
 						command: () => {
-							router.push('interactive_viewer/3d_viewer');
+							router.push('svg_animation_viewer/3d_model_viewer');
 						},
 					},
 			  ]
@@ -84,7 +84,7 @@
 					},
 					{
 						label: 'Move to Floor',
-						command: () => router.push('interactive_viewer/floor'),
+						command: () => router.push('svg_animation_viewer/floor'),
 					},
 			  ]
 	);
@@ -208,7 +208,7 @@
 		<div
 			class="fixed right-0 top-0 z-50 backdrop-blur-xl w-5/6 h-[8%] px-4 border-b flex justify-between items-center"
 		>
-			<span class="font-semibold text-lg">Interactive Viewer</span>
+			<span class="font-semibold text-lg">SVG Animation Viewer</span>
 
 			<div class="flex items-center">
 				<Chip id="area-name-1"> Name </Chip>
