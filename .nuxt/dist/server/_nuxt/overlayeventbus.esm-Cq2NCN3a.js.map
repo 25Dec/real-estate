@@ -1,0 +1,1 @@
+{"version":3,"file":"overlayeventbus.esm-Cq2NCN3a.js","sources":["../../../../node_modules/primevue/overlayeventbus/overlayeventbus.esm.js"],"sourcesContent":["import { EventBus } from 'primevue/utils';\n\nvar OverlayEventBus = EventBus();\n\nexport { OverlayEventBus as default };\n"],"names":["EventBus"],"mappings":";AAEG,IAAC,kBAAkBA,SAAQ;","x_google_ignoreList":[0]}

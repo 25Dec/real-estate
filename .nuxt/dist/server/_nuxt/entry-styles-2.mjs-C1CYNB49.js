@@ -1,0 +1,5 @@
+const main = ":root{--primary-50:236 253 245;--primary-100:209 250 229;--primary-200:167 243 208;--primary-300:110 231 183;--primary-400:52 211 153;--primary-500:16 185 129;--primary-600:5 150 105;--primary-700:4 120 87;--primary-800:6 95 70;--primary-900:4 78 56;--primary-950:2 44 34;--surface-0:255 255 255;--surface-50:248 250 252;--surface-100:241 245 249;--surface-200:226 232 240;--surface-300:203 213 225;--surface-400:148 163 184;--surface-500:100 116 139;--surface-600:71 85 105;--surface-700:45 55 72;--surface-800:30 41 59;--surface-900:15 23 42;--surface-950:3 6 23;--black:#171717;--onHover:#fafafa;--onActive:#f5f5f5}::-webkit-scrollbar{width:10px}::-webkit-scrollbar-thumb{background:#d2d2d2;border-radius:20px}::-webkit-scrollbar-thumb:hover{background:#b4b4b4}::-webkit-scrollbar-button{display:none}*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background-color:#fff;color:var(--black);min-height:100vh}a{text-decoration:none}";
+export {
+  main as default
+};
+//# sourceMappingURL=entry-styles-2.mjs-C1CYNB49.js.map
