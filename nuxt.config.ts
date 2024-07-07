@@ -72,7 +72,7 @@ export default defineNuxtConfig({
 			display: 'standalone',
 		},
 		workbox: {
-			navigateFallback: '/',
+			navigateFallback: undefined,
 		},
 		devOptions: {
 			enabled: true,
