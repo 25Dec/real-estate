@@ -21,10 +21,10 @@
 	const openNavigation = ref(false);
 	const navigations = ref([
 		{ title: 'Home', to: '/', external: false },
-		{ title: 'About', to: 'about', external: true },
-		{ title: 'Services', to: 'services', external: true },
-		{ title: 'Projects', to: 'projects', external: true },
-		{ title: 'Contact', to: 'contact', external: true },
+		{ title: 'About', to: '#about', external: true },
+		{ title: 'Services', to: '#services', external: true },
+		{ title: 'Projects', to: '#projects', external: true },
+		{ title: 'Contact', to: '#contact', external: true },
 		{
 			title: 'Login',
 			to: '/login',
