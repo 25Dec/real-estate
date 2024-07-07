@@ -90,7 +90,7 @@
         "../node_modules/pinia/dist/pinia"
       ],
       "#icon-collections": [
-        "./icon-collections.mjs"
+        "./icon-collections"
       ],
       "#image": [
         "../node_modules/@nuxt/image/dist/runtime"
@@ -108,7 +108,7 @@
         "./imports"
       ],
       "#app-manifest": [
-        "./manifest/meta/41ae6819-a7fc-4416-b05f-b6079656ae62.json"
+        "./manifest/meta/dev.json"
       ],
       "#build": [
         "."
