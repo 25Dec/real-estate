@@ -20,6 +20,7 @@ export const useUsersStore = defineStore('Users', () => {
 			usersDropdown.value = users.value.map((acc) => {
 				return {
 					name: `${acc['display_name']}`,
+					fullname: `${acc['first_name']} ${acc['last_name']}`,
 					value: `${acc['id']}`,
 				};
 			});

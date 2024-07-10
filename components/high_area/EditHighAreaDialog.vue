@@ -11,11 +11,14 @@
 	const { editHighArea } = useHighAreasStore();
 	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
 	const { getPaymentMethods } = usePaymentMethodsStore();
+	const { users, usersDropdown } = storeToRefs(useUsersStore());
+	const { getUsers } = useUsersStore();
 	const toast = useToast();
 
 	await getZones();
 	await getBlocks();
 	await getFloors();
+	await getUsers();
 	await getPaymentMethods();
 
 	zones.value = zones.value.map((zone) => {
@@ -82,7 +85,14 @@
 	const numberOfWC = ref(currentHighArea.value['number_of_wc']);
 	const numberOfRoom = ref(currentHighArea.value['number_of_room']);
 	const price = ref(currentHighArea.value['price']);
-	const owner = ref(currentHighArea.value['owner']);
+	const owner = ref({
+		name: usersDropdown.value.filter(
+			(user) => user['value'] == currentHighArea.value['owner']
+		)?.[0]?.['fullname'],
+		value: usersDropdown.value.filter(
+			(user) => user['value'] == currentHighArea.value['owner']
+		)?.[0]?.['value'],
+	});
 	const buyStatus = ref({
 		name: statuses.filter(
 			(status) => status['value'] == currentHighArea.value['buy_status']
@@ -117,7 +127,7 @@
 			number_of_wc: parseInt(numberOfWC.value),
 			number_of_room: parseInt(numberOfRoom.value),
 			price: parseInt(price.value),
-			owner: parseInt(owner.value),
+			owner: parseInt(owner.value.value),
 			buy_status: buyStatus.value.value,
 			desc: desc.value,
 			payment_method_id: parseInt(paymentMethod.value),
@@ -251,13 +261,25 @@
 				/>
 			</div>
 
-			<div class="flex flex-1 flex-col gap-2">
-				<label for="desc">Name</label>
-				<InputText
-					id="desc"
-					v-model="desc"
-					placeHolder="Name"
-				/>
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="desc">Name</label>
+					<InputText
+						id="desc"
+						v-model="desc"
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="owner">Owner</label>
+					<Dropdown
+						id="owner"
+						v-model="owner"
+						placeholder="Select Owner"
+						:options="usersDropdown"
+						optionLabel="name"
+						optionValue="value"
+					/>
+				</div>
 			</div>
 
 			<div class="flex gap-3">

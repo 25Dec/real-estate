@@ -32,6 +32,9 @@
       "@vue/runtime-dom": [
         "../node_modules/@vue/runtime-dom"
       ],
+      "unplugin-vue-router/client": [
+        "../node_modules/unplugin-vue-router/client"
+      ],
       "@nuxt/schema": [
         "../node_modules/@nuxt/schema"
       ],
@@ -102,13 +105,13 @@
         "../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index"
       ],
       "#vue-router": [
-        "./vue-router-stub"
+        "../node_modules/vue-router"
       ],
       "#imports": [
         "./imports"
       ],
       "#app-manifest": [
-        "./manifest/meta/dev.json"
+        "./manifest/meta/dev"
       ],
       "#build": [
         "."
@@ -137,7 +140,8 @@
     "lib": [
       "ESNext",
       "dom",
-      "dom.iterable"
+      "dom.iterable",
+      "webworker"
     ],
     "jsx": "preserve",
     "jsxImportSource": "vue",

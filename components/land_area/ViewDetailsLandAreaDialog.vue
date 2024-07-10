@@ -2,13 +2,17 @@
 	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
 	const { zonesDropdown } = storeToRefs(useZonesStore());
+	const { getZones } = useZonesStore();
 	const { currentLandArea } = storeToRefs(useLandAreasStore());
 	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
 	const { getPaymentMethods } = usePaymentMethodsStore();
+	const { users, usersDropdown } = storeToRefs(useUsersStore());
+	const { getUsers } = useUsersStore();
 
+	await getZones();
+	await getUsers();
 	await getPaymentMethods();
 
-	const myVisible = ref(visible);
 	const zone = ref({
 		name: zonesDropdown.value.filter(
 			(zone) => zone['value'] == currentLandArea.value['zone_id']
@@ -17,6 +21,8 @@
 			(zone) => zone['value'] == currentLandArea.value['zone_id']
 		)?.[0]?.['value'],
 	});
+
+	const myVisible = ref(visible);
 	const landAreaDirection = ref(currentLandArea.value['land_direction']);
 	const isFront = ref(currentLandArea.value['is_front']);
 	const lat = ref(currentLandArea.value['lat']);
@@ -28,7 +34,14 @@
 	const numberOfRoom = ref(currentLandArea.value['number_of_room']);
 	const numberOfWC = ref(currentLandArea.value['number_of_wc']);
 	const price = ref(currentLandArea.value['price']);
-	const owner = ref(currentLandArea.value['owner']);
+	const owner = ref({
+		name: usersDropdown.value.filter(
+			(user) => user['value'] == currentLandArea.value['owner']
+		)?.[0]?.['fullname'],
+		value: usersDropdown.value.filter(
+			(user) => user['value'] == currentLandArea.value['owner']
+		)?.[0]?.['value'],
+	});
 	const buyStatus = ref({
 		name: statuses.filter(
 			(status) => status['value'] == currentLandArea.value['buy_status']
@@ -92,14 +105,27 @@
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="isFront">Front</label>
-					<InputText
-						id="isFront"
-						v-model="isFront"
-						placeholder="0m"
+					<label for="owner">Owner</label>
+					<Dropdown
+						id="owner"
+						v-model="owner.value"
+						placeholder="Select Owner"
+						:options="usersDropdown"
+						optionLabel="name"
+						optionValue="value"
 						disabled
 					/>
 				</div>
+			</div>
+
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="isFront">Front</label>
+				<InputText
+					id="isFront"
+					v-model="isFront"
+					placeholder="0m"
+					disabled
+				/>
 			</div>
 
 			<div class="flex gap-3">

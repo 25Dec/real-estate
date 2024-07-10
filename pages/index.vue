@@ -1,5 +1,6 @@
 <script setup>
 	import { disablePageScroll, enablePageScroll } from 'scroll-lock';
+	import { baseUrl } from '../constants/index.js';
 	import {
 		landingPageAboutUsContents,
 		landingPageServicesContent,
@@ -20,15 +21,14 @@
 	const showBackground = ref(false);
 	const openNavigation = ref(false);
 	const navigations = ref([
-		{ title: 'Home', to: '/', external: false },
-		{ title: 'About', to: '#about', external: true },
-		{ title: 'Services', to: '#services', external: true },
-		{ title: 'Projects', to: '#projects', external: true },
-		{ title: 'Contact', to: '#contact', external: true },
+		{ title: 'Home', to: '/' },
+		{ title: 'About', to: '#about' },
+		{ title: 'Services', to: '#services' },
+		{ title: 'Projects', to: '#projects' },
+		{ title: 'Contact', to: '#contact' },
 		{
 			title: 'Login',
 			to: '/login',
-			external: false,
 			onlyMobile: true,
 		},
 	]);
@@ -110,7 +110,6 @@
 						v-for="item in navigations"
 						:key="item['title']"
 						:to="item['external'] ? { hash: item['to'] } : item['to']"
-						:external="item['external']"
 						@click="handleClick"
 						:class="`font-semibold hover:scale-150 hover:-translate-x-6 transition duration-500 ease-in-out block relative uppercase px-6 py-6 md:py-8 lg:-mr-0.25 lg:leading-5 xl:px-12 ${
 							item['onlyMobile'] ? 'lg:hidden' : ''

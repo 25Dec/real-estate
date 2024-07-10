@@ -66,6 +66,16 @@
 					icon: 'mdi:account-supervisor-outline',
 				},
 				{
+					name: 'Contract',
+					link: projectDetailsBaseLink + '/contract',
+					icon: 'mdi:contract-outline',
+				},
+				{
+					name: 'List Owner',
+					link: projectDetailsBaseLink + '/list_owner',
+					icon: 'ph:user-list',
+				},
+				{
 					name: 'Payment Method',
 					link: projectDetailsBaseLink + '/payment_method',
 					icon: 'mdi:payment',

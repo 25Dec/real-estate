@@ -10,11 +10,14 @@
 	const { addNewHighArea } = useHighAreasStore();
 	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
 	const { getPaymentMethods } = usePaymentMethodsStore();
+	const { users, usersDropdown } = storeToRefs(useUsersStore());
+	const { getUsers } = useUsersStore();
 	const toast = useToast();
 
 	await getZones();
 	await getBlocks();
 	await getFloors();
+	await getUsers();
 	await getPaymentMethods();
 
 	zones.value = zones.value.map((zone) => {
@@ -81,7 +84,7 @@
 	const numberOfWC = ref(0);
 	const numberOfRoom = ref(0);
 	const price = ref(0);
-	const owner = ref(0);
+	const owner = ref({});
 	const buyStatus = ref({});
 	const desc = ref('');
 	const paymentMethod = ref({});
@@ -98,7 +101,7 @@
 			number_of_wc: parseInt(numberOfWC.value),
 			number_of_room: parseInt(numberOfRoom.value),
 			price: parseInt(price.value),
-			owner: parseInt(owner.value),
+			owner: parseInt(owner.value.value),
 			buy_status: buyStatus.value.value,
 			desc: desc.value,
 			payment_method_id: parseInt(paymentMethod.value),
@@ -236,13 +239,26 @@
 				/>
 			</div>
 
-			<div class="flex flex-1 flex-col gap-2">
-				<label for="desc">Name</label>
-				<InputText
-					id="desc"
-					v-model="desc"
-					placeHolder="Name"
-				/>
+			<div class="flex gap-3">
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="desc">Name</label>
+					<InputText
+						id="desc"
+						v-model="desc"
+						placeHolder="Name"
+					/>
+				</div>
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="owner">Owner</label>
+					<Dropdown
+						id="owner"
+						v-model="owner"
+						placeholder="Select Owner"
+						:options="usersDropdown"
+						optionLabel="name"
+						optionValue="value"
+					/>
+				</div>
 			</div>
 
 			<div class="flex gap-3">

@@ -1,12 +1,17 @@
 <script setup>
 	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const { zones, zonesDropdown } = storeToRefs(useZonesStore());
+	const { zonesDropdown } = storeToRefs(useZonesStore());
+	const { getZones } = useZonesStore();
 	const { addNewLandArea } = useLandAreasStore();
 	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
 	const { getPaymentMethods } = usePaymentMethodsStore();
+	const { users, usersDropdown } = storeToRefs(useUsersStore());
+	const { getUsers } = useUsersStore();
 	const toast = useToast();
 
+	await getZones();
+	await getUsers();
 	await getPaymentMethods();
 
 	const myVisible = ref(visible);
@@ -22,7 +27,7 @@
 	const numberOfRoom = ref(0);
 	const numberOfWC = ref(0);
 	const price = ref(0);
-	const owner = ref(0);
+	const owner = ref({});
 	const buyStatus = ref({});
 	const desc = ref('');
 	const paymentMethod = ref(0);
@@ -42,7 +47,7 @@
 			number_of_room: parseInt(numberOfRoom.value),
 			number_of_wc: parseInt(numberOfWC.value),
 			price: parseInt(price.value),
-			owner: parseInt(owner.value),
+			owner: parseInt(owner.value.value),
 			buy_status: buyStatus.value,
 			desc: desc.value,
 			payment_method_id: parseInt(paymentMethod.value),
@@ -114,13 +119,25 @@
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
-					<label for="isFront">Front</label>
-					<InputText
-						id="isFront"
-						v-model="isFront"
-						placeholder="0m"
+					<label for="owner">Owner</label>
+					<Dropdown
+						id="owner"
+						v-model="owner"
+						placeholder="Select Owner"
+						:options="usersDropdown"
+						optionLabel="name"
+						optionValue="value"
 					/>
 				</div>
+			</div>
+
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="isFront">Front</label>
+				<InputText
+					id="isFront"
+					v-model="isFront"
+					placeholder="0m"
+				/>
 			</div>
 
 			<div class="flex gap-3">

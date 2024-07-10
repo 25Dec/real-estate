@@ -1,5 +1,6 @@
 export const baseUrl =
-	'https://breal-estate-management-system-ac54c699b7a0.herokuapp.com/v1';
+	// 'https://breal-estate-management-system-ac54c699b7a0.herokuapp.com/v1';
+	'http://127.0.0.1:3003/v1';
 
 export const ROLES = Object.freeze({
 	anonymous: 'anonymous',

@@ -3,6 +3,7 @@
 export default defineNuxtConfig({
 	devtools: { enabled: false },
 	css: ['~/assets/css/main.css', '/node_modules/primeicons/primeicons.css'],
+	ssr: false,
 	modules: [
 		'nuxt-primevue',
 		'@nuxtjs/tailwindcss',
@@ -72,7 +73,7 @@ export default defineNuxtConfig({
 			display: 'standalone',
 		},
 		workbox: {
-			navigateFallback: undefined,
+			navigateFallback: '/',
 		},
 		devOptions: {
 			enabled: true,
@@ -113,4 +114,5 @@ export default defineNuxtConfig({
 			},
 		},
 	},
+	compatibilityDate: '2024-07-09',
 });

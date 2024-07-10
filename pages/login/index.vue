@@ -38,61 +38,6 @@
 </script>
 
 <template>
-	<!-- <div class="w-screen h-screen">
-		<img
-			class="w-full h-full"
-			src="/public/images/login_bg.jpg"
-			alt="Login Background"
-		/>
-		<form
-			@submit.prevent="onLogin"
-			class="fixed right-0 top-0 w-1/2 rounded-3xl p-8 md:p-14 bg-[rgba(255,255,255,0.1)] backdrop-blur-lg flex flex-col justify-center items-center gap-10"
-		>
-			<div class="flex flex-col justify-center items-center gap-4">
-				<span class="font-bold text-3xl text-white">Login</span>
-				<span class="font-semibold text-xl text-white"
-					>Hi, Welcome to Propertier👋🏻</span
-				>
-			</div>
-			<div class="flex flex-col gap-2 w-1/2">
-				<div class="flex flex-col gap-2">
-					<label
-						for="loginName"
-						class="text-white"
-						>Login Name</label
-					>
-					<InputText
-						required
-						id="loginName"
-						v-model="loginName"
-					/>
-				</div>
-				<div class="flex flex-col gap-2">
-					<label
-						for="password"
-						class="text-white"
-						>Password</label
-					>
-					<Password
-						required
-						id="password"
-						v-model="password"
-						toggleMask
-						:feedback="false"
-					/>
-				</div>
-			</div>
-			<div class="w-1/2">
-				<Button
-					:loading="isLoading"
-					type="submit"
-					class="w-full"
-					label="LOG IN"
-				/>
-			</div>
-		</form>
-	</div> -->
-
 	<div class="w-screen h-screen flex items-center justify-center">
 		<img
 			class="w-full h-full"
@@ -105,7 +50,14 @@
 		>
 			<div class="flex flex-col justify-center items-center gap-4">
 				<span class="font-bold text-3xl">Login</span>
-				<span class="font-semibold text-xl">Hi, Welcome to Propertier👋🏻</span>
+				<span class="font-semibold text-xl"
+					>Hi, Welcome to
+					<NuxtLink
+						to="/"
+						class="hover:text-[#10b981]"
+						>Propertier</NuxtLink
+					>👋🏻</span
+				>
 			</div>
 			<div class="flex flex-col gap-2 w-full lg:w-1/2">
 				<div class="flex flex-col gap-2">

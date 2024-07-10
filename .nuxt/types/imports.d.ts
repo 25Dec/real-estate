@@ -58,8 +58,8 @@ declare global {
   const nextTick: typeof import('../../node_modules/vue')['nextTick']
   const onActivated: typeof import('../../node_modules/vue')['onActivated']
   const onBeforeMount: typeof import('../../node_modules/vue')['onBeforeMount']
-  const onBeforeRouteLeave: typeof import('../vue-router-stub')['onBeforeRouteLeave']
-  const onBeforeRouteUpdate: typeof import('../vue-router-stub')['onBeforeRouteUpdate']
+  const onBeforeRouteLeave: typeof import('../../node_modules/nuxt/dist/app/composables/router')['onBeforeRouteLeave']
+  const onBeforeRouteUpdate: typeof import('../../node_modules/nuxt/dist/app/composables/router')['onBeforeRouteUpdate']
   const onBeforeUnmount: typeof import('../../node_modules/vue')['onBeforeUnmount']
   const onBeforeUpdate: typeof import('../../node_modules/vue')['onBeforeUpdate']
   const onDeactivated: typeof import('../../node_modules/vue')['onDeactivated']
@@ -133,15 +133,19 @@ declare global {
   const useHead: typeof import('../../node_modules/@unhead/vue')['useHead']
   const useHeadSafe: typeof import('../../node_modules/@unhead/vue')['useHeadSafe']
   const useHighAreasStore: typeof import('../../stores/high-area-store')['useHighAreasStore']
+  const useHighContractStore: typeof import('../../stores/high-contract-store')['useHighContractStore']
+  const useHighListOwnerStore: typeof import('../../stores/high-list-owner-store')['useHighListOwnerStore']
   const useHighPaymentProcessStore: typeof import('../../stores/high-payment-process-store')['useHighPaymentProcessStore']
   const useHydration: typeof import('../../node_modules/nuxt/dist/app/composables/hydrate')['useHydration']
   const useId: typeof import('../../node_modules/nuxt/dist/app/composables/id')['useId']
   const useImage: typeof import('../../node_modules/@nuxt/image/dist/runtime/composables')['useImage']
   const useLandAreasStore: typeof import('../../stores/land-area-store')['useLandAreasStore']
+  const useLandContractStore: typeof import('../../stores/land-contract-store')['useLandContractStore']
+  const useLandListOwnerStore: typeof import('../../stores/land-list-owner-store')['useLandListOwnerStore']
   const useLandPaymentProcessStore: typeof import('../../stores/land-payment-process-store')['useLandPaymentProcessStore']
   const useLazyAsyncData: typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useLazyAsyncData']
   const useLazyFetch: typeof import('../../node_modules/nuxt/dist/app/composables/fetch')['useLazyFetch']
-  const useLink: typeof import('../vue-router-stub')['useLink']
+  const useLink: typeof import('../../node_modules/vue-router/auto-routes')['useLink']
   const useLoadingIndicator: typeof import('../../node_modules/nuxt/dist/app/composables/loading-indicator')['useLoadingIndicator']
   const useMaskablePwaIcon: typeof import('../../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index')['useMaskablePwaIcon']
   const useModel: typeof import('../../node_modules/vue')['useModel']
@@ -282,8 +286,8 @@ declare module 'vue' {
     readonly nextTick: UnwrapRef<typeof import('../../node_modules/vue')['nextTick']>
     readonly onActivated: UnwrapRef<typeof import('../../node_modules/vue')['onActivated']>
     readonly onBeforeMount: UnwrapRef<typeof import('../../node_modules/vue')['onBeforeMount']>
-    readonly onBeforeRouteLeave: UnwrapRef<typeof import('../vue-router-stub')['onBeforeRouteLeave']>
-    readonly onBeforeRouteUpdate: UnwrapRef<typeof import('../vue-router-stub')['onBeforeRouteUpdate']>
+    readonly onBeforeRouteLeave: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['onBeforeRouteLeave']>
+    readonly onBeforeRouteUpdate: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['onBeforeRouteUpdate']>
     readonly onBeforeUnmount: UnwrapRef<typeof import('../../node_modules/vue')['onBeforeUnmount']>
     readonly onBeforeUpdate: UnwrapRef<typeof import('../../node_modules/vue')['onBeforeUpdate']>
     readonly onDeactivated: UnwrapRef<typeof import('../../node_modules/vue')['onDeactivated']>
@@ -357,15 +361,19 @@ declare module 'vue' {
     readonly useHead: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['useHead']>
     readonly useHeadSafe: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['useHeadSafe']>
     readonly useHighAreasStore: UnwrapRef<typeof import('../../stores/high-area-store')['useHighAreasStore']>
+    readonly useHighContractStore: UnwrapRef<typeof import('../../stores/high-contract-store')['useHighContractStore']>
+    readonly useHighListOwnerStore: UnwrapRef<typeof import('../../stores/high-list-owner-store')['useHighListOwnerStore']>
     readonly useHighPaymentProcessStore: UnwrapRef<typeof import('../../stores/high-payment-process-store')['useHighPaymentProcessStore']>
     readonly useHydration: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/hydrate')['useHydration']>
     readonly useId: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/id')['useId']>
     readonly useImage: UnwrapRef<typeof import('../../node_modules/@nuxt/image/dist/runtime/composables')['useImage']>
     readonly useLandAreasStore: UnwrapRef<typeof import('../../stores/land-area-store')['useLandAreasStore']>
+    readonly useLandContractStore: UnwrapRef<typeof import('../../stores/land-contract-store')['useLandContractStore']>
+    readonly useLandListOwnerStore: UnwrapRef<typeof import('../../stores/land-list-owner-store')['useLandListOwnerStore']>
     readonly useLandPaymentProcessStore: UnwrapRef<typeof import('../../stores/land-payment-process-store')['useLandPaymentProcessStore']>
     readonly useLazyAsyncData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useLazyAsyncData']>
     readonly useLazyFetch: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/fetch')['useLazyFetch']>
-    readonly useLink: UnwrapRef<typeof import('../vue-router-stub')['useLink']>
+    readonly useLink: UnwrapRef<typeof import('../../node_modules/vue-router/auto-routes')['useLink']>
     readonly useLoadingIndicator: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/loading-indicator')['useLoadingIndicator']>
     readonly useMaskablePwaIcon: UnwrapRef<typeof import('../../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index')['useMaskablePwaIcon']>
     readonly useModel: UnwrapRef<typeof import('../../node_modules/vue')['useModel']>
@@ -499,8 +507,8 @@ declare module '@vue/runtime-core' {
     readonly nextTick: UnwrapRef<typeof import('../../node_modules/vue')['nextTick']>
     readonly onActivated: UnwrapRef<typeof import('../../node_modules/vue')['onActivated']>
     readonly onBeforeMount: UnwrapRef<typeof import('../../node_modules/vue')['onBeforeMount']>
-    readonly onBeforeRouteLeave: UnwrapRef<typeof import('../vue-router-stub')['onBeforeRouteLeave']>
-    readonly onBeforeRouteUpdate: UnwrapRef<typeof import('../vue-router-stub')['onBeforeRouteUpdate']>
+    readonly onBeforeRouteLeave: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['onBeforeRouteLeave']>
+    readonly onBeforeRouteUpdate: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['onBeforeRouteUpdate']>
     readonly onBeforeUnmount: UnwrapRef<typeof import('../../node_modules/vue')['onBeforeUnmount']>
     readonly onBeforeUpdate: UnwrapRef<typeof import('../../node_modules/vue')['onBeforeUpdate']>
     readonly onDeactivated: UnwrapRef<typeof import('../../node_modules/vue')['onDeactivated']>
@@ -574,15 +582,19 @@ declare module '@vue/runtime-core' {
     readonly useHead: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['useHead']>
     readonly useHeadSafe: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['useHeadSafe']>
     readonly useHighAreasStore: UnwrapRef<typeof import('../../stores/high-area-store')['useHighAreasStore']>
+    readonly useHighContractStore: UnwrapRef<typeof import('../../stores/high-contract-store')['useHighContractStore']>
+    readonly useHighListOwnerStore: UnwrapRef<typeof import('../../stores/high-list-owner-store')['useHighListOwnerStore']>
     readonly useHighPaymentProcessStore: UnwrapRef<typeof import('../../stores/high-payment-process-store')['useHighPaymentProcessStore']>
     readonly useHydration: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/hydrate')['useHydration']>
     readonly useId: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/id')['useId']>
     readonly useImage: UnwrapRef<typeof import('../../node_modules/@nuxt/image/dist/runtime/composables')['useImage']>
     readonly useLandAreasStore: UnwrapRef<typeof import('../../stores/land-area-store')['useLandAreasStore']>
+    readonly useLandContractStore: UnwrapRef<typeof import('../../stores/land-contract-store')['useLandContractStore']>
+    readonly useLandListOwnerStore: UnwrapRef<typeof import('../../stores/land-list-owner-store')['useLandListOwnerStore']>
     readonly useLandPaymentProcessStore: UnwrapRef<typeof import('../../stores/land-payment-process-store')['useLandPaymentProcessStore']>
     readonly useLazyAsyncData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useLazyAsyncData']>
     readonly useLazyFetch: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/fetch')['useLazyFetch']>
-    readonly useLink: UnwrapRef<typeof import('../vue-router-stub')['useLink']>
+    readonly useLink: UnwrapRef<typeof import('../../node_modules/vue-router/auto-routes')['useLink']>
     readonly useLoadingIndicator: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/loading-indicator')['useLoadingIndicator']>
     readonly useMaskablePwaIcon: UnwrapRef<typeof import('../../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index')['useMaskablePwaIcon']>
     readonly useModel: UnwrapRef<typeof import('../../node_modules/vue')['useModel']>
