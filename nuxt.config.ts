@@ -2,6 +2,9 @@
 
 export default defineNuxtConfig({
 	devtools: { enabled: false },
+	devServer: {
+		port: 5137,
+	},
 	css: ['~/assets/css/main.css', '/node_modules/primeicons/primeicons.css'],
 	ssr: false,
 	modules: [

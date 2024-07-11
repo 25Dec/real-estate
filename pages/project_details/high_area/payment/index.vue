@@ -115,6 +115,9 @@
 		</div>
 
 		<div class="absolute top-[10%] w-full h-[90%]">
+			<div class="flex justify-center items-center my-4 gap-2">
+				<span class="text-[#10b98e] text-xl">HISTORY PAYMENT</span>
+			</div>
 			<DataTable
 				:value="myPaymentBaseOnHighID"
 				v-model:filters="filters"

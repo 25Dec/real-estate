@@ -91,6 +91,18 @@
 				router.push('high_area/payment');
 			},
 		},
+		{
+			label: 'History Owner',
+			command: () => {
+				router.push('high_area/history_owner');
+			},
+		},
+		{
+			label: 'History Booking',
+			command: () => {
+				router.push('high_area/history_booking');
+			},
+		},
 	]);
 	const viewDetailsHighAreaDialogVisible = ref(false);
 	const createHighAreaDialogVisible = ref(false);

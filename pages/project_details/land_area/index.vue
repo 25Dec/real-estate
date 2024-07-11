@@ -39,6 +39,18 @@
 				router.push('land_area/payment');
 			},
 		},
+		{
+			label: 'History Owner',
+			command: () => {
+				router.push('land_area/history_owner');
+			},
+		},
+		{
+			label: 'History Booking',
+			command: () => {
+				router.push('land_area/history_booking');
+			},
+		},
 	]);
 	const viewDetailsLandAreaDialogVisible = ref(false);
 	const createLandAreaDialogVisible = ref(false);
