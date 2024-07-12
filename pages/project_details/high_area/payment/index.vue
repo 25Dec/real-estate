@@ -116,7 +116,7 @@
 
 		<div class="absolute top-[10%] w-full h-[90%]">
 			<div class="flex justify-center items-center my-4 gap-2">
-				<span class="text-[#10b98e] text-xl">HISTORY PAYMENT</span>
+				<span class="text-[#10b98e] text-xl font-bold">HISTORY PAYMENT</span>
 			</div>
 			<DataTable
 				:value="myPaymentBaseOnHighID"
@@ -185,7 +185,7 @@
 					</template>
 				</Column>
 
-				<Column
+				<!-- <Column
 					field="status"
 					header="Status"
 				>
@@ -195,7 +195,7 @@
 							:value="data['status'].toUpperCase()"
 						/>
 					</template>
-				</Column>
+				</Column> -->
 
 				<Column header="Actions">
 					<template #body="{ data }">
