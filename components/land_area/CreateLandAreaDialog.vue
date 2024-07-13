@@ -12,7 +12,7 @@
 
 	await getZones();
 	await getUsers();
-	await getPaymentMethods();
+	// await getPaymentMethods();
 
 	const myVisible = ref(visible);
 	const zone = ref(0);

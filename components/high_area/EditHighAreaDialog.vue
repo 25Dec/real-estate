@@ -102,16 +102,16 @@
 		)?.[0]?.['value'],
 	});
 	const desc = ref(currentHighArea.value['desc']);
-	const paymentMethod = ref({
-		name: paymentMethodsDropdown.value.filter(
-			(payment) =>
-				payment['value'] == currentHighArea.value['payment_method_id']
-		)?.[0]?.['name'],
-		value: paymentMethodsDropdown.value.filter(
-			(payment) =>
-				payment['value'] == currentHighArea.value['payment_method_id']
-		)?.[0]?.['value'],
-	});
+	// const paymentMethod = ref({
+	// 	name: paymentMethodsDropdown.value.filter(
+	// 		(payment) =>
+	// 			payment['value'] == currentHighArea.value['payment_method_id']
+	// 	)?.[0]?.['name'],
+	// 	value: paymentMethodsDropdown.value.filter(
+	// 		(payment) =>
+	// 			payment['value'] == currentHighArea.value['payment_method_id']
+	// 	)?.[0]?.['value'],
+	// });
 	const createdAt = ref(currentHighArea.value['created_at']);
 	const updatedAt = ref(currentHighArea.value['updated_at']);
 
@@ -130,7 +130,7 @@
 			owner: parseInt(owner.value.value),
 			buy_status: buyStatus.value.value,
 			desc: desc.value,
-			payment_method_id: parseInt(paymentMethod.value),
+			// payment_method_id: parseInt(paymentMethod.value),
 			updated_at: new Date().toLocaleString(),
 		};
 
@@ -343,18 +343,18 @@
 				</div>
 			</div>
 
-			<div class="flex gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="price">Price</label>
-					<InputNumber
-						id="price"
-						v-model="price"
-						mode="decimal"
-						prefix="$"
-						:min="0"
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
+			<!-- <div class="flex gap-3"> -->
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="price">Price</label>
+				<InputNumber
+					id="price"
+					v-model="price"
+					mode="decimal"
+					prefix="$"
+					:min="0"
+				/>
+			</div>
+			<!-- <div class="flex flex-1 flex-col gap-2">
 					<label for="paymentMethod">Payment Method</label>
 					<Dropdown
 						id="paymentMethod"
@@ -364,8 +364,8 @@
 						optionLabel="name"
 						optionValue="value"
 					/>
-				</div>
-			</div>
+				</div> -->
+			<!-- </div> -->
 
 			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">

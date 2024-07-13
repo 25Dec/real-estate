@@ -6,7 +6,7 @@
 	);
 	const { getPaymentMethodsProcess } = usePaymentMethodsProcessStore();
 
-	await getPaymentMethods();
+	// await getPaymentMethods();
 	await getPaymentMethodsProcess();
 
 	const myPaymentMethodsProcessBaseOnPMId = computed(() => {

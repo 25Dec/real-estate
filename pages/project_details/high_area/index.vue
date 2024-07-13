@@ -7,9 +7,11 @@
 	const { getBlocks } = useBlocksStore();
 	const { floors } = storeToRefs(useFloorsStore());
 	const { getFloors } = useFloorsStore();
-	const { highAreas } = storeToRefs(useHighAreasStore());
-	const { getHighAreas, setCurrentHighArea } = useHighAreasStore();
+	const { highAreas, currentHighArea } = storeToRefs(useHighAreasStore());
+	const { getHighAreas, setCurrentHighArea, editHighArea } =
+		useHighAreasStore();
 	const router = useRouter();
+	const toast = useToast();
 
 	await getZones();
 	await getBlocks();
@@ -77,13 +79,14 @@
 		});
 	});
 	const statuses = ref([
-		{ name: 'Booked', value: 'booked' },
 		{ name: 'Not Booked', value: 'not booked' },
+		{ name: 'Deal', value: 'deal' },
+		{ name: 'Booked', value: 'booked' },
 	]);
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
-	const menu = ref();
+	const options = ref();
 	const menuItems = ref([
 		{
 			label: 'Payment',
@@ -104,6 +107,22 @@
 			},
 		},
 	]);
+	const buyStatus = ref();
+	const buyStatusItems = ref([
+		{
+			label: 'Not Booked',
+			command: () => changeBuyStatus('not booked'),
+		},
+		{
+			label: 'Deal',
+			command: () => changeBuyStatus('deal'),
+		},
+		{
+			label: 'Booked',
+			command: () => changeBuyStatus('booked'),
+		},
+	]);
+
 	const viewDetailsHighAreaDialogVisible = ref(false);
 	const createHighAreaDialogVisible = ref(false);
 	const editHighAreaDialogVisible = ref(false);
@@ -158,9 +177,37 @@
 		}
 	};
 
-	const toggleMenu = (event, data) => {
+	const toggleOptions = (event, data) => {
 		setCurrentHighArea(data);
-		menu.value.toggle(event);
+		options.value.toggle(event);
+	};
+	const toggleChangeBuyStatus = (event, data) => {
+		setCurrentHighArea(data);
+		buyStatus.value.toggle(event);
+	};
+	const changeBuyStatus = async (buyStatus) => {
+		const response = await editHighArea({
+			...currentHighArea.value,
+			buy_status: buyStatus,
+		});
+
+		if (response != null && response['result'] == 'ok') {
+			toast.add({
+				severity: 'success',
+				summary: 'Success',
+				detail: 'Change Buy Status Successfully!',
+				group: 'bl',
+				life: 3000,
+			});
+		} else {
+			toast.add({
+				severity: 'danger',
+				summary: 'Error',
+				detail: 'Failed to Change Buy Status',
+				group: 'bl',
+				life: 3000,
+			});
+		}
 	};
 	const toggleViewDetailsHighArea = (data) => {
 		setCurrentHighArea(data);
@@ -291,7 +338,13 @@
 				>
 					<template #body="{ data }">
 						<Tag
-							:severity="data['buy_status'] == 'booked' ? 'danger' : 'success'"
+							:severity="
+								data['buy_status'] == 'booked'
+									? 'danger'
+									: data['buy_status'] == 'not booked'
+									? 'success'
+									: 'warning'
+							"
 							:value="data['buy_status'].toUpperCase()"
 						/>
 					</template>
@@ -329,6 +382,13 @@
 						</Button>
 						<Button
 							text
+							severity="secondary"
+							@click="(event) => toggleChangeBuyStatus(event, data)"
+						>
+							<Icon name="tabler:status-change" />
+						</Button>
+						<Button
+							text
 							severity="danger"
 							@click="toggleDeleteHighArea(data)"
 						>
@@ -337,13 +397,18 @@
 						<Button
 							text
 							severity="secondary"
-							@click="(event) => toggleMenu(event, data)"
+							@click="(event) => toggleOptions(event, data)"
 						>
 							<Icon name="mdi:more-vert" />
 						</Button>
 						<Menu
-							ref="menu"
+							ref="options"
 							:model="menuItems"
+							:popup="true"
+						/>
+						<Menu
+							ref="buyStatus"
+							:model="buyStatusItems"
 							:popup="true"
 						/>
 					</template>

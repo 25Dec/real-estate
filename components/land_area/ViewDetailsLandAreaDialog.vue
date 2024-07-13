@@ -11,7 +11,7 @@
 
 	await getZones();
 	await getUsers();
-	await getPaymentMethods();
+	// await getPaymentMethods();
 
 	const zone = ref({
 		name: zonesDropdown.value.filter(

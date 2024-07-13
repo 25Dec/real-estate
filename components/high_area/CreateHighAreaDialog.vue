@@ -18,7 +18,7 @@
 	await getBlocks();
 	await getFloors();
 	await getUsers();
-	await getPaymentMethods();
+	// await getPaymentMethods();
 
 	zones.value = zones.value.map((zone) => {
 		return { id: zone.id, name: `${zone.name}`, value: `${zone.id}` };
@@ -104,7 +104,7 @@
 			owner: parseInt(owner.value.value),
 			buy_status: buyStatus.value.value,
 			desc: desc.value,
-			payment_method_id: parseInt(paymentMethod.value),
+			// payment_method_id: parseInt(paymentMethod.value),
 			deleted: 'false',
 			created_by: 13,
 			updated_by: 13,
@@ -321,18 +321,18 @@
 				</div>
 			</div>
 
-			<div class="flex gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="price">Price</label>
-					<InputNumber
-						id="price"
-						v-model="price"
-						mode="decimal"
-						prefix="$"
-						:min="0"
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
+			<!-- <div class="flex gap-3"> -->
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="price">Price</label>
+				<InputNumber
+					id="price"
+					v-model="price"
+					mode="decimal"
+					prefix="$"
+					:min="0"
+				/>
+			</div>
+			<!-- <div class="flex flex-1 flex-col gap-2">
 					<label for="paymentMethod">Payment Method</label>
 					<Dropdown
 						id="paymentMethod"
@@ -342,8 +342,8 @@
 						optionLabel="name"
 						optionValue="value"
 					/>
-				</div>
-			</div>
+				</div> -->
+			<!-- </div> -->
 
 			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">

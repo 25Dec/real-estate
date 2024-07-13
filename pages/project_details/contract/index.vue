@@ -10,15 +10,25 @@
 		useLandContractStore()
 	);
 	const { getLandContracts } = useLandContractStore();
+	const { highAreas } = storeToRefs(useHighAreasStore());
+	const { getHighAreas } = useHighAreasStore();
+	const { landAreas } = storeToRefs(useLandAreasStore());
+	const { getLandAreas } = useLandAreasStore();
+	const { customers } = storeToRefs(useCustomersStore());
+	const { getCustomers } = useCustomersStore();
+
+	await getCustomers();
 
 	const projectType = ref(currentProjectFromLocalStore.value['type']);
 
 	if (projectType.value == 'high' || projectType.value == 'hybrid') {
 		await getHighContracts();
+		await getHighAreas();
 	}
 
 	if (projectType.value == 'land' || projectType.value == 'hybrid') {
 		await getLandContracts();
+		await getLandAreas();
 	}
 
 	const filters = ref({
@@ -128,6 +138,108 @@
 						<span>No Contract Found.</span>
 					</div>
 				</template>
+
+				<Column
+					field="buyer_id"
+					header="Customer"
+				>
+					<template #body="{ data }">
+						{{
+							`${
+								customers.filter(
+									(customer) => customer['id'] == data['buyer_id']
+								)?.[0]?.['first_name']
+							} ${
+								customers.filter(
+									(customer) => customer['id'] == data['buyer_id']
+								)?.[0]?.['last_name']
+							}`
+						}}
+					</template>
+				</Column>
+
+				<Column
+					v-if="projectType == 'high'"
+					field="high_area_id"
+					header="High Area"
+				>
+					<template #body="{ data }">
+						{{
+							highAreas.filter(
+								(high) => high['id'] == data['high_area_id']?.[0]?.['desc']
+							)
+						}}
+					</template>
+				</Column>
+
+				<Column
+					v-else
+					field="land_area_id"
+					header="Land Area"
+				>
+					<template #body="{ data }"
+						>{{
+							landAreas.filter(
+								(land) => land['id'] == data['land_area_id']
+							)?.[0]?.['desc']
+						}}
+						<Tag
+							:severity="
+								landAreas.filter(
+									(land) => land['id'] == data['land_area_id']
+								)?.[0]?.['desc'] != null
+									? 'success'
+									: 'danger'
+							"
+							:value="
+								landAreas.filter(
+									(land) => land['id'] == data['land_area_id']
+								)?.[0]?.['desc'] ?? 'null'.toUpperCase()
+							"
+						/>
+					</template>
+				</Column>
+
+				<Column
+					field="booking_fee"
+					header="Booking Fee"
+				>
+					<template #body="{ data }">
+						{{
+							`${data['booking_fee'].toLocaleString('en-US', {
+								style: 'currency',
+								currency: 'USD',
+							})}`
+						}}</template
+					>
+				</Column>
+
+				<Column
+					field="begin_payment"
+					header="Begin Payment"
+				>
+					<template #body="{ data }">
+						{{ convertDateTime(data['begin_payment']) }}
+					</template>
+				</Column>
+
+				<Column
+					field="status"
+					header="Status"
+				>
+					<template #body="{ data }">
+						<Tag
+							:severity="
+								data['status'] == 'enable'
+									? 'success'
+									: data['status'] == 'disable'
+									? 'warning'
+									: 'danger'
+							"
+							:value="data['status'].toUpperCase()"
+						/>
+					</template>
+				</Column>
 
 				<Column header="Actions">
 					<template #body="{ data }">
