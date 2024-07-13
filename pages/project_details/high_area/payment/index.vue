@@ -3,24 +3,11 @@
 		layout: 'empty',
 	});
 
-	import { ref, markRaw, defineAsyncComponent } from 'vue';
+	import { ref } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
-	import { useDialog } from 'primevue/usedialog';
 
 	const router = useRouter();
-	const dialog = useDialog();
 	const toast = useToast();
-
-	const CheckProgressExampleDialogData = defineAsyncComponent(() =>
-		import(
-			'/components/high_payment_process/CheckProgressExampleDialogData.vue'
-		)
-	);
-	const CheckProgressExampleDialogFooter = defineAsyncComponent(() =>
-		import(
-			'/components/high_payment_process/CheckProgressExampleDialogFooter.vue'
-		)
-	);
 
 	const { zones, currentZoneIDFromLocalStore } = storeToRefs(useZonesStore());
 	const { getZones } = useZonesStore();
@@ -38,6 +25,10 @@
 	const { addNewHighContract } = useHighContractStore();
 	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
 	const { getPaymentMethods } = usePaymentMethodsStore();
+	const { paymentMethodsProcess } = storeToRefs(
+		usePaymentMethodsProcessStore()
+	);
+	const { getPaymentMethodsProcess } = usePaymentMethodsProcessStore();
 
 	await getHighPaymentProcesses();
 	await getCustomers();
@@ -45,6 +36,7 @@
 	await getZones();
 	await getHighAreas();
 	await getPaymentMethods();
+	await getPaymentMethodsProcess();
 
 	const user = ref({});
 	const high = ref(
@@ -104,32 +96,11 @@
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
 	const createHighPaymentProcessDialogVisible = ref(false);
-	const editHighPaymentProcessDialogVisible = ref(false);
-	const deleteHighPaymentProcessDialogVisible = ref(false);
 
-	const toggleEditPayment = (data) => {
+	const toggleCreateHighPaymentProcess = (data) => {
 		currentHighPaymentProcess.value = data;
-		editHighPaymentProcessDialogVisible.value =
-			!editHighPaymentProcessDialogVisible.value;
-	};
-	const toggleDeletePayment = (data) => {
-		currentHighPaymentProcess.value = data;
-		deleteHighPaymentProcessDialogVisible.value =
-			!deleteHighPaymentProcessDialogVisible.value;
-	};
-	const viewProgressExample = () => {
-		const dialogRef = dialog.open(CheckProgressExampleDialogData, {
-			props: {
-				header: 'Check Progress Example',
-				style: { width: '50rem' },
-				breakpoints: { '1199px': '75vw', '575px': '90vw' },
-				modal: true,
-				maximizable: true,
-			},
-			templates: {
-				footer: markRaw(CheckProgressExampleDialogFooter),
-			},
-		});
+		createHighPaymentProcessDialogVisible.value =
+			!createHighPaymentProcessDialogVisible.value;
 	};
 
 	const highAreaDirection = ref(currentHighArea.value['high_area_direction']);
@@ -160,11 +131,38 @@
 	const paymentMethodDesc = ref('');
 	const desc = ref(currentHighArea.value['desc']);
 	const isLoading = ref(false);
+	const showProgressExamplePanel = ref(false);
+	const showCheckProgressExampleButton = ref(false);
+	const myPaymentMethodsProcessBaseOnPMId = ref(0);
+	const currentPaymentMethod = ref({});
 
 	const onChangePaymentMethod = (event) => {
+		showCheckProgressExampleButton.value = true;
+
 		paymentMethodDesc.value = paymentMethodsDropdown.value.filter(
 			(payment) => payment['value'] == event.value
 		)?.[0]?.['desc'];
+
+		currentPaymentMethod.value = paymentMethodsDropdown.value.filter(
+			(payment) => payment['value'] == event.value
+		)?.[0];
+	};
+
+	const checkProgressExample = () => {
+		toast.add({
+			severity: 'success',
+			summary: 'Success',
+			detail: 'Check Progress Example Successfully!',
+			group: 'bl',
+			life: 3000,
+		});
+
+		showProgressExamplePanel.value = true;
+
+		myPaymentMethodsProcessBaseOnPMId.value =
+			paymentMethodsProcess.value.filter((process) => {
+				return process['payment_method_id'] == currentPaymentMethod.value.value;
+			});
 	};
 
 	const submitDepositForm = async () => {
@@ -185,7 +183,6 @@
 			created_at: new Date().toLocaleString(),
 			updated_at: null,
 		};
-		console.log(newHighContract);
 
 		const response = await addNewHighContract(newHighContract);
 
@@ -217,41 +214,10 @@
 			class="fixed right-0 top-0 z-50 backdrop-blur-xl w-full h-[10%] px-4 border-b flex justify-between items-center"
 		>
 			<div class="flex flex-col justify-center gap-2">
-				<!-- <p
-					class="text-[#10b98e] cursor-pointer text-sm hover:underline"
-					@click="() => router.go(-1)"
-				>
-					Back to High Area
-				</p> -->
 				<div class="flex items-center gap-2">
 					<span class="font-semibold text-lg">Payment</span>
 					<Tag :value="myPaymentBaseOnHighID.length"></Tag>
 				</div>
-			</div>
-
-			<div class="flex items-center gap-2">
-				<IconField iconPosition="left">
-					<InputIcon class="flex items-center">
-						<Icon name="mdi:filter-outline" />
-					</InputIcon>
-					<InputText
-						v-model="filters['global'].value"
-						placeholder="Filter payment..."
-					/>
-				</IconField>
-				<Button
-					size="small"
-					label="New"
-					@click="
-						createHighPaymentProcessDialogVisible =
-							!createHighPaymentProcessDialogVisible
-					"
-				/>
-				<Button
-					size="small"
-					label="Check Progress Example"
-					@click="viewProgressExample"
-				/>
 			</div>
 		</div>
 
@@ -262,7 +228,9 @@
 				class="w-full shadow-none"
 			>
 				<template #header>
-					<span class="font-bold text-[#10b98e]">High Area Info</span>
+					<span class="w-full flex justify-center font-bold text-[#10b98e]"
+						>High Area Info</span
+					>
 				</template>
 
 				<div class="flex flex-1 flex-col gap-2">
@@ -366,7 +334,10 @@
 					<InputNumber
 						id="price"
 						v-model="price"
-						mode="decimal"
+						mode="currency"
+						currency="USD"
+						locale="en-US"
+						fluid
 						prefix="$"
 						:min="0"
 						disabled
@@ -393,7 +364,9 @@
 				class="w-full shadow-none"
 			>
 				<template #header>
-					<span class="font-bold text-[#10b98e]">Deposit Form</span>
+					<span class="w-full flex justify-center font-bold text-[#10b98e]"
+						>Deposit Form</span
+					>
 				</template>
 
 				<div class="flex gap-3">
@@ -493,7 +466,20 @@
 				</div>
 
 				<template #footer>
-					<div class="flex justify-center items-center">
+					<div class="flex justify-end items-center gap-3">
+						<NuxtLink
+							v-if="showCheckProgressExampleButton"
+							:to="'#cpe'"
+							@click="checkProgressExample"
+						>
+							<Button
+								:loading="isLoading"
+								type="submit"
+								outlined
+								label="Check Progress Example"
+							/>
+						</NuxtLink>
+
 						<Button
 							:loading="isLoading"
 							type="submit"
@@ -504,108 +490,110 @@
 				</template>
 			</Panel>
 
-			<div class="flex justify-center items-center my-4">
-				<span class="text-[#10b98e] text-xl font-bold">HISTORY PAYMENT</span>
-			</div>
-
-			<DataTable
-				:value="myPaymentBaseOnHighID"
-				v-model:filters="filters"
-				:paginator="true"
-				:rows="50"
-				:rowsPerPageOptions="[5, 10, 20, 50]"
-				scrollable
-				scrollHeight="flex"
-				removableSort
-				v-auto-animate
+			<Panel
+				id="cpe"
+				toggleable
+				class="w-full shadow-none"
+				v-if="showProgressExamplePanel"
 			>
-				<template #empty>
-					<div class="flex justify-center items-center">
-						<span>No payment found.</span>
-					</div>
+				<template #header>
+					<span class="w-full flex justify-center font-bold text-[#10b98e]"
+						>Progress Example</span
+					>
 				</template>
 
-				<Column
-					field="payment_time"
-					header="Payment Time"
-					sortable
+				<DataTable
+					:value="myPaymentMethodsProcessBaseOnPMId"
+					v-model:filters="filters"
+					:paginator="true"
+					:rows="5"
+					:rowsPerPageOptions="[5, 10, 20, 50]"
+					scrollable
+					scrollHeight="flex"
+					removableSort
+					v-auto-animate
+					sortField="payment_time_example"
+					:sortOrder="1"
 				>
-					<template #body="{ data }">
-						{{ data['payment_time'] }}
+					<template #empty>
+						<div class="flex justify-center items-center">
+							<span>No progress example found.</span>
+						</div>
 					</template>
-				</Column>
 
-				<Column
-					field="amount_of_money"
-					header="Amount Of Money"
-					sortable
-				>
-					<template #body="{ data }">
-						{{ data['amount_of_money'] }}
-					</template>
-				</Column>
+					<Column
+						field="payment_time_example"
+						header="Payment Time Example"
+						sortable
+					>
+						<template #body="{ data }">
+							{{ data['payment_time_example'] }}
+						</template>
+					</Column>
 
-				<Column
-					field="amount_of_debt"
-					header="Amount Of Debt"
-					sortable
-				>
-					<template #body="{ data }">
-						{{ data['amount_of_debt'] }}
-					</template>
-				</Column>
+					<Column
+						field="include_vat"
+						header="Include VAT"
+					>
+						<template #body="{ data }">
+							{{ data['include_vat'] == true ? 'Yes' : 'No' }}
+						</template>
+					</Column>
 
-				<Column
-					field="submitter"
-					header="Submitter"
-					sortable
-				>
-					<template #body="{ data }">
-						{{ data['submitter'] }}
-					</template>
-				</Column>
+					<Column
+						field="total_percent_payment"
+						header="Total payment"
+						sortable
+					>
+						<template #body="{ data }">
+							<Knob
+								v-model="data['total_percent_payment']"
+								readonly
+								:size="50"
+							/>
+						</template>
+					</Column>
 
-				<Column
-					field="created_at"
-					header="Created At"
-					sortable
-				>
-					<template #body="{ data }">
-						{{ convertDateTime(data['created_at']) }}
-					</template>
-				</Column>
+					<Column header="Payment Due Time">
+						<template #body="{ data }">
+							<span
+								:class="
+									isPaymentDueTodayOrTomorrow(
+										addDaysToDate(beginPayment, data['flag_time'])
+									)
+										? 'text-red-500'
+										: ''
+								"
+							>
+								{{ addDaysToDate(beginPayment, data['flag_time']) }}
+							</span>
+						</template>
+					</Column>
 
-				<!-- <Column
-					field="status"
-					header="Status"
-				>
-					<template #body="{ data }">
-						<Tag
-							:severity="data['status'] == 'done' ? 'success' : 'danger'"
-							:value="data['status'].toUpperCase()"
-						/>
-					</template>
-				</Column> -->
-
-				<Column header="Actions">
-					<template #body="{ data }">
-						<Button
-							text
-							severity="secondary"
-							@click="toggleEditPayment(data)"
-						>
-							<Icon name="mdi:edit-outline" />
-						</Button>
-						<Button
-							text
-							severity="danger"
-							@click="toggleDeletePayment(data)"
-						>
-							<Icon name="mdi:delete-outline" />
-						</Button>
-					</template>
-				</Column>
-			</DataTable>
+					<Column header="Actions">
+						<template #body="{ data }">
+							<Button
+								text
+								severity="secondary"
+								@click="toggleCreateHighPaymentProcess(data)"
+							>
+								<Icon name="mdi:payment" />
+							</Button>
+							<Button
+								v-if="
+									isPaymentDueTodayOrTomorrow(
+										addDaysToDate(beginPayment, data['flag_time'])
+									)
+								"
+								text
+								severity="danger"
+							>
+								<Icon name="streamline:mail-send-email-message" />
+							</Button>
+						</template>
+					</Column>
+				</DataTable>
+			</Panel>
 		</div>
 	</div>
 	<CreateHighPaymentProcessDialog
@@ -613,23 +601,4 @@
 		:visible="createHighPaymentProcessDialogVisible"
 		:statuses="statuses"
 	/>
-	<EditHighPaymentProcessDialog
-		v-if="editHighPaymentProcessDialogVisible"
-		:visible="editHighPaymentProcessDialogVisible"
-		:statuses="statuses"
-	/>
-	<DeleteHighPaymentProcessDialog
-		v-if="deleteHighPaymentProcessDialogVisible"
-		:visible="deleteHighPaymentProcessDialogVisible"
-	/>
-	<ViewDetailsHighAreaDialog
-		v-if="viewDetailsHighAreaDialogVisible"
-		:visible="viewDetailsHighAreaDialogVisible"
-		:statuses="[
-			{ name: 'Not Booked', value: 'not booked' },
-			{ name: 'Deal', value: 'deal' },
-			{ name: 'Booked', value: 'booked' },
-		]"
-	/>
-	<DynamicDialog />
 </template>

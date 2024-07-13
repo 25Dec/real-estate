@@ -10,24 +10,32 @@
 	const router = useRouter();
 	const dialog = useDialog();
 
-	const { currentLandArea, currentLandAreaIDFromLocalStore } = storeToRefs(
-		useLandAreasStore()
-	);
+	const { landAreas, currentLandArea, currentLandAreaIDFromLocalStore } =
+		storeToRefs(useLandAreasStore());
+	const { getLandAreas } = useLandAreasStore();
 	const { landPaymentProcesses, currentLandPaymentProcess } = storeToRefs(
 		useLandPaymentProcessStore()
 	);
 	const { getLandPaymentProcesses } = useLandPaymentProcessStore();
-	const { getCustomers } = useCustomersStore();
+	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
+	const { getPaymentMethods } = usePaymentMethodsStore();
 
 	await getLandPaymentProcesses();
-	await getCustomers();
+	await getLandAreas();
+	await getPaymentMethods();
 
 	const myPaymentBaseOnLandID = computed(() => {
 		return landPaymentProcesses.value.filter((payment) => {
-			return payment['land_area_id'] == currentLandAreaIDFromLocalStore.value;
+			return payment['Land_area_id'] == currentLandAreaIDFromLocalStore.value;
 		});
 	});
 	const statuses = ref([{ name: 'Done', value: 'Done' }]);
+	const buyStatuses = ref([
+		{ name: 'Not Booked', value: 'not booked' },
+		{ name: 'Deal', value: 'deal' },
+		{ name: 'Booked', value: 'booked' },
+	]);
+
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
@@ -53,14 +61,8 @@
 			class="fixed right-0 top-0 z-50 backdrop-blur-xl w-full h-[10%] px-4 border-b flex justify-between items-center"
 		>
 			<div class="flex flex-col justify-center gap-2">
-				<p
-					class="text-[#10b98e] cursor-pointer text-sm hover:underline"
-					@click="() => router.go(-1)"
-				>
-					Back to Land Area
-				</p>
 				<div class="flex items-center gap-2">
-					<span class="font-semibold text-lg">Payment</span>
+					<span class="font-semibold text-lg">History Payment</span>
 					<Tag :value="myPaymentBaseOnLandID.length"></Tag>
 				</div>
 			</div>
@@ -72,7 +74,7 @@
 					</InputIcon>
 					<InputText
 						v-model="filters['global'].value"
-						placeholder="Filter payment..."
+						placeholder="Filter Payment..."
 					/>
 				</IconField>
 				<Button
@@ -82,11 +84,6 @@
 						createLandPaymentProcessDialogVisible =
 							!createLandPaymentProcessDialogVisible
 					"
-				/>
-				<Button
-					size="small"
-					label="Check Progress Example"
-					@click="viewProgressExample"
 				/>
 			</div>
 		</div>
@@ -159,18 +156,6 @@
 					</template>
 				</Column>
 
-				<Column
-					field="status"
-					header="Status"
-				>
-					<template #body="{ data }">
-						<Tag
-							:severity="data['status'] == 'done' ? 'success' : 'danger'"
-							:value="data['status'].toUpperCase()"
-						/>
-					</template>
-				</Column>
-
 				<Column header="Actions">
 					<template #body="{ data }">
 						<Button
@@ -206,5 +191,4 @@
 		v-if="deleteLandPaymentProcessDialogVisible"
 		:visible="deleteLandPaymentProcessDialogVisible"
 	/>
-	<DynamicDialog />
 </template>

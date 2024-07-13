@@ -44,15 +44,21 @@
 			},
 		},
 		{
-			label: 'History Owner',
+			label: 'History Payment',
 			command: () => {
-				router.push('land_area/history_owner');
+				router.push('land_area/history_payment');
 			},
 		},
 		{
 			label: 'History Booking',
 			command: () => {
 				router.push('land_area/history_booking');
+			},
+		},
+		{
+			label: 'History Owner',
+			command: () => {
+				router.push('land_area/history_owner');
 			},
 		},
 	]);
@@ -194,7 +200,7 @@
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
-						<span>No land area found.</span>
+						<span>No Land Area Found.</span>
 					</div>
 				</template>
 

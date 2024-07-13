@@ -1,22 +1,35 @@
 <script setup>
 	const { visible, statuses } = defineProps(['visible', 'statuses']);
 
-	const { customersDropdown: submitters } = storeToRefs(useCustomersStore());
-	const { currentHighAreaIDFromLocalStore } = storeToRefs(useHighAreasStore());
+	const { currentHighPaymentProcess } = storeToRefs(
+		useHighPaymentProcessStore()
+	);
 	const { addNewHighPaymentProcess } = useHighPaymentProcessStore();
+	const { customersDropdown: submitters } = storeToRefs(useCustomersStore());
+	const { currentHighAreaFromLocalStore } = storeToRefs(useHighAreasStore());
 	const toast = useToast();
 
 	const myVisible = ref(visible);
-	const paymentTime = ref(0);
-	const amountOfMoney = ref(0);
-	const amountOfDebt = ref(0);
+	const paymentTime = ref(
+		currentHighPaymentProcess.value['payment_time_example']
+	);
+	const amountOfMoney = ref(
+		currentHighAreaFromLocalStore.value['price'] -
+			currentHighAreaFromLocalStore.value['price'] *
+				currentHighPaymentProcess.value['total_percent_payment'] *
+				0.01
+	);
+	const amountWantToPay = ref(0);
+	const amountOfDebt = computed(() => {
+		return amountOfMoney.value - amountWantToPay.value;
+	});
 	const submitter = ref({});
 	const status = ref('');
 
 	const onSave = async () => {
 		const newPaymentData = {
 			id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1,
-			high_area_id: parseInt(currentHighAreaIDFromLocalStore.value),
+			high_area_id: parseInt(currentHighAreaFromLocalStore.value['id']),
 			payment_time: parseInt(paymentTime.value),
 			amount_of_money: parseInt(amountOfMoney.value),
 			amount_of_debt: parseInt(amountOfDebt.value),
@@ -76,29 +89,7 @@
 						mode="decimal"
 						v-model="paymentTime"
 						:min="0"
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="amountOfMoney">Amount Of Money</label>
-					<InputNumber
-						id="amountOfMoney"
-						placeholder="Amount Of Money"
-						mode="decimal"
-						v-model="amountOfMoney"
-						:min="0"
-					/>
-				</div>
-			</div>
-
-			<div class="flex gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="amountOfDebt">Amount Of Debt</label>
-					<InputNumber
-						id="amountOfDebt"
-						placeholder="Amount Of Debt"
-						mode="decimal"
-						v-model="amountOfDebt"
-						:min="0"
+						disabled
 					/>
 				</div>
 				<div class="flex flex-1 flex-col gap-2">
@@ -114,18 +105,66 @@
 				</div>
 			</div>
 
-			<!-- <div class="flex flex-1 flex-col gap-2">
-				<label for="status">Status</label>
-				<Dropdown
-					id="status"
-					placeholder="Select status"
-					v-model="status"
-					:options="statuses"
-					optionLabel="name"
-					optionValue="value"
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="highAreaPrice">High Area Price</label>
+				<InputNumber
+					id="highAreaPrice"
+					mode="currency"
+					currency="USD"
+					locale="en-US"
+					fluid
+					v-model="currentHighAreaFromLocalStore['price']"
+					disabled
 				/>
-			</div> -->
+			</div>
+
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="totalPercentPayment">Total Percent Payment</label>
+				<InputNumber
+					id="totalPercentPayment"
+					mode="decimal"
+					prefix="%"
+					v-model="currentHighPaymentProcess['total_percent_payment']"
+					disabled
+				/>
+			</div>
+
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="amountOfMoney">Total Amount To Be Paid</label>
+				<InputNumber
+					id="amountOfMoney"
+					placeholder="Amount Of Money"
+					mode="currency"
+					currency="USD"
+					locale="en-US"
+					fluid
+					v-model="amountOfMoney"
+					disabled
+				/>
+			</div>
+
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="amountWantToPay">Amount Want To Pay</label>
+				<InputNumber
+					id="amountWantToPay"
+					placeholder=""
+					mode="currency"
+					currency="USD"
+					locale="en-US"
+					fluid
+					:max="amountOfMoney"
+					:min="0"
+					v-model="amountWantToPay"
+				/>
+			</div>
+
+			<div class="flex flex-row gap-3 justify-between">
+				<span class="text-xs text-gray-400">
+					Amount Of Debt: ${{ amountOfDebt }}
+				</span>
+			</div>
 		</template>
+
 		<template #footer>
 			<Button
 				type="button"

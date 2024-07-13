@@ -192,10 +192,7 @@
 					:data="about"
 				/>
 			</div>
-			<NuxtLink
-				:to="{ hash: 'services' }"
-				:external="true"
-			>
+			<NuxtLink :to="'#services'">
 				<Button size="large">
 					<span class="text-bold"> Our Services </span>
 				</Button>

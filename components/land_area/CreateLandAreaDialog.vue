@@ -221,7 +221,10 @@
 				<InputNumber
 					id="price"
 					v-model="price"
-					mode="decimal"
+					mode="currency"
+					currency="USD"
+					locale="en-US"
+					fluid
 					prefix="$"
 					:min="0"
 				/>

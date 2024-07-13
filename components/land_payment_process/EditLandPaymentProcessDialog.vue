@@ -17,11 +17,11 @@
 	const submitter = ref({
 		name: customers.value.filter(
 			(acc) => acc['id'] == currentLandPaymentProcess.value['submitter']
-		)[0]['display_name'],
+		)?.[0]?.['display_name'],
 		value: `${
 			customers.value.filter(
 				(acc) => acc['id'] == currentLandPaymentProcess.value['submitter']
-			)[0]['id']
+			)?.[0]?.['id']
 		}`,
 	});
 	const status = ref(currentLandPaymentProcess.value['status']);
@@ -92,7 +92,10 @@
 					<InputNumber
 						id="amountOfMoney"
 						placeholder="Amount Of Money"
-						mode="decimal"
+						mode="currency"
+						currency="USD"
+						locale="en-US"
+						fluid
 						v-model="amountOfMoney"
 						:min="0"
 					/>
@@ -105,7 +108,10 @@
 					<InputNumber
 						id="amountOfDebt"
 						placeholder="Amount Of Debt"
-						mode="decimal"
+						mode="currency"
+						currency="USD"
+						locale="en-US"
+						fluid
 						v-model="amountOfDebt"
 						:min="0"
 					/>

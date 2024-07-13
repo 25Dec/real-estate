@@ -83,7 +83,10 @@
 					<InputNumber
 						id="amountOfMoney"
 						placeholder="Amount Of Money"
-						mode="decimal"
+						mode="currency"
+						currency="USD"
+						locale="en-US"
+						fluid
 						v-model="amountOfMoney"
 						:min="0"
 					/>
@@ -96,7 +99,10 @@
 					<InputNumber
 						id="amountOfDebt"
 						placeholder="Amount Of Debt"
-						mode="decimal"
+						mode="currency"
+						currency="USD"
+						locale="en-US"
+						fluid
 						v-model="amountOfDebt"
 						:min="0"
 					/>

@@ -44,3 +44,41 @@ export const hideLongText = (text) => {
 	}
 	return text;
 };
+
+export const addDaysToDate = (beginPayment, flag_time) => {
+	// Chuyển đổi beginPayment từ chuỗi thành đối tượng Date
+	let date = new Date(beginPayment);
+
+	// Cộng thêm flag_time ngày vào đối tượng Date
+	date.setDate(date.getDate() + flag_time);
+
+	// Định dạng lại ngày thành chuỗi định dạng mong muốn
+	let options = {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+		hour: '2-digit',
+		minute: '2-digit',
+		second: '2-digit',
+		hour12: true,
+	};
+
+	return new Intl.DateTimeFormat('en-US', options).format(date);
+};
+
+export const isPaymentDueTodayOrTomorrow = (paymentDueTime) => {
+	let paymentDate = new Date(paymentDueTime);
+
+	// Lấy ngày hôm nay
+	let today = new Date();
+	let todayStr = today.toDateString();
+
+	// Lấy ngày mai
+	let tomorrow = new Date();
+	tomorrow.setDate(today.getDate() + 1);
+	let tomorrowStr = tomorrow.toDateString();
+
+	// So sánh paymentDate với ngày hôm nay và ngày mai
+	let paymentDateStr = paymentDate.toDateString();
+	return paymentDateStr === todayStr || paymentDateStr === tomorrowStr;
+};

@@ -3,23 +3,12 @@
 		layout: 'empty',
 	});
 
-	import { ref, markRaw, defineAsyncComponent } from 'vue';
+	import { ref, markRaw } from 'vue';
 	import { FilterMatchMode } from 'primevue/api';
 	import { useDialog } from 'primevue/usedialog';
 
 	const router = useRouter();
 	const dialog = useDialog();
-
-	const CheckProgressExampleDialogData = defineAsyncComponent(() =>
-		import(
-			'/components/high_payment_process/CheckProgressExampleDialogData.vue'
-		)
-	);
-	const CheckProgressExampleDialogFooter = defineAsyncComponent(() =>
-		import(
-			'/components/high_payment_process/CheckProgressExampleDialogFooter.vue'
-		)
-	);
 
 	const { currentHighAreaIDFromLocalStore } = storeToRefs(useHighAreasStore());
 	const { highPaymentProcesses, currentHighPaymentProcess } = storeToRefs(
@@ -53,20 +42,6 @@
 		currentHighPaymentProcess.value = data;
 		deleteHighPaymentProcessDialogVisible.value =
 			!deleteHighPaymentProcessDialogVisible.value;
-	};
-	const viewProgressExample = () => {
-		const dialogRef = dialog.open(CheckProgressExampleDialogData, {
-			props: {
-				header: 'Check Progress Example',
-				style: { width: '50rem' },
-				breakpoints: { '1199px': '75vw', '575px': '90vw' },
-				modal: true,
-				maximizable: true,
-			},
-			templates: {
-				footer: markRaw(CheckProgressExampleDialogFooter),
-			},
-		});
 	};
 </script>
 

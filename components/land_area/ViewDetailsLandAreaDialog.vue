@@ -42,10 +42,10 @@
 	const buyStatus = ref({
 		name: statuses.filter(
 			(status) => status['value'] == currentLandArea.value['buy_status']
-		)[0]['name'],
+		)?.[0]?.['name'],
 		value: statuses.filter(
 			(status) => status['value'] == currentLandArea.value['buy_status']
-		)[0]['value'],
+		)?.[0]?.['value'],
 	});
 	const desc = ref(currentLandArea.value['desc']);
 	const createdAt = ref(currentLandArea.value['created_at']);
@@ -209,7 +209,10 @@
 				<InputNumber
 					id="price"
 					v-model="price"
-					mode="decimal"
+					mode="currency"
+					currency="USD"
+					locale="en-US"
+					fluid
 					prefix="$"
 					:min="0"
 					disabled

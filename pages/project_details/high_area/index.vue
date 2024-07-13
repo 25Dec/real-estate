@@ -96,15 +96,21 @@
 			},
 		},
 		{
-			label: 'History Owner',
+			label: 'History Payment',
 			command: () => {
-				router.push('high_area/history_owner');
+				router.push('high_area/history_payment');
 			},
 		},
 		{
 			label: 'History Booking',
 			command: () => {
 				router.push('high_area/history_booking');
+			},
+		},
+		{
+			label: 'History Owner',
+			command: () => {
+				router.push('high_area/history_owner');
 			},
 		},
 	]);

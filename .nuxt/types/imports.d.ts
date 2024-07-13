@@ -3,6 +3,7 @@ export {}
 declare global {
   const abortNavigation: typeof import('../../node_modules/nuxt/dist/app/composables/router')['abortNavigation']
   const acceptHMRUpdate: typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['acceptHMRUpdate']
+  const addDaysToDate: typeof import('../../utils/core_utils')['addDaysToDate']
   const addRouteMiddleware: typeof import('../../node_modules/nuxt/dist/app/composables/router')['addRouteMiddleware']
   const autoAnimate: typeof import('../../node_modules/@formkit/auto-animate')['autoAnimate']
   const callOnce: typeof import('../../node_modules/nuxt/dist/app/composables/once')['callOnce']
@@ -43,6 +44,7 @@ declare global {
   const inject: typeof import('../../node_modules/vue')['inject']
   const injectHead: typeof import('../../node_modules/@unhead/vue')['injectHead']
   const isNuxtError: typeof import('../../node_modules/nuxt/dist/app/composables/error')['isNuxtError']
+  const isPaymentDueTodayOrTomorrow: typeof import('../../utils/core_utils')['isPaymentDueTodayOrTomorrow']
   const isPrerendered: typeof import('../../node_modules/nuxt/dist/app/composables/payload')['isPrerendered']
   const isProxy: typeof import('../../node_modules/vue')['isProxy']
   const isReactive: typeof import('../../node_modules/vue')['isReactive']
@@ -231,6 +233,7 @@ declare module 'vue' {
   interface ComponentCustomProperties {
     readonly abortNavigation: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['abortNavigation']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['acceptHMRUpdate']>
+    readonly addDaysToDate: UnwrapRef<typeof import('../../utils/core_utils')['addDaysToDate']>
     readonly addRouteMiddleware: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['addRouteMiddleware']>
     readonly autoAnimate: UnwrapRef<typeof import('../../node_modules/@formkit/auto-animate')['autoAnimate']>
     readonly callOnce: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/once')['callOnce']>
@@ -271,6 +274,7 @@ declare module 'vue' {
     readonly inject: UnwrapRef<typeof import('../../node_modules/vue')['inject']>
     readonly injectHead: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['injectHead']>
     readonly isNuxtError: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/error')['isNuxtError']>
+    readonly isPaymentDueTodayOrTomorrow: UnwrapRef<typeof import('../../utils/core_utils')['isPaymentDueTodayOrTomorrow']>
     readonly isPrerendered: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/payload')['isPrerendered']>
     readonly isProxy: UnwrapRef<typeof import('../../node_modules/vue')['isProxy']>
     readonly isReactive: UnwrapRef<typeof import('../../node_modules/vue')['isReactive']>
@@ -452,6 +456,7 @@ declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     readonly abortNavigation: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['abortNavigation']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['acceptHMRUpdate']>
+    readonly addDaysToDate: UnwrapRef<typeof import('../../utils/core_utils')['addDaysToDate']>
     readonly addRouteMiddleware: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['addRouteMiddleware']>
     readonly autoAnimate: UnwrapRef<typeof import('../../node_modules/@formkit/auto-animate')['autoAnimate']>
     readonly callOnce: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/once')['callOnce']>
@@ -492,6 +497,7 @@ declare module '@vue/runtime-core' {
     readonly inject: UnwrapRef<typeof import('../../node_modules/vue')['inject']>
     readonly injectHead: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['injectHead']>
     readonly isNuxtError: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/error')['isNuxtError']>
+    readonly isPaymentDueTodayOrTomorrow: UnwrapRef<typeof import('../../utils/core_utils')['isPaymentDueTodayOrTomorrow']>
     readonly isPrerendered: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/payload')['isPrerendered']>
     readonly isProxy: UnwrapRef<typeof import('../../node_modules/vue')['isProxy']>
     readonly isReactive: UnwrapRef<typeof import('../../node_modules/vue')['isReactive']>

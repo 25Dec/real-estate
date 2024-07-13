@@ -4,11 +4,14 @@
 	const { customers, customersDropdown: submitters } = storeToRefs(
 		useCustomersStore()
 	);
+	const { getCustomers } = useCustomersStore();
 	const { currentHighPaymentProcess } = storeToRefs(
 		useHighPaymentProcessStore()
 	);
 	const { editHighPaymentProcess } = useHighPaymentProcessStore();
 	const toast = useToast();
+
+	await getCustomers();
 
 	const myVisible = ref(visible);
 	const paymentTime = ref(currentHighPaymentProcess.value['payment_time']);
@@ -17,11 +20,11 @@
 	const submitter = ref({
 		name: customers.value.filter(
 			(acc) => acc['id'] == currentHighPaymentProcess.value['submitter']
-		)[0]['display_name'],
+		)?.[0]?.['display_name'],
 		value: `${
 			customers.value.filter(
 				(acc) => acc['id'] == currentHighPaymentProcess.value['submitter']
-			)[0]['id']
+			)?.[0]?.['id']
 		}`,
 	});
 	const status = ref(currentHighPaymentProcess.value['status']);
@@ -92,7 +95,10 @@
 					<InputNumber
 						id="amountOfMoney"
 						placeholder="Amount Of Money"
-						mode="decimal"
+						mode="currency"
+						currency="USD"
+						locale="en-US"
+						fluid
 						v-model="amountOfMoney"
 						:min="0"
 					/>
@@ -105,7 +111,10 @@
 					<InputNumber
 						id="amountOfDebt"
 						placeholder="Amount Of Debt"
-						mode="decimal"
+						mode="currency"
+						currency="USD"
+						locale="en-US"
+						fluid
 						v-model="amountOfDebt"
 						:min="0"
 					/>

@@ -10,8 +10,19 @@ export const useHighAreasStore = defineStore('HighAreas', () => {
 		currentHighAreaID.value = data.id;
 		if (process.client) {
 			localStorage.setItem('currentHighAreaID', data.id);
+			localStorage.setItem('currentHighArea', JSON.stringify(data));
 		}
 	};
+
+	const currentHighAreaFromLocalStore = computed(() => {
+		if (process.client && localStorage.getItem('currentHighArea')) {
+			currentHighArea.value = JSON.parse(
+				localStorage.getItem('currentHighArea')
+			);
+			return currentHighArea.value;
+		}
+		return {};
+	});
 
 	const currentHighAreaIDFromLocalStore = computed(() => {
 		if (process.client && localStorage.getItem('currentHighAreaID')) {
@@ -87,6 +98,7 @@ export const useHighAreasStore = defineStore('HighAreas', () => {
 		currentHighArea,
 		setCurrentHighArea,
 		currentHighAreaIDFromLocalStore,
+		currentHighAreaFromLocalStore,
 		getHighAreas,
 		addNewHighArea,
 		editHighArea,

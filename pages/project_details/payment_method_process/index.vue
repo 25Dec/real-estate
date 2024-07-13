@@ -116,6 +116,8 @@
 				scrollHeight="flex"
 				removableSort
 				v-auto-animate
+				sortField="payment_time_example"
+				:sortOrder="1"
 			>
 				<template #empty>
 					<div class="flex justify-center items-center">
