@@ -25,6 +25,7 @@ export const usePaymentMethodsStore = defineStore('PaymentMethods', () => {
 				return {
 					name: `${payment['method_name']}`,
 					value: `${payment['id']}`,
+					desc: `${payment['desc']}`,
 				};
 			});
 		else paymentMethodsDropdown.value = [];

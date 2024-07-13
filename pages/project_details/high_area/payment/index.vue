@@ -9,6 +9,7 @@
 
 	const router = useRouter();
 	const dialog = useDialog();
+	const toast = useToast();
 
 	const CheckProgressExampleDialogData = defineAsyncComponent(() =>
 		import(
@@ -21,20 +22,45 @@
 		)
 	);
 
-	const { currentHighAreaIDFromLocalStore } = storeToRefs(useHighAreasStore());
+	const { zones, currentZoneIDFromLocalStore } = storeToRefs(useZonesStore());
+	const { getZones } = useZonesStore();
+	const { highAreas, currentHighArea, currentHighAreaIDFromLocalStore } =
+		storeToRefs(useHighAreasStore());
+	const { getHighAreas } = useHighAreasStore();
 	const { highPaymentProcesses, currentHighPaymentProcess } = storeToRefs(
 		useHighPaymentProcessStore()
 	);
 	const { getHighPaymentProcesses } = useHighPaymentProcessStore();
+	const { customersDropdown } = storeToRefs(useCustomersStore());
 	const { getCustomers } = useCustomersStore();
-	const { currentHighArea } = storeToRefs(useHighAreasStore());
-	const { usersDropdown } = storeToRefs(useUsersStore());
+	const { users, usersDropdown } = storeToRefs(useUsersStore());
 	const { getUsers } = useUsersStore();
+	const { addNewHighContract } = useHighContractStore();
+	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
+	const { getPaymentMethods } = usePaymentMethodsStore();
 
 	await getHighPaymentProcesses();
 	await getCustomers();
 	await getUsers();
+	await getZones();
+	await getHighAreas();
+	await getPaymentMethods();
 
+	const user = ref({});
+	const high = ref(
+		highAreas.value.filter(
+			(high) => high['id'] == currentHighAreaIDFromLocalStore.value
+		)?.[0]?.['desc']
+	);
+	const zone = ref(
+		zones.value.filter(
+			(zone) => zone['id'] == currentZoneIDFromLocalStore.value
+		)?.[0]?.['name']
+	);
+
+	if (process.client) {
+		user.value = JSON.parse(localStorage.getItem('user')) ?? {};
+	}
 	const myPaymentBaseOnHighID = computed(() => {
 		return highPaymentProcesses.value.filter((payment) => {
 			return payment['high_area_id'] == currentHighAreaIDFromLocalStore.value;
@@ -45,6 +71,33 @@
 		{ name: 'Not Booked', value: 'not booked' },
 		{ name: 'Deal', value: 'deal' },
 		{ name: 'Booked', value: 'booked' },
+	]);
+	const contractStatuses = ref([
+		{ name: 'Enabled', value: 'enable' },
+		{ name: 'Disabled', value: 'disabled' },
+		{ name: 'Cancelled', value: 'cancelled' },
+	]);
+	const seller = ref({
+		id: users.value.filter((seller) => seller['id'] == user.value['id'])?.[0]?.[
+			'id'
+		],
+		fullname: `${
+			users.value.filter((seller) => seller['id'] == user.value['id'])?.[0]?.[
+				'first_name'
+			]
+		} ${
+			users.value.filter((seller) => seller['id'] == user.value['id'])?.[0]?.[
+				'last_name'
+			]
+		}`,
+	});
+	const buyer = ref({});
+	const beginPayment = ref(convertDateTime(new Date().toLocaleString()));
+	const bookingFee = ref({});
+	const paymentMethod = ref({});
+	const bookingFeeStatuses = ref([
+		{ name: '10.000.000', value: 10000000 },
+		{ name: '50.000.000', value: 50000000 },
 	]);
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -102,7 +155,61 @@
 			(status) => status['value'] == currentHighArea.value['buy_status']
 		)?.[0]?.['value'],
 	});
+	const contractStatus = ref({});
+	const paymentMethodDesc = ref('');
 	const desc = ref(currentHighArea.value['desc']);
+	const isLoading = ref(false);
+
+	const onChangePaymentMethod = (event) => {
+		console.log(event.value);
+		console.log(paymentMethodsDropdown.value);
+		paymentMethodDesc.value = paymentMethodsDropdown.value.filter(
+			(payment) => payment['value'] == event.value
+		)?.[0]?.['desc'];
+	};
+
+	const submitDepositForm = async () => {
+		isLoading.value = true;
+
+		const newHighContract = {
+			id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1,
+			high_area_id: parseInt(currentHighArea.value['id']),
+			zone_id: parseInt(currentZoneIDFromLocalStore.value),
+			booking_fee: parseInt(bookingFee.value.value),
+			sale_id: parseInt(seller.value['id']),
+			buyer_id: parseInt(buyer.value['value']),
+			payment_method_id: parseInt(paymentMethod.value.value),
+			status: contractStatus.value.value,
+			begin_payment: new Date().toLocaleString(),
+			created_by: 46,
+			updated_by: 46,
+			created_at: new Date().toLocaleString(),
+			updated_at: null,
+		};
+		console.log(newHighContract);
+
+		const response = await addNewHighContract(newHighContract);
+
+		if (response != null && response['result'] == 'ok') {
+			isLoading.value = false;
+			toast.add({
+				severity: 'success',
+				summary: 'Success',
+				detail: 'Create New Contract Successfully!',
+				group: 'bl',
+				life: 3000,
+			});
+		} else {
+			isLoading.value = false;
+			toast.add({
+				severity: 'danger',
+				summary: 'Error',
+				detail: 'Failed to Create New Contract!',
+				group: 'bl',
+				life: 3000,
+			});
+		}
+	};
 </script>
 
 <template>
@@ -111,12 +218,12 @@
 			class="fixed right-0 top-0 z-50 backdrop-blur-xl w-full h-[10%] px-4 border-b flex justify-between items-center"
 		>
 			<div class="flex flex-col justify-center gap-2">
-				<p
+				<!-- <p
 					class="text-[#10b98e] cursor-pointer text-sm hover:underline"
 					@click="() => router.go(-1)"
 				>
 					Back to High Area
-				</p>
+				</p> -->
 				<div class="flex items-center gap-2">
 					<span class="font-semibold text-lg">Payment</span>
 					<Tag :value="myPaymentBaseOnHighID.length"></Tag>
@@ -156,7 +263,7 @@
 				class="w-full shadow-none"
 			>
 				<template #header>
-					<span class="font-bold">High Area Info</span>
+					<span class="font-bold text-[#10b98e]">High Area Info</span>
 				</template>
 
 				<div class="flex flex-1 flex-col gap-2">
@@ -278,7 +385,114 @@
 				class="w-full shadow-none"
 			>
 				<template #header>
-					<span class="font-bold">Deposit Form</span>
+					<span class="font-bold text-[#10b98e]">Deposit Form</span>
+				</template>
+
+				<div class="flex gap-3">
+					<div class="flex flex-1 flex-col gap-2">
+						<label for="zone_id">Zone</label>
+						<InputText
+							id="zone_id"
+							v-model="zone"
+							disabled
+						/>
+					</div>
+					<div class="flex flex-1 flex-col gap-2">
+						<label for="high_area_id">High Area</label>
+						<InputText
+							id="high_area_id"
+							v-model="high"
+							disabled
+						/>
+					</div>
+				</div>
+
+				<!-- <div class="flex flex-1 flex-col gap-2">
+						<label for="sale_id">Seller</label>
+						<InputText
+							id="sale_id"
+							v-model="seller['fullname']"
+							disabled
+						/>
+					</div> -->
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="buyer_id">Buyer</label>
+					<Dropdown
+						id="buyer_id"
+						v-model="buyer.value"
+						placeholder="Select Buyer"
+						:options="customersDropdown"
+						optionLabel="name"
+						optionValue="value"
+					/>
+				</div>
+
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="bookingFee">Booking Fee</label>
+					<Dropdown
+						id="bookingFee"
+						v-model="bookingFee.value"
+						placeholder="Select Booking fee"
+						:options="bookingFeeStatuses"
+						optionLabel="name"
+						optionValue="value"
+					/>
+				</div>
+
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="contractStatus">Contract Status</label>
+					<Dropdown
+						id="contractStatus"
+						v-model="contractStatus.value"
+						placeholder="Select Status"
+						:options="contractStatuses"
+						optionLabel="name"
+						optionValue="value"
+					/>
+				</div>
+
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="beginPayment">Begin Payment</label>
+					<InputText
+						id="beginPayment"
+						v-model="beginPayment"
+						disabled
+					/>
+				</div>
+
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="paymentMethod">Payment Method</label>
+					<Dropdown
+						id="paymentMethod"
+						v-model="paymentMethod.value"
+						placeholder="Select Payment Method"
+						:options="paymentMethodsDropdown"
+						optionLabel="name"
+						optionValue="value"
+						@change="onChangePaymentMethod"
+					/>
+				</div>
+
+				<div
+					v-if="paymentMethod.value"
+					class="my-3"
+				>
+					<Textarea
+						class="w-full"
+						disabled
+						v-model="paymentMethodDesc"
+					/>
+				</div>
+
+				<template #footer>
+					<div class="flex justify-center items-center">
+						<Button
+							:loading="isLoading"
+							type="submit"
+							label="Save"
+							@click="submitDepositForm"
+						/>
+					</div>
 				</template>
 			</Panel>
 

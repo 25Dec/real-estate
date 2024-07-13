@@ -4,14 +4,11 @@
 	const { zonesDropdown } = storeToRefs(useZonesStore());
 	const { getZones } = useZonesStore();
 	const { currentLandArea } = storeToRefs(useLandAreasStore());
-	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
-	const { getPaymentMethods } = usePaymentMethodsStore();
 	const { users, usersDropdown } = storeToRefs(useUsersStore());
 	const { getUsers } = useUsersStore();
 
 	await getZones();
 	await getUsers();
-	// await getPaymentMethods();
 
 	const zone = ref({
 		name: zonesDropdown.value.filter(
@@ -51,16 +48,6 @@
 		)[0]['value'],
 	});
 	const desc = ref(currentLandArea.value['desc']);
-	const paymentMethod = ref({
-		name: paymentMethodsDropdown.value.filter(
-			(payment) =>
-				payment['value'] == currentLandArea.value['payment_method_id']
-		)?.[0]?.['name'],
-		value: paymentMethodsDropdown.value.filter(
-			(payment) =>
-				payment['value'] == currentLandArea.value['payment_method_id']
-		)?.[0]?.['value'],
-	});
 	const createdAt = ref(currentLandArea.value['created_at']);
 	const updatedAt = ref(currentLandArea.value['updated_at']);
 </script>
@@ -217,30 +204,16 @@
 				</div>
 			</div>
 
-			<div class="flex gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="price">Price</label>
-					<InputNumber
-						id="price"
-						v-model="price"
-						mode="decimal"
-						prefix="$"
-						:min="0"
-						disabled
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="paymentMethod">Payment Method</label>
-					<Dropdown
-						id="paymentMethod"
-						v-model="paymentMethod.value"
-						placeholder="Select Payment Method"
-						:options="paymentMethodsDropdown"
-						optionLabel="name"
-						optionValue="value"
-						disabled
-					/>
-				</div>
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="price">Price</label>
+				<InputNumber
+					id="price"
+					v-model="price"
+					mode="decimal"
+					prefix="$"
+					:min="0"
+					disabled
+				/>
 			</div>
 
 			<div class="flex gap-3">

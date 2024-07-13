@@ -7,7 +7,7 @@
 	const { getPaymentMethods } = usePaymentMethodsStore();
 	const { allProjectIDs } = storeToRefs(useProjectsStore());
 
-	// await getPaymentMethods();
+	await getPaymentMethods();
 
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },

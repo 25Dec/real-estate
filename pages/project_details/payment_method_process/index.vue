@@ -10,7 +10,7 @@
 	);
 	const { getPaymentMethodsProcess } = usePaymentMethodsProcessStore();
 
-	// await getPaymentMethods();
+	await getPaymentMethods();
 	await getPaymentMethodsProcess();
 
 	const currentPaymentMethod = ref({

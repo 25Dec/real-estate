@@ -164,11 +164,20 @@
 					header="High Area"
 				>
 					<template #body="{ data }">
-						{{
-							highAreas.filter(
-								(high) => high['id'] == data['high_area_id']?.[0]?.['desc']
-							)
-						}}
+						<Tag
+							:severity="
+								highAreas.filter(
+									(high) => high['id'] == data['high_area_id']
+								)?.[0]?.['desc'] != null
+									? 'success'
+									: 'danger'
+							"
+							:value="
+								highAreas.filter(
+									(high) => high['id'] == data['high_area_id']
+								)?.[0]?.['desc'] ?? 'null'.toUpperCase()
+							"
+						/>
 					</template>
 				</Column>
 
@@ -233,8 +242,8 @@
 								data['status'] == 'enable'
 									? 'success'
 									: data['status'] == 'disable'
-									? 'warning'
-									: 'danger'
+									? 'danger'
+									: 'warning'
 							"
 							:value="data['status'].toUpperCase()"
 						/>

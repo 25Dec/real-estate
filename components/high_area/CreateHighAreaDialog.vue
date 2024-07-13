@@ -8,8 +8,6 @@
 	const { floors } = storeToRefs(useFloorsStore());
 	const { getFloors } = useFloorsStore();
 	const { addNewHighArea } = useHighAreasStore();
-	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
-	const { getPaymentMethods } = usePaymentMethodsStore();
 	const { users, usersDropdown } = storeToRefs(useUsersStore());
 	const { getUsers } = useUsersStore();
 	const toast = useToast();
@@ -18,7 +16,6 @@
 	await getBlocks();
 	await getFloors();
 	await getUsers();
-	// await getPaymentMethods();
 
 	zones.value = zones.value.map((zone) => {
 		return { id: zone.id, name: `${zone.name}`, value: `${zone.id}` };
@@ -104,7 +101,6 @@
 			owner: parseInt(owner.value.value),
 			buy_status: buyStatus.value.value,
 			desc: desc.value,
-			// payment_method_id: parseInt(paymentMethod.value),
 			deleted: 'false',
 			created_by: 13,
 			updated_by: 13,
@@ -332,18 +328,6 @@
 					:min="0"
 				/>
 			</div>
-			<!-- <div class="flex flex-1 flex-col gap-2">
-					<label for="paymentMethod">Payment Method</label>
-					<Dropdown
-						id="paymentMethod"
-						v-model="paymentMethod"
-						placeholder="Select Payment Method"
-						:options="paymentMethodsDropdown"
-						optionLabel="name"
-						optionValue="value"
-					/>
-				</div> -->
-			<!-- </div> -->
 
 			<div class="flex gap-3">
 				<div class="flex flex-1 flex-col gap-2">

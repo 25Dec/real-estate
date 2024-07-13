@@ -2,7 +2,7 @@
 	import { FilterMatchMode } from 'primevue/api';
 
 	const { zones } = storeToRefs(useZonesStore());
-	const { getZones } = useZonesStore();
+	const { getZones, setCurrentZoneID } = useZonesStore();
 	const { blocks } = storeToRefs(useBlocksStore());
 	const { getBlocks } = useBlocksStore();
 	const { floors } = storeToRefs(useFloorsStore());
@@ -26,6 +26,7 @@
 		name: myZones.value[0]?.name ?? '',
 		value: myZones.value[0]?.value ?? '',
 	});
+	setCurrentZoneID(currentZone.value.value);
 
 	blocks.value = blocks.value.map((block) => {
 		return {
@@ -130,6 +131,8 @@
 
 	const handleDropdown = (event, type) => {
 		if (type == 'zone') {
+			setCurrentZoneID(event.value);
+
 			myBlocks.value = blocks.value.filter(
 				(block) => block['zone_id'] == event.value
 			);

@@ -4,15 +4,12 @@
 	const { zonesDropdown } = storeToRefs(useZonesStore());
 	const { getZones } = useZonesStore();
 	const { addNewLandArea } = useLandAreasStore();
-	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
-	const { getPaymentMethods } = usePaymentMethodsStore();
 	const { users, usersDropdown } = storeToRefs(useUsersStore());
 	const { getUsers } = useUsersStore();
 	const toast = useToast();
 
 	await getZones();
 	await getUsers();
-	// await getPaymentMethods();
 
 	const myVisible = ref(visible);
 	const zone = ref(0);
@@ -30,7 +27,6 @@
 	const owner = ref({});
 	const buyStatus = ref({});
 	const desc = ref('');
-	const paymentMethod = ref(0);
 
 	const onSave = async () => {
 		const newLandAreaData = {
@@ -50,7 +46,6 @@
 			owner: parseInt(owner.value.value),
 			buy_status: buyStatus.value,
 			desc: desc.value,
-			payment_method_id: parseInt(paymentMethod.value),
 			deleted: 'true',
 			created_by: 13,
 			updated_by: 13,
@@ -221,28 +216,15 @@
 				</div>
 			</div>
 
-			<div class="flex gap-3">
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="price">Price</label>
-					<InputNumber
-						id="price"
-						v-model="price"
-						mode="decimal"
-						prefix="$"
-						:min="0"
-					/>
-				</div>
-				<div class="flex flex-1 flex-col gap-2">
-					<label for="paymentMethod">Payment Method</label>
-					<Dropdown
-						id="paymentMethod"
-						v-model="paymentMethod"
-						placeholder="Select Payment Method"
-						:options="paymentMethodsDropdown"
-						optionLabel="name"
-						optionValue="value"
-					/>
-				</div>
+			<div class="flex flex-1 flex-col gap-2">
+				<label for="price">Price</label>
+				<InputNumber
+					id="price"
+					v-model="price"
+					mode="decimal"
+					prefix="$"
+					:min="0"
+				/>
 			</div>
 
 			<div class="flex gap-3">

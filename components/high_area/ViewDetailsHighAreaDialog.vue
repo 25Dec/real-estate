@@ -8,8 +8,7 @@
 	const { floors } = storeToRefs(useFloorsStore());
 	const { getFloors } = useFloorsStore();
 	const { currentHighArea } = storeToRefs(useHighAreasStore());
-	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
-	const { getPaymentMethods } = usePaymentMethodsStore();
+
 	const { users, usersDropdown } = storeToRefs(useUsersStore());
 	const { getUsers } = useUsersStore();
 
@@ -17,7 +16,6 @@
 	await getBlocks();
 	await getFloors();
 	await getUsers();
-	// await getPaymentMethods();
 
 	zones.value = zones.value.map((zone) => {
 		return { id: zone.id, name: `${zone.name}`, value: `${zone.id}` };
