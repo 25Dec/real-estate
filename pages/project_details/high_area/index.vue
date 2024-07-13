@@ -244,7 +244,7 @@
 					</InputIcon>
 					<InputText
 						v-model="filters['global'].value"
-						placeholder="Filter high area..."
+						placeholder="Filter High Area..."
 					/>
 				</IconField>
 				<Button

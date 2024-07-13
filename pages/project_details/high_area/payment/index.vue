@@ -61,6 +61,7 @@
 	if (process.client) {
 		user.value = JSON.parse(localStorage.getItem('user')) ?? {};
 	}
+
 	const myPaymentBaseOnHighID = computed(() => {
 		return highPaymentProcesses.value.filter((payment) => {
 			return payment['high_area_id'] == currentHighAreaIDFromLocalStore.value;
@@ -161,8 +162,6 @@
 	const isLoading = ref(false);
 
 	const onChangePaymentMethod = (event) => {
-		console.log(event.value);
-		console.log(paymentMethodsDropdown.value);
 		paymentMethodDesc.value = paymentMethodsDropdown.value.filter(
 			(payment) => payment['value'] == event.value
 		)?.[0]?.['desc'];
@@ -274,6 +273,7 @@
 						disabled
 					/>
 				</div>
+
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="owner">Owner</label>
 					<Dropdown
@@ -286,6 +286,7 @@
 						disabled
 					/>
 				</div>
+
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="buyStatus">Buy Status</label>
 					<Dropdown
@@ -298,6 +299,7 @@
 						disabled
 					/>
 				</div>
+
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="lat">Latitude</label>
 					<InputNumber
@@ -307,6 +309,7 @@
 						disabled
 					/>
 				</div>
+
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="long">Longitude</label>
 					<InputNumber
@@ -316,6 +319,7 @@
 						disabled
 					/>
 				</div>
+
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="totalArea">Total Area</label>
 					<InputNumber
@@ -326,6 +330,7 @@
 						disabled
 					/>
 				</div>
+
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="highAreaDirection">High Area Direction</label>
 					<InputText
@@ -334,6 +339,7 @@
 						disabled
 					/>
 				</div>
+
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="numberOfRoom">Number Of Room</label>
 					<InputNumber
@@ -344,6 +350,7 @@
 						disabled
 					/>
 				</div>
+
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="numberOfWC">Number Of WC</label>
 					<InputNumber
@@ -365,6 +372,7 @@
 						disabled
 					/>
 				</div>
+
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="progress">Progress</label>
 					<InputNumber
@@ -432,7 +440,7 @@
 					<Dropdown
 						id="bookingFee"
 						v-model="bookingFee.value"
-						placeholder="Select Booking fee"
+						placeholder="Select Booking Fee"
 						:options="bookingFeeStatuses"
 						optionLabel="name"
 						optionValue="value"

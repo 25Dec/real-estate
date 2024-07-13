@@ -24,7 +24,7 @@
 	const isFront = ref(currentLandArea.value['is_front']);
 	const lat = ref(currentLandArea.value['lat']);
 	const long = ref(currentLandArea.value['long']);
-	const buildingArea = ref(0);
+	const buildingArea = ref(currentLandArea.value['building_area']);
 	const totalArea = ref(currentLandArea.value['total_area']);
 	const progress = ref(currentLandArea.value['progress']);
 	const numberOfFloor = ref(currentLandArea.value['number_of_floor']);

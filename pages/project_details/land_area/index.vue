@@ -2,10 +2,12 @@
 	import { FilterMatchMode } from 'primevue/api';
 
 	const { zones } = storeToRefs(useZonesStore());
-	const { getZones } = useZonesStore();
-	const { landAreas } = storeToRefs(useLandAreasStore());
-	const { getLandAreas, setCurrentLandArea } = useLandAreasStore();
+	const { getZones, setCurrentZoneID } = useZonesStore();
+	const { landAreas, currentLandArea } = storeToRefs(useLandAreasStore());
+	const { getLandAreas, setCurrentLandArea, editLandArea } =
+		useLandAreasStore();
 	const router = useRouter();
+	const toast = useToast();
 
 	await getZones();
 	await getLandAreas();
@@ -18,6 +20,7 @@
 		name: myZones.value[0]?.name ?? '',
 		value: myZones.value[0]?.value ?? '',
 	});
+	setCurrentZoneID(currentZone.value.value);
 
 	const myLandAreasBaseOnZoneID = computed(() => {
 		return landAreas.value.filter((landArea) => {
@@ -25,13 +28,14 @@
 		});
 	});
 	const statuses = ref([
-		{ name: 'Booked', value: 'booked' },
 		{ name: 'Not Booked', value: 'not booked' },
+		{ name: 'Deal', value: 'deal' },
+		{ name: 'Booked', value: 'booked' },
 	]);
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
-	const menu = ref();
+	const options = ref();
 	const menuItems = ref([
 		{
 			label: 'Payment',
@@ -52,19 +56,65 @@
 			},
 		},
 	]);
+	const buyStatus = ref();
+	const buyStatusItems = ref([
+		{
+			label: 'Not Booked',
+			command: () => changeBuyStatus('not booked'),
+		},
+		{
+			label: 'Deal',
+			command: () => changeBuyStatus('deal'),
+		},
+		{
+			label: 'Booked',
+			command: () => changeBuyStatus('booked'),
+		},
+	]);
+
 	const viewDetailsLandAreaDialogVisible = ref(false);
 	const createLandAreaDialogVisible = ref(false);
 	const editLandAreaDialogVisible = ref(false);
 	const deleteLandAreaDialogVisible = ref(false);
 
 	const handleDropdown = (event) => {
+		setCurrentZoneID(event.value);
+
 		myLandAreasBaseOnZoneID.value = landAreas.value.filter((landAreas) => {
 			return landAreas['zone_id'] == event.value;
 		});
 	};
-	const toggleMenu = (event, data) => {
+	const toggleOptions = (event, data) => {
 		setCurrentLandArea(data);
-		menu.value.toggle(event);
+		options.value.toggle(event);
+	};
+	const toggleChangeBuyStatus = (event, data) => {
+		setCurrentLandArea(data);
+		buyStatus.value.toggle(event);
+	};
+	const changeBuyStatus = async (buyStatus) => {
+		const response = await editLandArea({
+			...currentLandArea.value,
+			buy_status: buyStatus,
+		});
+
+		if (response != null && response['result'] == 'ok') {
+			toast.add({
+				severity: 'success',
+				summary: 'Success',
+				detail: 'Change Buy Status Successfully!',
+				group: 'bl',
+				life: 3000,
+			});
+		} else {
+			toast.add({
+				severity: 'danger',
+				summary: 'Error',
+				detail: 'Failed to Change Buy Status',
+				group: 'bl',
+				life: 3000,
+			});
+		}
 	};
 	const toggleViewDetailsLandArea = (data) => {
 		setCurrentLandArea(data);
@@ -158,12 +208,18 @@
 				</Column>
 
 				<Column
-					field="type"
+					field="buy_status"
 					header="Buy Status"
 				>
 					<template #body="{ data }">
 						<Tag
-							:severity="data['buy_status'] == 'booked' ? 'danger' : 'success'"
+							:severity="
+								data['buy_status'] == 'booked'
+									? 'danger'
+									: data['buy_status'] == 'not booked'
+									? 'success'
+									: 'warning'
+							"
 							:value="data['buy_status'].toUpperCase()"
 						/>
 					</template>
@@ -201,6 +257,13 @@
 						</Button>
 						<Button
 							text
+							severity="secondary"
+							@click="(event) => toggleChangeBuyStatus(event, data)"
+						>
+							<Icon name="tabler:status-change" />
+						</Button>
+						<Button
+							text
 							severity="danger"
 							@click="toggleDeleteLandArea(data)"
 						>
@@ -209,13 +272,18 @@
 						<Button
 							text
 							severity="secondary"
-							@click="(event) => toggleMenu(event, data)"
+							@click="(event) => toggleOptions(event, data)"
 						>
 							<Icon name="mdi:more-vert" />
 						</Button>
 						<Menu
-							ref="menu"
+							ref="options"
 							:model="menuItems"
+							:popup="true"
+						/>
+						<Menu
+							ref="buyStatus"
+							:model="buyStatusItems"
 							:popup="true"
 						/>
 					</template>
