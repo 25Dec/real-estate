@@ -1,5 +1,12 @@
 <script setup>
-	const { visible, statuses } = defineProps(['visible', 'statuses']);
+	const { visible, statuses, data, alreadyHaveBooking } = defineProps([
+		'visible',
+		'statuses',
+		'data',
+		'alreadyHaveBooking',
+	]);
+
+	console.log(data);
 
 	const { currentHighPaymentProcess } = storeToRefs(
 		useHighPaymentProcessStore()
@@ -23,7 +30,19 @@
 	const amountOfDebt = computed(() => {
 		return amountOfMoney.value - amountWantToPay.value;
 	});
-	const submitter = ref({});
+	const submitter = ref(
+		alreadyHaveBooking
+			? {
+					name: submitters.value.filter(
+						(customer) => customer['value'] == data?.['buyer_id']
+					)?.[0]?.['display_name'],
+					value: submitters.value.filter(
+						(customer) => customer['value'] == data?.['buyer_id']
+					)?.[0]?.['value'],
+			  }
+			: {}
+	);
+
 	const status = ref('');
 
 	const onSave = async () => {

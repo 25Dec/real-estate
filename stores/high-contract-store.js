@@ -32,6 +32,7 @@ export const useHighContractStore = defineStore('HighContract', () => {
 	};
 
 	const editHighContract = async (data) => {
+		console.log(data);
 		const accessToken = useCookie('token');
 		const response = await $fetch(baseUrl + `/auth/highBooking/${data['id']}`, {
 			method: 'put',

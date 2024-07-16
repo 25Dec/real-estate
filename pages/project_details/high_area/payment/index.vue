@@ -9,6 +9,7 @@
 	const router = useRouter();
 	const toast = useToast();
 
+	const { currentProjectFromLocalStore } = storeToRefs(useProjectsStore());
 	const { zones, currentZoneIDFromLocalStore } = storeToRefs(useZonesStore());
 	const { getZones } = useZonesStore();
 	const { highAreas, currentHighArea, currentHighAreaIDFromLocalStore } =
@@ -22,13 +23,17 @@
 	const { getCustomers } = useCustomersStore();
 	const { users, usersDropdown } = storeToRefs(useUsersStore());
 	const { getUsers } = useUsersStore();
-	const { addNewHighContract } = useHighContractStore();
+	const { addNewHighContract, editHighContract } = useHighContractStore();
 	const { paymentMethodsDropdown } = storeToRefs(usePaymentMethodsStore());
 	const { getPaymentMethods } = usePaymentMethodsStore();
 	const { paymentMethodsProcess } = storeToRefs(
 		usePaymentMethodsProcessStore()
 	);
 	const { getPaymentMethodsProcess } = usePaymentMethodsProcessStore();
+	const { highContracts, currentHighContract } = storeToRefs(
+		useHighContractStore()
+	);
+	const { getHighContracts } = useHighContractStore();
 
 	await getHighPaymentProcesses();
 	await getCustomers();
@@ -37,7 +42,15 @@
 	await getHighAreas();
 	await getPaymentMethods();
 	await getPaymentMethodsProcess();
+	await getHighContracts();
 
+	const allHighBookings = ref(
+		highContracts.value.filter(
+			(booking) =>
+				booking['high_area_id'] == currentHighAreaIDFromLocalStore.value
+		)
+	);
+	const alreadyHaveBooking = ref(Object.keys(allHighBookings.value).length > 0);
 	const user = ref({});
 	const high = ref(
 		highAreas.value.filter(
@@ -54,6 +67,10 @@
 		user.value = JSON.parse(localStorage.getItem('user')) ?? {};
 	}
 
+	const bookingFeeStatuses = ref([
+		{ name: '10.000.000', value: 10000000 },
+		{ name: '50.000.000', value: 50000000 },
+	]);
 	const myPaymentBaseOnHighID = computed(() => {
 		return highPaymentProcesses.value.filter((payment) => {
 			return payment['high_area_id'] == currentHighAreaIDFromLocalStore.value;
@@ -67,8 +84,12 @@
 	]);
 	const contractStatuses = ref([
 		{ name: 'Enabled', value: 'enable' },
-		{ name: 'Disabled', value: 'disabled' },
+		{ name: 'Disabled', value: 'disable' },
 		{ name: 'Cancelled', value: 'cancelled' },
+	]);
+	const typeStatuses = ref([
+		{ name: 'Booking', value: 'booking' },
+		{ name: 'Deposit', value: 'deposit' },
 	]);
 	const seller = ref({
 		id: users.value.filter((seller) => seller['id'] == user.value['id'])?.[0]?.[
@@ -84,14 +105,88 @@
 			]
 		}`,
 	});
-	const buyer = ref({});
+	const buyer = ref(
+		alreadyHaveBooking.value
+			? {
+					name: customersDropdown.value.filter(
+						(customer) =>
+							customer['value'] ==
+							allHighBookings?.value?.[allHighBookings?.value.length - 1]?.[
+								'buyer_id'
+							]
+					)?.[0]?.['display_name'],
+					value: customersDropdown.value.filter(
+						(customer) =>
+							customer['value'] ==
+							allHighBookings?.value?.[allHighBookings?.value.length - 1]?.[
+								'buyer_id'
+							]
+					)?.[0]?.['value'],
+			  }
+			: {}
+	);
 	const beginPayment = ref(convertDateTime(new Date().toLocaleString()));
-	const bookingFee = ref({});
-	const paymentMethod = ref({});
-	const bookingFeeStatuses = ref([
-		{ name: '10.000.000', value: 10000000 },
-		{ name: '50.000.000', value: 50000000 },
-	]);
+	const bookingFee = ref(
+		alreadyHaveBooking.value
+			? {
+					name: bookingFeeStatuses.value.filter(
+						(fee) =>
+							fee['value'] ==
+							allHighBookings?.value?.[allHighBookings?.value.length - 1]?.[
+								'booking_fee'
+							]
+					)?.[0]?.['display_name'],
+					value: bookingFeeStatuses.value.filter(
+						(fee) =>
+							fee['value'] ==
+							allHighBookings?.value?.[allHighBookings?.value.length - 1]?.[
+								'booking_fee'
+							]
+					)?.[0]?.['value'],
+			  }
+			: {}
+	);
+	const typeStatus = ref(
+		alreadyHaveBooking.value
+			? {
+					name: typeStatuses.value.filter(
+						(type) =>
+							type['value'] ==
+							allHighBookings?.value?.[allHighBookings?.value.length - 1]?.[
+								'type'
+							]
+					)?.[0]?.['name'],
+					value: typeStatuses.value.filter(
+						(type) =>
+							type['value'] ==
+							allHighBookings?.value?.[allHighBookings?.value.length - 1]?.[
+								'type'
+							]
+					)?.[0]?.['value'],
+			  }
+			: {}
+	);
+	const paymentMethod = ref(
+		alreadyHaveBooking.value
+			? {
+					name: paymentMethodsDropdown.value.filter(
+						(payment) =>
+							payment['value'] ==
+							allHighBookings?.value?.[allHighBookings?.value.length - 1]?.[
+								'payment_method_id'
+							]
+					)?.[0]?.['name'],
+					value: paymentMethodsDropdown.value.filter(
+						(payment) =>
+							payment['value'] ==
+							allHighBookings?.value?.[allHighBookings?.value.length - 1]?.[
+								'payment_method_id'
+							]
+					)?.[0]?.['value'],
+			  }
+			: {}
+	);
+
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
@@ -127,15 +222,49 @@
 			(status) => status['value'] == currentHighArea.value['buy_status']
 		)?.[0]?.['value'],
 	});
-	const contractStatus = ref({});
-	const paymentMethodDesc = ref('');
+	const contractStatus = ref(
+		alreadyHaveBooking.value
+			? {
+					name: contractStatuses.value.filter(
+						(contract) =>
+							contract['value'] ==
+							allHighBookings?.value?.[allHighBookings?.value.length - 1]?.[
+								'status'
+							]
+					)?.[0]?.['name'],
+					value: contractStatuses.value.filter(
+						(contract) =>
+							contract['value'] ==
+							allHighBookings?.value?.[allHighBookings?.value.length - 1]?.[
+								'status'
+							]
+					)?.[0]?.['value'],
+			  }
+			: {}
+	);
+	const paymentMethodDesc = ref(
+		alreadyHaveBooking.value
+			? paymentMethodsDropdown.value.filter(
+					(payment) =>
+						payment['value'] ==
+						allHighBookings?.value?.[allHighBookings?.value.length - 1]?.[
+							'payment_method_id'
+						]
+			  )?.[0]?.['desc']
+			: ''
+	);
 	const desc = ref(currentHighArea.value['desc']);
 	const isLoading = ref(false);
 	const showProgressExamplePanel = ref(false);
 	const showCheckProgressExampleButton = ref(false);
-	const myPaymentMethodsProcessBaseOnPMId = ref(0);
-	const currentPaymentMethod = ref({});
 
+	const myPaymentMethodsProcessBaseOnPMId = ref(
+		alreadyHaveBooking.value
+			? paymentMethodsProcess.value.filter((process) => {
+					return process['payment_method_id'] == paymentMethod.value.value;
+			  })
+			: 0
+	);
 	const onChangePaymentMethod = (event) => {
 		showCheckProgressExampleButton.value = true;
 
@@ -143,7 +272,7 @@
 			(payment) => payment['value'] == event.value
 		)?.[0]?.['desc'];
 
-		currentPaymentMethod.value = paymentMethodsDropdown.value.filter(
+		paymentMethod.value = paymentMethodsDropdown.value.filter(
 			(payment) => payment['value'] == event.value
 		)?.[0];
 	};
@@ -161,11 +290,11 @@
 
 		myPaymentMethodsProcessBaseOnPMId.value =
 			paymentMethodsProcess.value.filter((process) => {
-				return process['payment_method_id'] == currentPaymentMethod.value.value;
+				return process['payment_method_id'] == paymentMethod.value.value;
 			});
 	};
 
-	const submitDepositForm = async () => {
+	const createDepositForm = async () => {
 		isLoading.value = true;
 
 		const newHighContract = {
@@ -175,7 +304,9 @@
 			booking_fee: parseInt(bookingFee.value.value),
 			sale_id: parseInt(seller.value['id']),
 			buyer_id: parseInt(buyer.value['value']),
+			type: typeStatus.value.value,
 			payment_method_id: parseInt(paymentMethod.value.value),
+			project_id: parseInt(currentProjectFromLocalStore.value['id']),
 			status: contractStatus.value.value,
 			begin_payment: new Date().toLocaleString(),
 			created_by: 46,
@@ -206,6 +337,38 @@
 			});
 		}
 	};
+
+	const saveDepositForm = async () => {
+		isLoading.value = true;
+
+		const newHighContract = {
+			...allHighBookings?.value?.[allHighBookings?.value.length - 1],
+			status: contractStatus.value.value,
+			type: typeStatus.value.value,
+		};
+
+		const response = await editHighContract(newHighContract);
+
+		if (response != null && response['result'] == 'ok') {
+			isLoading.value = false;
+			toast.add({
+				severity: 'success',
+				summary: 'Success',
+				detail: 'Edit Contract Successfully!',
+				group: 'bl',
+				life: 3000,
+			});
+		} else {
+			isLoading.value = false;
+			toast.add({
+				severity: 'danger',
+				summary: 'Error',
+				detail: 'Failed to Edit Contract!',
+				group: 'bl',
+				life: 3000,
+			});
+		}
+	};
 </script>
 
 <template>
@@ -216,7 +379,7 @@
 			<div class="flex flex-col justify-center gap-2">
 				<div class="flex items-center gap-2">
 					<span class="font-semibold text-lg">Payment</span>
-					<Tag :value="myPaymentBaseOnHighID.length"></Tag>
+					<!-- <Tag :value="myPaymentBaseOnHighID.length"></Tag> -->
 				</div>
 			</div>
 		</div>
@@ -405,6 +568,7 @@
 						:options="customersDropdown"
 						optionLabel="name"
 						optionValue="value"
+						:disabled="alreadyHaveBooking"
 					/>
 				</div>
 
@@ -417,6 +581,7 @@
 						:options="bookingFeeStatuses"
 						optionLabel="name"
 						optionValue="value"
+						:disabled="alreadyHaveBooking"
 					/>
 				</div>
 
@@ -427,6 +592,18 @@
 						v-model="contractStatus.value"
 						placeholder="Select Status"
 						:options="contractStatuses"
+						optionLabel="name"
+						optionValue="value"
+					/>
+				</div>
+
+				<div class="flex flex-1 flex-col gap-2">
+					<label for="typeStatus">Type</label>
+					<Dropdown
+						id="typeStatus"
+						v-model="typeStatus.value"
+						placeholder="Select Status"
+						:options="typeStatuses"
 						optionLabel="name"
 						optionValue="value"
 					/>
@@ -451,6 +628,7 @@
 						optionLabel="name"
 						optionValue="value"
 						@change="onChangePaymentMethod"
+						:disabled="alreadyHaveBooking"
 					/>
 				</div>
 
@@ -468,7 +646,7 @@
 				<template #footer>
 					<div class="flex justify-end items-center gap-3">
 						<NuxtLink
-							v-if="showCheckProgressExampleButton"
+							v-if="showCheckProgressExampleButton || alreadyHaveBooking"
 							:to="'#cpe'"
 							@click="checkProgressExample"
 						>
@@ -481,10 +659,19 @@
 						</NuxtLink>
 
 						<Button
+							v-if="!alreadyHaveBooking"
+							:loading="isLoading"
+							type="submit"
+							label="Create"
+							@click="createDepositForm"
+						/>
+
+						<Button
+							v-if="alreadyHaveBooking"
 							:loading="isLoading"
 							type="submit"
 							label="Save"
-							@click="submitDepositForm"
+							@click="saveDepositForm"
 						/>
 					</div>
 				</template>
@@ -596,9 +783,12 @@
 			</Panel>
 		</div>
 	</div>
+
 	<CreateHighPaymentProcessDialog
 		v-if="createHighPaymentProcessDialogVisible"
 		:visible="createHighPaymentProcessDialogVisible"
 		:statuses="statuses"
+		:data="allHighBookings?.value?.[allHighBookings?.value.length - 1]"
+		:alreadyHaveBooking="alreadyHaveBooking ? true : false"
 	/>
 </template>
