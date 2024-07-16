@@ -20,6 +20,7 @@
 	});
 
 	projectSeller.value = projectSeller.value.map((sl) => {
+		console.log(projects.value);
 		const {
 			name: pjName,
 			address: pjAddress,
@@ -33,14 +34,14 @@
 			budget: pjBudget,
 			status: pjStatus,
 			type: pjType,
-		} = projects.value.filter((pj) => pj['id'] == sl['project_id'])[0];
+		} = projects.value.filter((pj) => pj['id'] == sl['project_id'])?.[0];
 
 		const {
 			phone: slPhone,
 			first_name: slFirstName,
 			last_name: slLastName,
 			email: slEmail,
-		} = users.value.filter((usr) => usr['id'] == sl['account_id'])[0];
+		} = users.value.filter((usr) => usr['id'] == sl['account_id'])?.[0];
 
 		return {
 			...sl,
