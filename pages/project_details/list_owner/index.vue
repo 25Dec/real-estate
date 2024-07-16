@@ -1,67 +1,217 @@
 <script setup>
 	import { FilterMatchMode } from 'primevue/api';
 
-	const { currentProjectFromLocalStore } = storeToRefs(useProjectsStore());
-	const { highListOwners, currentHighListOwner } = storeToRefs(
-		useHighListOwnerStore()
-	);
+	const { zones } = storeToRefs(useZonesStore());
+	const { getZones, setCurrentZoneID } = useZonesStore();
+	const { blocks } = storeToRefs(useBlocksStore());
+	const { getBlocks } = useBlocksStore();
+	const { floors } = storeToRefs(useFloorsStore());
+	const { getFloors } = useFloorsStore();
+	const { highAreas, currentHighArea } = storeToRefs(useHighAreasStore());
+	const { getHighAreas, setCurrentHighArea } = useHighAreasStore();
+	const { highListOwners } = storeToRefs(useHighListOwnerStore());
 	const { getHighListOwners } = useHighListOwnerStore();
-	const { landListOwners, currentLandListOwner } = storeToRefs(
-		useLandListOwnerStore()
+	const { customers } = storeToRefs(useCustomersStore());
+	const { getCustomers } = useCustomersStore();
+
+	const router = useRouter();
+
+	await getZones();
+	await getBlocks();
+	await getFloors();
+	await getHighAreas();
+	await getHighListOwners();
+	await getCustomers();
+
+	highListOwners.value = customers.value.filter((customer) => {
+		return highListOwners.value.filter(
+			(owner) => owner['owner_id'] == customer['id']
+		);
+	});
+
+	zones.value = zones.value.map((zone) => {
+		return { id: zone.id, name: `${zone.name}`, value: `${zone.id}` };
+	});
+	const myZones = ref(zones.value);
+	const currentZone = ref({
+		name: myZones.value[0]?.name ?? '',
+		value: myZones.value[0]?.value ?? '',
+	});
+	setCurrentZoneID(currentZone.value.value);
+
+	blocks.value = blocks.value.map((block) => {
+		return {
+			id: block['id'],
+			name: `${block['desc']}`,
+			value: `${block['id']}`,
+			zone_id: `${block['zone_id']}`,
+		};
+	});
+	const myBlocks = ref(
+		blocks.value.filter((block) => block['zone_id'] == currentZone.value.value)
 	);
-	const { getLandListOwners } = useLandListOwnerStore();
+	const currentBlock = ref({
+		name:
+			myBlocks.value.filter(
+				(block) => block['zone_id'] == currentZone.value.value
+			)?.[0]?.name ?? '',
+		value:
+			myBlocks.value.filter(
+				(block) => block['zone_id'] == currentZone.value.value
+			)?.[0]?.value ?? '',
+	});
 
-	const projectType = ref(currentProjectFromLocalStore.value['type']);
-
-	if (projectType.value == 'high' || projectType.value == 'hybrid') {
-		await getHighListOwners();
-	}
-
-	if (projectType.value == 'land' || projectType.value == 'hybrid') {
-		await getLandListOwners();
-	}
-
+	floors.value = floors.value.map((floor) => {
+		return {
+			id: floor.id,
+			name: `${floor.desc}`,
+			value: `${floor.id}`,
+			block_id: `${floor['block_id']}`,
+		};
+	});
+	const myFloors = ref(
+		floors.value.filter(
+			(floor) => floor['block_id'] == currentBlock.value.value
+		)
+	);
+	const currentFloor = ref({
+		name:
+			myFloors.value.filter(
+				(floor) => floor['block_id'] == currentBlock.value.value
+			)?.[0]?.name ?? '',
+		value:
+			myFloors.value.filter(
+				(floor) => floor['block_id'] == currentBlock.value.value
+			)?.[0]?.value ?? '',
+	});
+	highAreas.value = highAreas.value.map((high) => {
+		return {
+			id: high.id,
+			name: `${high.desc}`,
+			value: `${high.id}`,
+			floor_id: `${high['floor_id']}`,
+		};
+	});
+	const myHighAreas = ref(
+		highAreas.value.filter(
+			(high) => high['floor_id'] == currentFloor.value.value
+		)
+	);
+	const currentHigh = ref({
+		name:
+			myFloors.value.filter(
+				(floor) => floor['block_id'] == currentBlock.value.value
+			)?.[0]?.name ?? '',
+		value:
+			myFloors.value.filter(
+				(floor) => floor['block_id'] == currentBlock.value.value
+			)?.[0]?.value ?? '',
+	});
+	const myOwnersBaseOnZoneAndBlockAndFloorAndHighID = computed(() => {
+		return highListOwners.value.filter((owner) => {
+			return owner['high_area_id'] == currentFloor.value.value;
+		});
+	});
 	const filters = ref({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 	});
-	const viewDetailsHighListOwnerDialogVisible = ref(false);
-	const createHighListOwnerDialogVisible = ref(false);
-	const editHighListOwnerDialogVisible = ref(false);
-	const deleteHighListOwnerDialogVisible = ref(false);
-	const viewDetailsLandListOwnerDialogVisible = ref(false);
-	const createLandListOwnerDialogVisible = ref(false);
-	const editLandListOwnerDialogVisible = ref(false);
-	const deleteLandListOwnerDialogVisible = ref(false);
+	const viewDetailsOwnerDialogVisible = ref(false);
+	const createOwnerDialogVisible = ref(false);
+	const editOwnerDialogVisible = ref(false);
+	const deleteOwnerDialogVisible = ref(false);
 
-	const viewDetailsHighListOwner = (data) => {
-		currentHighListOwner.value = data;
-		viewDetailsHighListOwnerDialogVisible.value =
-			!viewDetailsHighListOwnerDialogVisible.value;
+	const toggleViewDetailsOwner = (data) => {
+		viewDetailsOwnerDialogVisible.value = !viewDetailsOwnerDialogVisible.value;
 	};
-	const editHighListOwner = (data) => {
-		currentHighListOwner.value = data;
-		editHighListOwnerDialogVisible.value =
-			!editHighListOwnerDialogVisible.value;
+	const toggleEditOwner = (data) => {
+		setCurrentOwner(data);
+		editOwnerDialogVisible.value = !editOwnerDialogVisible.value;
 	};
-	const deleteHighListOwner = async (data) => {
-		currentHighListOwner.value = data;
-		deleteHighListOwnerDialogVisible.value =
-			!deleteHighListOwnerDialogVisible.value;
+	const toggleDeleteOwner = (data) => {
+		setCurrentOwner(data);
+		deleteOwnerDialogVisible.value = !deleteOwnerDialogVisible.value;
 	};
-	const viewDetailsLandListOwner = (data) => {
-		currentLandListOwner.value = data;
-		viewDetailsLandListOwnerDialogVisible.value =
-			!viewDetailsLandListOwnerDialogVisible.value;
-	};
-	const editLandListOwner = (data) => {
-		currentLandListOwner.value = data;
-		editLandListOwnerDialogVisible.value =
-			!editLandListOwnerDialogVisible.value;
-	};
-	const deleteLandListOwner = async (data) => {
-		currentLandListOwner.value = data;
-		deleteLandListOwnerDialogVisible.value =
-			!deleteLandListOwnerDialogVisible.value;
+
+	const handleDropdown = (event, type) => {
+		if (type == 'zone') {
+			setCurrentZoneID(event.value);
+
+			myBlocks.value = blocks.value.filter(
+				(block) => block['zone_id'] == event.value
+			);
+			currentBlock.value = {
+				name:
+					myBlocks.value.filter(
+						(block) => block['zone_id'] == currentZone.value.value
+					)?.[0]?.name ?? '',
+				value:
+					myBlocks.value.filter(
+						(block) => block['zone_id'] == currentZone.value.value
+					)?.[0]?.value ?? '',
+			};
+			myFloors.value = floors.value.filter(
+				(floor) => floor['block_id'] == currentBlock.value.value
+			);
+			currentFloor.value = {
+				name:
+					myFloors.value.filter(
+						(floor) => floor['block_id'] == currentBlock.value.value
+					)?.[0]?.name ?? '',
+				value:
+					`${
+						myFloors.value.filter(
+							(floor) => floor['block_id'] == currentBlock.value.value
+						)?.[0]?.value
+					}` ?? '',
+			};
+			myHighAreas.value = highAreas.value.filter(
+				(high) => high['floor_id'] == currentFloor.value.value
+			);
+			currentHighArea.value = {
+				name:
+					myHighAreas.value.filter(
+						(high) => high['floor_id'] == currentFloor.value.value
+					)?.[0]?.name ?? '',
+				value:
+					`${
+						myHighAreas.value.filter(
+							(high) => high['floor_id'] == currentFloor.value.value
+						)?.[0]?.value
+					}` ?? '',
+			};
+		}
+
+		if (type == 'block') {
+			myFloors.value = floors.value.filter(
+				(floor) => floor['block_id'] == event.value
+			);
+			currentFloor.value = {
+				name:
+					myFloors.value.filter(
+						(floor) => floor['block_id'] == currentBlock.value.value
+					)?.[0]?.name ?? '',
+				value:
+					myFloors.value.filter(
+						(floor) => floor['block_id'] == currentBlock.value.value
+					)?.[0]?.value ?? '',
+			};
+		}
+
+		if (type == 'floor') {
+			myHighAreas.value = highAreas.value.filter(
+				(high) => high['floor_id'] == event.value
+			);
+			currentHigh.value = {
+				name:
+					myHighAreas.value.filter(
+						(high) => high['floor_id'] == currentFloor.value.value
+					)?.[0]?.name ?? '',
+				value:
+					myHighAreas.value.filter(
+						(high) => high['floor_id'] == currentFloor.value.value
+					)?.[0]?.value ?? '',
+			};
+		}
 	};
 </script>
 
@@ -71,15 +221,8 @@
 			class="fixed right-0 top-0 z-50 backdrop-blur-xl w-5/6 h-[8%] px-4 border-b flex justify-between items-center"
 		>
 			<div class="flex items-center gap-2">
-				<span class="font-semibold text-lg">List Owner</span>
-				<Tag
-					v-if="projectType == 'high'"
-					:value="highListOwners.length"
-				/>
-				<Tag
-					v-else
-					:value="landListOwners.length"
-				/>
+				<span class="font-semibold text-lg">Owner</span>
+				<Tag :value="myOwnersBaseOnZoneAndBlockAndFloorAndHighID.length"></Tag>
 			</div>
 
 			<div class="flex items-center gap-2">
@@ -89,31 +232,89 @@
 					</InputIcon>
 					<InputText
 						v-model="filters['global'].value"
-						placeholder="Filter owner..."
+						placeholder="Filter Owner..."
 					/>
 				</IconField>
 				<Button
-					v-if="projectType == 'high'"
 					size="small"
 					label="New"
-					@click="
-						createHighListOwnerDialogVisible = !createHighListOwnerDialogVisible
-					"
-				/>
-				<Button
-					v-else
-					size="small"
-					label="New"
-					@click="
-						createLandListOwnerDialogVisible = !createLandListOwnerDialogVisible
-					"
+					@click="createOwnerDialogVisible = !createOwnerDialogVisible"
 				/>
 			</div>
 		</div>
 
-		<div class="absolute top-[8%] w-full h-[92%]">
+		<div
+			class="fixed right-0 top-[8%] z-50 backdrop-blur-xl w-5/6 h-[8%] px-4 border-b flex items-center gap-3"
+		>
+			<div class="flex items-center gap-2">
+				<label
+					for="currentZone"
+					class="font-semibold text-lg"
+					>Current Zone:
+				</label>
+				<Dropdown
+					id="currentZone"
+					placeholder="Select Zone"
+					v-model="currentZone.value"
+					:options="myZones"
+					optionLabel="name"
+					optionValue="value"
+					@change="(event) => handleDropdown(event, 'zone')"
+				/>
+			</div>
+			<div class="flex items-center gap-2">
+				<label
+					for="currentZone"
+					class="font-semibold text-lg"
+					>Current Block:
+				</label>
+				<Dropdown
+					id="currentBlock"
+					placeholder="Select Block"
+					v-model="currentBlock.value"
+					:options="myBlocks"
+					optionLabel="name"
+					optionValue="value"
+					@change="(event) => handleDropdown(event, 'block')"
+				/>
+			</div>
+			<div class="flex items-center gap-2">
+				<label
+					for="currentFloor"
+					class="font-semibold text-lg"
+					>Current Floor:
+				</label>
+				<Dropdown
+					id="currentFloor"
+					placeholder="Select Floor"
+					v-model="currentFloor.value"
+					:options="myFloors"
+					optionLabel="name"
+					optionValue="value"
+					@change="(event) => handleDropdown(event, 'floor')"
+				/>
+			</div>
+			<div class="flex items-center gap-2">
+				<label
+					for="currentHigh"
+					class="font-semibold text-lg"
+					>Current High:
+				</label>
+				<Dropdown
+					id="currentHigh"
+					placeholder="Select High"
+					v-model="currentHigh.value"
+					:options="myHighAreas"
+					optionLabel="name"
+					optionValue="value"
+					@change="(event) => handleDropdown(event, 'high')"
+				/>
+			</div>
+		</div>
+
+		<div class="absolute top-[16%] w-full h-[92%]">
 			<DataTable
-				:value="projectType == 'high' ? highListOwners : landListOwners"
+				:value="myOwnersBaseOnZoneAndBlockAndFloorAndHighID"
 				v-model:filters="filters"
 				:paginator="true"
 				:rows="50"
@@ -131,89 +332,80 @@
 					</div>
 				</template>
 
+				<Column
+					field="fullname"
+					header="Full Name"
+				>
+					<template #body="{ data }">
+						<div class="flex items-center gap-3">
+							<Avatar
+								:label="data['first_name']?.substring(0, 3)"
+								shape="square"
+							/>
+							<div class="flex flex-col">
+								<span class="font-semibold">{{
+									`${data['first_name']} ${data['last_name']}`
+								}}</span>
+								<span>{{ data['email'] }}</span>
+							</div>
+						</div>
+					</template>
+				</Column>
+
+				<Column
+					field="phone"
+					header="Phone"
+				>
+					<template #body="{ data }">
+						{{ data['phone'] }}
+					</template>
+				</Column>
+
 				<Column header="Actions">
 					<template #body="{ data }">
-						<div v-if="projectType == 'high'">
-							<Button
-								text
-								severity="secondary"
-								@click="viewDetailsHighListOwner(data)"
-							>
-								<Icon name="mdi:eye-outline" />
-							</Button>
-							<Button
-								text
-								severity="secondary"
-								@click="editHighListOwner(data)"
-							>
-								<Icon name="mdi:edit-outline" />
-							</Button>
-							<Button
-								text
-								severity="danger"
-								@click="deleteHighListOwner(data)"
-							>
-								<Icon name="mdi:delete-outline" />
-							</Button>
-						</div>
-						<div v-else>
-							<Button
-								text
-								severity="secondary"
-								@click="viewDetailsLandListOwner(data)"
-							>
-								<Icon name="mdi:eye-outline" />
-							</Button>
-							<Button
-								text
-								severity="secondary"
-								@click="editLandListOwner(data)"
-							>
-								<Icon name="mdi:edit-outline" />
-							</Button>
-							<Button
-								text
-								severity="danger"
-								@click="deleteLandListOwner(data)"
-							>
-								<Icon name="mdi:delete-outline" />
-							</Button>
-						</div>
+						<Button
+							text
+							severity="secondary"
+							@click="viewDetailsCustomer(data)"
+						>
+							<Icon name="mdi:eye-outline" />
+						</Button>
+						<Button
+							text
+							severity="secondary"
+							@click="editCustomer(data)"
+						>
+							<Icon name="mdi:edit-outline" />
+						</Button>
+						<Button
+							text
+							severity="danger"
+							@click="deleteCustomer(data)"
+						>
+							<Icon name="mdi:delete-outline" />
+						</Button>
 					</template>
 				</Column>
 			</DataTable>
 		</div>
 	</div>
-	<ViewDetailsHighListOwnerDialog
-		v-if="viewDetailsHighListOwnerDialogVisible"
-		:visible="viewDetailsHighListOwnerDialogVisible"
+	<ViewDetailsHighAreaDialog
+		v-if="viewDetailsHighAreaDialogVisible"
+		:visible="viewDetailsHighAreaDialogVisible"
+		:statuses="statuses"
 	/>
-	<CreateHighListOwnerDialog
-		v-if="createHighListOwnerDialogVisible"
-		:visible="createHighListOwnerDialogVisible"
+	<CreateHighAreaDialog
+		v-if="createHighAreaDialogVisible"
+		:visible="createHighAreaDialogVisible"
+		:statuses="statuses"
 	/>
-	<EditHighListOwnerDialog
-		v-if="editHighListOwnerDialogVisible"
-		:visible="editHighListOwnerDialogVisible"
+	<EditHighAreaDialog
+		v-if="editHighAreaDialogVisible"
+		:visible="editHighAreaDialogVisible"
+		:statuses="statuses"
 	/>
-	<DeleteHighListOwnerDialog
-		v-if="deleteHighListOwnerDialogVisible"
-		:visible="deleteHighListOwnerDialogVisible"
-	/>
-	<ViewDetailsLandListOwnerDialog
-		v-if="viewDetailsLandListOwnerDialogVisible"
-		:visible="viewDetailsLandListOwnerDialogVisible"
-	/>
-	<CreateLandListOwnerDialog
-		v-if="createLandListOwnerDialogVisible"
-		:visible="createLandListOwnerDialogVisible"
-	/>
-	<EditLandListOwnerDialog
-		v-if="editLandListOwnerDialogVisible"
-		:visible="editLandListOwnerDialogVisible"
-	/>
-	<DeleteLandListOwnerDialog
-		v-if="deleteLandListOwnerDialogVisible"
-		:visible="deleteLandListOwnerDialogVisible"
+	<DeleteHighAreaDialog
+		v-if="deleteHighAreaDialogVisible"
+		:visible="deleteHighAreaDialogVisible"
 	/>
 </template>

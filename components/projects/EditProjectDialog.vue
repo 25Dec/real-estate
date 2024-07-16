@@ -35,7 +35,7 @@
 			phone: phone.value,
 			email: email.value,
 			open_at: openAt.value,
-			activated: activated.value,
+			activated: activated.value ? 'true' : 'false',
 			project_progress: projectProgress.value,
 			desc: desc.value,
 			started_day: startedDay.value,

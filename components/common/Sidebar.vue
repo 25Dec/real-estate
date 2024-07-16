@@ -114,6 +114,11 @@
 					icon: 'mdi:account-supervisor-outline',
 				},
 				{
+					name: 'List Owner',
+					link: adminDashBoardBaseLink + '/list_owner',
+					icon: 'ph:user-list',
+				},
+				{
 					name: 'Sellers',
 					link: adminDashBoardBaseLink + '/project_seller',
 					icon: 'streamline:office-worker',

@@ -219,9 +219,7 @@
 		class="relative pt-[100px] px-4 h-fit flex flex-col items-center gap-12"
 	>
 		<span class="text-4xl font-bold p-2 border-b">Available Projects</span>
-		<div
-			class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-		>
+		<div class="flex gap-6">
 			<ProjectCard
 				v-for="project in projects"
 				:key="project.id"

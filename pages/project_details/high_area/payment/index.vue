@@ -387,7 +387,6 @@
 		<div class="absolute top-[10%] w-full h-[90%]">
 			<Panel
 				toggleable
-				collapsed
 				class="w-full shadow-none"
 			>
 				<template #header>
@@ -523,7 +522,6 @@
 
 			<Panel
 				toggleable
-				collapsed
 				class="w-full shadow-none"
 			>
 				<template #header>
@@ -559,6 +557,7 @@
 							disabled
 						/>
 					</div> -->
+
 				<div class="flex flex-1 flex-col gap-2">
 					<label for="buyer_id">Buyer</label>
 					<Dropdown
@@ -568,7 +567,11 @@
 						:options="customersDropdown"
 						optionLabel="name"
 						optionValue="value"
-						:disabled="alreadyHaveBooking"
+						:disabled="
+							allHighBookings?.value?.[allHighBookings?.value.length - 1]?.[
+								'status'
+							] == 'enable'
+						"
 					/>
 				</div>
 
@@ -581,7 +584,6 @@
 						:options="bookingFeeStatuses"
 						optionLabel="name"
 						optionValue="value"
-						:disabled="alreadyHaveBooking"
 					/>
 				</div>
 
@@ -628,7 +630,6 @@
 						optionLabel="name"
 						optionValue="value"
 						@change="onChangePaymentMethod"
-						:disabled="alreadyHaveBooking"
 					/>
 				</div>
 
@@ -657,6 +658,12 @@
 								label="Check Progress Example"
 							/>
 						</NuxtLink>
+
+						<Button
+							outlined
+							label="Check History Payment"
+							@click="() => router.push(`payment/history`)"
+						/>
 
 						<Button
 							v-if="!alreadyHaveBooking"
