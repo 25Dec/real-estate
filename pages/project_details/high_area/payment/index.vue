@@ -126,6 +126,7 @@
 			: {}
 	);
 	const beginPayment = ref(convertDateTime(new Date().toLocaleString()));
+	console.log(beginPayment.value);
 	const bookingFee = ref(
 		alreadyHaveBooking.value
 			? {
