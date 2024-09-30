@@ -1,0 +1,57 @@
+{
+  "name": "lvtn",
+  "version": "1.0.0",
+  "description": "real estate management",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "genAPIDoc": "apidoc -i ./app/route/ -o ./public/docs/"
+  },
+  "keywords": [
+    "real estate",
+    "graduation essay"
+  ],
+  "author": "SugarTawng",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/storage": "^1.7.0",
+    "async": "^3.2.4",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "cron": "^2.4.0",
+    "express": "^4.18.2",
+    "extract-zip": "^2.0.1",
+    "find-remove": "^4.1.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "fs": "0.0.1-security",
+    "fs-extra": "^11.1.1",
+    "image-size": "^1.0.2",
+    "jsonwebtoken": "^9.0.1",
+    "md5": "^2.3.0",
+    "md5-file": "^5.0.0",
+    "method-override": "^3.0.0",
+    "moment": "^2.29.4",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.5.2",
+    "node-gyp": "^9.4.0",
+    "path": "^0.12.7",
+    "redis": "^4.6.7",
+    "request": "^2.88.0",
+    "sequelize": "^6.32.1",
+    "sharp": "^0.32.4",
+    "socket.io": "^4.7.2",
+    "socket.io-redis": "^5.2.0",
+    "validator": "^13.9.0"
+  },
+  "devDependencies": {
+    "apidoc": "^0.53.0",
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": "20.12.0",
+    "npm": "9.3.0"
+  }
+}
