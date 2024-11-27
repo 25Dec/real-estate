@@ -1,0 +1,50 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Code Analysis') {
+            steps {
+                script {
+                    withSonarQubeEnv('SonarQube') {
+                        sh 'sonar-scanner -Dsonar.projectKey=frontend -Dsonar.sources=frontend'
+                        sh 'sonar-scanner -Dsonar.projectKey=backend -Dsonar.sources=backend'
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Images') {
+            parallel {
+                stage('Build FE') {
+                    steps {
+                        dir('frontend') {
+                            sh 'docker image build -t frontend-image .'
+                        }
+                    }
+                }
+
+                stage('Build BE') {
+                    steps {
+                        dir('backend') {
+                            sh 'docker image build -t backend-image .'
+                        }
+                    }
+                }
+
+                stage('Build DB') {
+                    steps {
+                        dir('database') {
+                            sh 'docker image build -t database-image .'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'ansible-playbook -i ansible/hosts ansible/playbook.yml'
+            }
+        }
+    }
+}

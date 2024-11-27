@@ -1,0 +1,10 @@
+FROM mysql:5.7
+
+ENV MYSQL_ROOT_PASSWORD=root
+ENV MYSQL_DATABASE=realestate
+ENV MYSQL_USER=root
+ENV MYSQL_PASSWORD=020121
+
+COPY ./Dump20240728/ /docker-entrypoint-initdb.d/
+
+EXPOSE 3306

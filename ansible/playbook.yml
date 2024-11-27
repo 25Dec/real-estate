@@ -1,0 +1,35 @@
+---
+- hosts: database
+  tasks:
+    - name: Install MySQL
+      apt:
+        name:
+
+    - name: Deploy Database Container
+      docker_container:
+        name: database
+        image: database-image
+        state: started
+        restart_policy: always
+        ports:
+          - '3306:3306'
+# - hosts: backend
+#   tasks:
+#     - name: Deploy Backend Container
+#       docker_container:
+#         name: backend_app
+#         image: backend-image
+#         state: started
+#         restart_policy: always
+#         ports:
+#           - '3000:3000'
+# - hosts: frontend
+#   tasks:
+#     - name: Deploy Frontend Container
+#       docker_container:
+#         name: frontend_app
+#         image: frontend-image
+#         state: started
+#         restart_policy: always
+#         ports:
+#           - '80:80'
